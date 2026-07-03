@@ -427,6 +427,137 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 }
 .color-picker-wrapper input[type="color"]::-webkit-color-swatch { border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); }
 
+/* ============================================ */
+/* ESTILOS NUEVOS - GESTIÓN DE CATEGORÍAS       */
+/* ============================================ */
+.category-list-admin {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.category-item-admin {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 1px solid var(--gray-border);
+    transition: all 0.2s ease;
+}
+.category-item-admin:hover {
+    border-color: var(--primary-pink);
+    background: var(--light-pink);
+}
+.category-item-admin .cat-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.category-item-admin .cat-name .cat-count {
+    font-size: 11px;
+    background: var(--primary-pink);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+.category-item-admin .cat-actions {
+    display: flex;
+    gap: 6px;
+}
+.category-item-admin .cat-actions button {
+    background: transparent;
+    border: 1px solid var(--gray-border);
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+.category-item-admin .cat-actions button:hover {
+    background: white;
+    border-color: var(--primary-pink);
+}
+.category-item-admin .cat-actions button.delete-cat:hover {
+    background: #fef2f2;
+    border-color: var(--danger);
+    color: var(--danger);
+}
+.add-category-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+.add-category-row input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--gray-border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    background: #f8fafc;
+    color: var(--text-dark);
+}
+.add-category-row input:focus {
+    outline: none;
+    border-color: var(--primary-pink);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(228, 87, 143, 0.15);
+}
+.add-category-row button {
+    background: var(--primary-pink);
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(228, 87, 143, 0.3);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+.add-category-row button:hover {
+    background: var(--text-dark);
+}
+.code-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--gray-border);
+    letter-spacing: 0.5px;
+    font-family: 'Inter', monospace;
+    margin-top: 4px;
+}
+.card .code-badge {
+    margin-top: 6px;
+}
+.inline-edit-input {
+    padding: 6px 10px;
+    border: 1px solid var(--primary-pink);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    background: white;
+    color: var(--text-dark);
+    width: 200px;
+}
+.inline-edit-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(228, 87, 143, 0.15);
+}
+
 @media (max-width: 900px) {
     .admin-content { grid-template-columns: 1fr; }
     .admin-sidebar { display: none; }
@@ -443,12 +574,8 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 <!-- NAVIGATION BAR -->
 <header id="mainHeader">
     <div class="brand" id="storeNameView" onclick="filtrarCategoria('Todos', document.getElementById('btn-todos'))">Xiolover</div>
-    <nav>
+    <nav id="mainNav">
         <a href="#" id="btn-todos" class="active" onclick="filtrarCategoria('Todos', this)">Todos</a>
-        <a href="#" onclick="filtrarCategoria('Maquillaje', this)">Maquillaje</a>
-        <a href="#" onclick="filtrarCategoria('Skincare', this)">Skincare</a>
-        <a href="#" onclick="filtrarCategoria('Cejas', this)">Cejas</a>
-        <a href="#" onclick="filtrarCategoria('Accesorios', this)">Accesorios</a>
     </nav>
     <div class="top-bar-buttons">
         <button onclick="abrirLogin()">Consola Admin</button>
@@ -509,6 +636,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                 <p>v2.0 • Frontend Consola</p>
                 <div class="admin-nav-menu">
                     <button class="admin-nav-item active" onclick="switchTab('tab-tienda', this)">Apariencia y Tienda</button>
+                    <button class="admin-nav-item" onclick="switchTab('tab-categorias', this)">Gestión de Categorías</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-nuevo', this)">Agregar Producto</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-inventario', this)">Control de Inventario</button>
                 </div>
@@ -597,16 +725,52 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     <button class="btn-buy" style="width:auto; padding:14px 35px;" onclick="guardarConfigTienda()">💾 Guardar Cambios de Apariencia</button>
                 </div>
 
+                <!-- ============================================ -->
+                <!-- NUEVO TAB: GESTIÓN DE CATEGORÍAS             -->
+                <!-- ============================================ -->
+                <div id="tab-categorias" class="admin-view">
+                    <div class="dashboard-card">
+                        <h4>Administrador de Categorías del Catálogo</h4>
+                        <p style="margin:0 0 20px 0; font-size:13px; color:#64748b; line-height:1.5;">
+                            Desde aquí puedes crear, editar o eliminar las categorías que aparecen en la barra de navegación principal del catálogo. 
+                            Los productos existentes se mantendrán aunque se elimine su categoría (se marcarán como "Sin Categoría").
+                        </p>
+                        
+                        <div class="category-list-admin" id="categoryListAdmin">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+
+                        <div class="add-category-row">
+                            <input type="text" id="newCategoryInput" placeholder="Nombre de la nueva categoría (ej: Labios, Capilar, Corporal...)" maxlength="30">
+                            <button onclick="agregarNuevaCategoria()">+ Agregar Categoría</button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h4>Resumen de Productos por Categoría</h4>
+                        <div id="categorySummaryGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:15px;">
+                            <!-- Se llena dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
                 <!-- TAB NUEVO PRODUCTO -->
                 <div id="tab-nuevo" class="admin-view">
                     <div class="product-split-layout">
                         <div class="dashboard-card" style="margin:0;">
                             <h4>Atributos del Producto</h4>
                             
-                            <div class="form-group" id="valNombre">
-                                <label>Nombre del Producto *</label>
-                                <input type="text" id="prodNombre" placeholder="Ej: Labial Matte Gloss 24h" oninput="updateLivePreview()">
-                                <div class="invalid-feedback">El nombre es obligatorio (mínimo 3 caracteres).</div>
+                            <div class="grid-form-2">
+                                <div class="form-group" id="valCodigo">
+                                    <label>Código del Producto *</label>
+                                    <input type="text" id="prodCodigo" placeholder="Ej: LAB-001, SKN-015" oninput="updateLivePreview()">
+                                    <div class="invalid-feedback">El código es obligatorio (único).</div>
+                                </div>
+                                <div class="form-group" id="valNombre">
+                                    <label>Nombre del Producto *</label>
+                                    <input type="text" id="prodNombre" placeholder="Ej: Labial Matte Gloss 24h" oninput="updateLivePreview()">
+                                    <div class="invalid-feedback">El nombre es obligatorio (mínimo 3 caracteres).</div>
+                                </div>
                             </div>
 
                             <div class="grid-form-2">
@@ -625,13 +789,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                             <div class="form-group">
                                 <label>Categoría</label>
                                 <select id="prodCategoria" onchange="updateLivePreview()">
-                                    <option value="Maquillaje">Labios</option>
-                                    <option value="Skincare">Skincare</option>
-                                    <option value="Cejas">Ojos</option>
-                                    <option value="Accesorios">Accesorios</option>
-                                     <option value="Accesorios">Capilar</option>
-                                     <option value="Accesorios">Corporal</option>
-                                    
+                                    <!-- Se llena dinámicamente -->
                                 </select>
                             </div>
 
@@ -660,13 +818,14 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                 <div id="tab-inventario" class="admin-view">
                     <div class="dashboard-card">
                         <div style="display:flex; justify-content:between; align-items:center; margin-bottom:20px; gap:15px;">
-                            <input type="text" id="inventarioBuscador" placeholder="Buscar por nombre o categoría en el stock..." oninput="filtrarTablaInventario(this.value)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--gray-border); font-family:inherit;">
+                            <input type="text" id="inventarioBuscador" placeholder="Buscar por nombre, código o categoría en el stock..." oninput="filtrarTablaInventario(this.value)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--gray-border); font-family:inherit;">
                         </div>
                         <div class="table-wrapper">
                             <table class="modern-table">
                                 <thead>
                                     <tr>
                                         <th>Imagen</th>
+                                        <th>Código</th>
                                         <th>Nombre del Producto</th>
                                         <th>Categoría</th>
                                         <th>Precio</th>
@@ -695,13 +854,28 @@ let imagenProductoBase64 = "";
 
 // BASE DE DATOS MOCK INITIAL
 const prodsDefecto = [
-    {nombre: "Caja Lip Combo Xiolover Premium", precio: "40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
-    {nombre: "Tinte Fijador De Cejas Brow Set", precio: "38.000", categoria: "Cejas", img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=300", stock: 15},
-    {nombre: "Kit Base Humide + Obsequio Corrector", precio: "50.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300", stock: 5},
-    {nombre: "Kit Brochas Fluffy x10 Montoc", precio: "60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0}
+    {codigo: "MKP-001", nombre: "Caja Lip Combo Xiolover Premium", precio: "40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
+    {codigo: "CEJ-001", nombre: "Tinte Fijador De Cejas Brow Set", precio: "38.000", categoria: "Cejas", img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=300", stock: 15},
+    {codigo: "MKP-002", nombre: "Kit Base Humide + Obsequio Corrector", precio: "50.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300", stock: 5},
+    {codigo: "ACC-001", nombre: "Kit Brochas Fluffy x10 Montoc", precio: "60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0}
 ];
 
+// ============================================
+// NUEVA BASE DE DATOS: CATEGORÍAS DINÁMICAS
+// ============================================
+const categoriasDefecto = ["Maquillaje", "Skincare", "Cejas", "Accesorios"];
+let categoriasCatalogo = JSON.parse(localStorage.getItem('db_categorias_v2')) || categoriasDefecto.slice();
+
 let productos = JSON.parse(localStorage.getItem('db_prods_v2')) || prodsDefecto;
+
+// Migración: asegurar que todos los productos tengan código
+productos.forEach((p, i) => {
+    if (!p.codigo) {
+        p.codigo = "GEN-" + String(i + 1).padStart(3, '0');
+    }
+});
+localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+
 let tiendaConfig = JSON.parse(localStorage.getItem('db_store_cfg_v2')) || {
     name: "Xiolover", 
     title: "Welcome to Xiolover World!", 
@@ -724,9 +898,236 @@ function showToast(message, type = "success") {
     setTimeout(() => { toast.remove(); }, 3500);
 }
 
+// ============================================
+// MOTOR DE CATEGORÍAS DINÁMICAS
+// ============================================
+function guardarCategorias() {
+    localStorage.setItem('db_categorias_v2', JSON.stringify(categoriasCatalogo));
+}
+
+function renderizarNavbarCategorias() {
+    const nav = document.getElementById('mainNav');
+    nav.innerHTML = `<a href="#" id="btn-todos" class="${categoriaActual === 'Todos' ? 'active' : ''}" onclick="filtrarCategoria('Todos', this)">Todos</a>`;
+    categoriasCatalogo.forEach(cat => {
+        const link = document.createElement('a');
+        link.href = '#';
+        link.textContent = cat;
+        if (categoriaActual === cat) link.classList.add('active');
+        link.onclick = function(e) {
+            e.preventDefault();
+            filtrarCategoria(cat, this);
+        };
+        nav.appendChild(link);
+    });
+}
+
+function renderizarSelectCategorias() {
+    const select = document.getElementById('prodCategoria');
+    if (!select) return;
+    select.innerHTML = '';
+    if (categoriasCatalogo.length === 0) {
+        select.innerHTML = '<option value="">-- Sin categorías disponibles --</option>';
+        return;
+    }
+    categoriasCatalogo.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        select.appendChild(opt);
+    });
+}
+
+function renderizarListaCategoriasAdmin() {
+    const cont = document.getElementById('categoryListAdmin');
+    if (!cont) return;
+    cont.innerHTML = '';
+    
+    if (categoriasCatalogo.length === 0) {
+        cont.innerHTML = '<div style="text-align:center; padding:30px; color:#94a3b8; font-size:13px;">No hay categorías creadas. Agrega una nueva para comenzar.</div>';
+        return;
+    }
+    
+    categoriasCatalogo.forEach((cat, idx) => {
+        const count = productos.filter(p => p.categoria === cat).length;
+        const item = document.createElement('div');
+        item.className = 'category-item-admin';
+        item.id = `cat-item-${idx}`;
+        item.innerHTML = `
+            <div class="cat-name">
+                <span class="cat-label" id="cat-label-${idx}">${cat}</span>
+                <span class="cat-count">${count} prod.</span>
+            </div>
+            <div class="cat-actions">
+                <button onclick="editarCategoria(${idx})" title="Editar nombre">✏️</button>
+                <button class="delete-cat" onclick="eliminarCategoria(${idx})" title="Eliminar categoría">🗑️</button>
+            </div>
+        `;
+        cont.appendChild(item);
+    });
+}
+
+function renderizarResumenCategorias() {
+    const grid = document.getElementById('categorySummaryGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    
+    categoriasCatalogo.forEach(cat => {
+        const count = productos.filter(p => p.categoria === cat).length;
+        const sinStock = productos.filter(p => p.categoria === cat && p.stock <= 0).length;
+        const div = document.createElement('div');
+        div.style.cssText = 'background:#f8fafc; padding:18px; border-radius:12px; border:1px solid var(--gray-border); text-align:center;';
+        div.innerHTML = `
+            <div style="font-weight:700; color:var(--primary-pink); font-size:14px; margin-bottom:8px;">${cat}</div>
+            <div style="font-size:24px; font-weight:800; color:var(--text-dark);">${count}</div>
+            <div style="font-size:11px; color:#64748b; margin-top:4px;">${sinStock > 0 ? `<span style="color:var(--danger);">${sinStock} agotado(s)</span>` : 'Todo en stock ✓'}</div>
+        `;
+        grid.appendChild(div);
+    });
+    
+    // Productos sin categoría
+    const sinCat = productos.filter(p => !categoriasCatalogo.includes(p.categoria)).length;
+    if (sinCat > 0) {
+        const div = document.createElement('div');
+        div.style.cssText = 'background:#fef2f2; padding:18px; border-radius:12px; border:1px solid #fecaca; text-align:center;';
+        div.innerHTML = `
+            <div style="font-weight:700; color:var(--danger); font-size:14px; margin-bottom:8px;">Sin Categoría</div>
+            <div style="font-size:24px; font-weight:800; color:var(--text-dark);">${sinCat}</div>
+            <div style="font-size:11px; color:#64748b; margin-top:4px;">Requieren asignación</div>
+        `;
+        grid.appendChild(div);
+    }
+}
+
+function agregarNuevaCategoria() {
+    const input = document.getElementById('newCategoryInput');
+    const nombre = input.value.trim();
+    
+    if (!nombre) {
+        showToast("Ingresa un nombre para la categoría", "danger");
+        return;
+    }
+    
+    if (nombre.length < 2) {
+        showToast("El nombre debe tener al menos 2 caracteres", "danger");
+        return;
+    }
+    
+    if (categoriasCatalogo.some(c => c.toLowerCase() === nombre.toLowerCase())) {
+        showToast("Ya existe una categoría con ese nombre", "danger");
+        return;
+    }
+    
+    categoriasCatalogo.push(nombre);
+    guardarCategorias();
+    input.value = '';
+    
+    renderizarListaCategoriasAdmin();
+    renderizarResumenCategorias();
+    renderizarNavbarCategorias();
+    renderizarSelectCategorias();
+    
+    showToast(`✓ Categoría "${nombre}" creada exitosamente`);
+}
+
+function editarCategoria(idx) {
+    const label = document.getElementById(`cat-label-${idx}`);
+    const nombreActual = categoriasCatalogo[idx];
+    
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = nombreActual;
+    input.className = 'inline-edit-input';
+    input.maxLength = 30;
+    
+    label.replaceWith(input);
+    input.focus();
+    input.select();
+    
+    const guardar = () => {
+        const nuevoNombre = input.value.trim();
+        
+        if (!nuevoNombre || nuevoNombre.length < 2) {
+            showToast("Nombre inválido. Cancelado.", "danger");
+            renderizarListaCategoriasAdmin();
+            return;
+        }
+        
+        if (nuevoNombre.toLowerCase() !== nombreActual.toLowerCase() && 
+            categoriasCatalogo.some((c, i) => i !== idx && c.toLowerCase() === nuevoNombre.toLowerCase())) {
+            showToast("Ya existe una categoría con ese nombre", "danger");
+            renderizarListaCategoriasAdmin();
+            return;
+        }
+        
+        // Actualizar productos que tengan la categoría antigua
+        productos.forEach(p => {
+            if (p.categoria === nombreActual) {
+                p.categoria = nuevoNombre;
+            }
+        });
+        localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+        
+        categoriasCatalogo[idx] = nuevoNombre;
+        guardarCategorias();
+        
+        renderizarListaCategoriasAdmin();
+        renderizarResumenCategorias();
+        renderizarNavbarCategorias();
+        renderizarSelectCategorias();
+        renderProductos();
+        
+        showToast(`✓ Categoría actualizada a "${nuevoNombre}"`);
+    };
+    
+    input.addEventListener('blur', guardar);
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+        if (e.key === 'Escape') { renderizarListaCategoriasAdmin(); }
+    });
+}
+
+function eliminarCategoria(idx) {
+    const cat = categoriasCatalogo[idx];
+    const productosEnCat = productos.filter(p => p.categoria === cat).length;
+    
+    let mensaje = `¿Eliminar la categoría "${cat}"?`;
+    if (productosEnCat > 0) {
+        mensaje += `\n\nHay ${productosEnCat} producto(s) en esta categoría. Serán marcados como "Sin Categoría".`;
+    }
+    
+    if (!confirm(mensaje)) return;
+    
+    // Marcar productos como sin categoría
+    productos.forEach(p => {
+        if (p.categoria === cat) {
+            p.categoria = "Sin Categoría";
+        }
+    });
+    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+    
+    categoriasCatalogo.splice(idx, 1);
+    guardarCategorias();
+    
+    // Si la categoría actual filtrada fue eliminada, volver a "Todos"
+    if (categoriaActual === cat) {
+        categoriaActual = "Todos";
+        document.getElementById('seccionTitulo').textContent = "Todos los Productos";
+    }
+    
+    renderizarListaCategoriasAdmin();
+    renderizarResumenCategorias();
+    renderizarNavbarCategorias();
+    renderizarSelectCategorias();
+    renderProductos();
+    
+    showToast(`Categoría "${cat}" eliminada`, "danger");
+}
+
 // APP SYSTEM INITIALIZER
 window.addEventListener('DOMContentLoaded', () => {
     syncTiendaUI();
+    renderizarNavbarCategorias();
+    renderizarSelectCategorias();
     renderProductos();
     updateLivePreview();
 });
@@ -789,10 +1190,22 @@ function switchTab(tabId, btn) {
     document.getElementById(tabId).classList.add('active');
     btn.classList.add('active');
     
-    const titulos = { 'tab-tienda': 'Personalización de Apariencia', 'tab-nuevo': 'Gestión de Catálogo / Alta de Producto', 'tab-inventario': 'Consola de Control de Existencias' };
+    const titulos = { 
+        'tab-tienda': 'Personalización de Apariencia', 
+        'tab-categorias': 'Gestión de Categorías del Catálogo',
+        'tab-nuevo': 'Gestión de Catálogo / Alta de Producto', 
+        'tab-inventario': 'Consola de Control de Existencias' 
+    };
     document.getElementById('adminSectionTitle').textContent = titulos[tabId];
     
     if(tabId === 'tab-inventario') renderInventarioTabla();
+    if(tabId === 'tab-categorias') {
+        renderizarListaCategoriasAdmin();
+        renderizarResumenCategorias();
+    }
+    if(tabId === 'tab-nuevo') {
+        renderizarSelectCategorias();
+    }
 }
 
 // DATA SYNC MANAGER
@@ -847,6 +1260,7 @@ function renderProductos() {
                 </div>
                 <div class="card-info">
                     <span class="category-tag">${p.categoria}</span>
+                    ${p.codigo ? `<span class="code-badge">COD: ${p.codigo}</span>` : ''}
                     <h3>${p.nombre}</h3>
                     <p class="price">$${p.precio}</p>
                     <span class="stock-tag">${sinStock ? 'AGOTADO EN ALMACÉN' : `Disponibles: ${p.stock} u.`}</span>
@@ -867,9 +1281,10 @@ function filtrarCategoria(cat, elem) {
 
 // LIVE PREVIEW GENERATOR
 function updateLivePreview() {
+    const codigo = document.getElementById('prodCodigo').value || "COD-000";
     const nombre = document.getElementById('prodNombre').value || "Nombre de tu Producto Estrella";
     const precio = document.getElementById('prodPrecio').value || "0.000";
-    const categoria = document.getElementById('prodCategoria').value;
+    const categoria = document.getElementById('prodCategoria').value || "Sin Categoría";
     const stock = parseInt(document.getElementById('prodStock').value) || 0;
     const urlImg = document.getElementById('prodUrlImg').value;
     
@@ -885,8 +1300,9 @@ function updateLivePreview() {
             </div>
             <div class="card-info">
                 <span class="category-tag">${categoria}</span>
+                <span class="code-badge">COD: ${codigo}</span>
                 <h3>${nombre}</h3>
-                <p class="price">$${previewBox ? precio : '0.000'}</p>
+                <p class="price">$${precio}</p>
                 <span class="stock-tag">${sinStock ? 'AGOTADO EN ALMACÉN' : `Disponibles: ${stock} u.`}</span>
             </div>
         </div>
@@ -897,11 +1313,25 @@ function updateLivePreview() {
 function guardarNuevoProducto() {
     let isValid = true;
     
+    const codigoInput = document.getElementById('prodCodigo');
     const nombreInput = document.getElementById('prodNombre');
     const precioInput = document.getElementById('prodPrecio');
     const stockInput = document.getElementById('prodStock');
     const catSelect = document.getElementById('prodCategoria');
     const urlImgInput = document.getElementById('prodUrlImg');
+
+    // Validación de código único
+    if (!codigoInput.value || codigoInput.value.trim().length < 2) {
+        document.getElementById('valCodigo').classList.add('invalid');
+        isValid = false;
+    } else if (productos.some(p => p.codigo && p.codigo.toLowerCase() === codigoInput.value.trim().toLowerCase())) {
+        document.getElementById('valCodigo').classList.add('invalid');
+        document.querySelector('#valCodigo .invalid-feedback').textContent = "Este código ya existe en otro producto.";
+        isValid = false;
+    } else { 
+        document.getElementById('valCodigo').classList.remove('invalid');
+        document.querySelector('#valCodigo .invalid-feedback').textContent = "El código es obligatorio (único).";
+    }
 
     if (!nombreInput.value || nombreInput.value.trim().length < 3) {
         document.getElementById('valNombre').classList.add('invalid');
@@ -925,9 +1355,10 @@ function guardarNuevoProducto() {
     }
 
     const nuevoP = {
+        codigo: codigoInput.value.trim().toUpperCase(),
         nombre: nombreInput.value.trim(),
         precio: precioInput.value.trim(),
-        categoria: catSelect.value,
+        categoria: catSelect.value || "Sin Categoría",
         img: imagenProductoBase64 || urlImgInput.value || 'https://via.placeholder.com/300?text=Cosmetico',
         stock: parseInt(stockInput.value)
     };
@@ -935,6 +1366,7 @@ function guardarNuevoProducto() {
     productos.unshift(nuevoP); 
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
     
+    codigoInput.value = "";
     nombreInput.value = "";
     precioInput.value = "";
     stockInput.value = "10";
@@ -944,7 +1376,7 @@ function guardarNuevoProducto() {
     
     renderProductos();
     updateLivePreview();
-    showToast(`¡${nuevoP.nombre} ha sido publicado exitosamente!`);
+    showToast(`¡${nuevoP.nombre} (${nuevoP.codigo}) ha sido publicado exitosamente!`);
 }
 
 // INVENTORY SPREADSHEET MANAGER
@@ -959,6 +1391,7 @@ function renderInventarioTabla() {
         tbody.innerHTML += `
             <tr id="row-inv-${index}">
                 <td><img src="${p.img || 'https://via.placeholder.com/50?text=Item'}" style="width:40px; height:40px; object-fit:contain; border-radius:6px; background:#f8fafc; border:1px solid var(--gray-border);"></td>
+                <td><span class="code-badge">${p.codigo || '—'}</span></td>
                 <td style="font-weight:600;">${p.nombre}</td>
                 <td><span style="font-size:11px; font-weight:700; background:var(--light-pink); padding:4px 8px; border-radius:10px; color:var(--primary-pink);">${p.categoria}</span></td>
                 <td style="font-weight:700;">$${p.precio}</td>
@@ -967,11 +1400,35 @@ function renderInventarioTabla() {
                 </td>
                 <td><span style="${statusClass}">${statusText}</span></td>
                 <td style="text-align:center;">
+                    <button style="background:none; border:none; font-size:16px; cursor:pointer; padding:6px;" onclick="editarCodigoProducto(${index})" title="Editar código">🔖</button>
                     <button style="background:none; border:none; font-size:16px; cursor:pointer; padding:6px;" onclick="eliminarProducto(${index})">🗑️</button>
                 </td>
             </tr>
         `;
     });
+}
+
+function editarCodigoProducto(idx) {
+    const nuevoCodigo = prompt(`Editar código del producto "${productos[idx].nombre}":`, productos[idx].codigo || '');
+    if (nuevoCodigo === null) return;
+    
+    const codigoLimpio = nuevoCodigo.trim().toUpperCase();
+    
+    if (!codigoLimpio || codigoLimpio.length < 2) {
+        showToast("Código inválido (mínimo 2 caracteres)", "danger");
+        return;
+    }
+    
+    if (productos.some((p, i) => i !== idx && p.codigo && p.codigo.toLowerCase() === codigoLimpio.toLowerCase())) {
+        showToast("Ya existe otro producto con ese código", "danger");
+        return;
+    }
+    
+    productos[idx].codigo = codigoLimpio;
+    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+    renderInventarioTabla();
+    renderProductos();
+    showToast(`Código actualizado a "${codigoLimpio}"`);
 }
 
 function actualizarStockLinea(idx, nuevoStock) {
@@ -985,7 +1442,10 @@ function filtrarTablaInventario(busqueda) {
     productos.forEach((p, index) => {
         const fila = document.getElementById(`row-inv-${index}`);
         if(!fila) return;
-        if(p.nombre.toLowerCase().includes(query) || p.categoria.toLowerCase().includes(query)){
+        const matchNombre = p.nombre.toLowerCase().includes(query);
+        const matchCategoria = p.categoria.toLowerCase().includes(query);
+        const matchCodigo = (p.codigo || '').toLowerCase().includes(query);
+        if(matchNombre || matchCategoria || matchCodigo){
             fila.style.display = "table-row";
         } else {
             fila.style.display = "none";
@@ -1075,7 +1535,7 @@ function actualizarCarrito() {
     carrito.forEach((item) => {
         div.innerHTML += `
             <div class="cart-item">
-                <span><b>${item.nombre}</b></span> 
+                <span><b>${item.nombre}</b>${item.codigo ? `<br><small style="color:#64748b;">Cod: ${item.codigo}</small>` : ''}</span> 
                 <span>$${item.precio}</span>
             </div>`;
         suma += parseInt(item.precio.replace(/\./g, ''));
@@ -1099,7 +1559,7 @@ function comprar() {
     let total = 0;
     
     carrito.forEach(item => {
-        mensaje += "- " + item.nombre + " ($" + (item.price || item.precio) + ")\n";
+        mensaje += "- [" + (item.codigo || 'S/C') + "] " + item.nombre + " ($" + (item.price || item.precio) + ")\n";
         total += parseInt(item.precio.replace(/\./g, ''));
         const ori = productos.find(p => p.nombre === item.nombre);
         if (ori) ori.stock--;
@@ -1120,3 +1580,4 @@ function comprar() {
 </script>
 </body>
 </html>
+
