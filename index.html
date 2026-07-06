@@ -281,7 +281,8 @@ main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
 .form-group input[type="text"], 
 .form-group input[type="number"], 
 .form-group input[type="password"], 
-.form-group select { 
+.form-group select,
+.form-group input[type="file"] { 
     width: 100%; padding: 12px 16px; border: 1px solid var(--gray-border); 
     border-radius: 10px; box-sizing: border-box; font-family: inherit; font-size: 14px;
     transition: all 0.2s ease; background: #f8fafc; color: var(--text-dark);
@@ -315,6 +316,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
 }
 .toast.success { border-left-color: var(--success); }
 .toast.danger { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
 @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
 .table-wrapper { background: white; border-radius: 12px; border: 1px solid var(--gray-border); overflow: hidden; }
@@ -368,6 +370,106 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
 }
 .btn-add-categoria:hover { background: var(--text-dark); transform: translateY(-1px); }
+
+/* ESTILOS PARA PANEL DE SINCRONIZACIÓN */
+.sync-status-card {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 2px solid var(--gray-border);
+}
+
+.sync-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.sync-status-indicator.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.sync-status-indicator.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.sync-status-indicator.warning {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.sync-buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.sync-btn {
+    padding: 14px 20px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+}
+
+.sync-btn:hover { transform: translateY(-2px); }
+.sync-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.sync-btn.primary {
+    background: var(--primary-pink);
+    color: white;
+    box-shadow: 0 4px 12px rgba(228, 87, 143, 0.3);
+}
+.sync-btn.primary:hover { background: var(--text-dark); }
+
+.sync-btn.secondary {
+    background: var(--text-dark);
+    color: white;
+    box-shadow: 0 4px 12px rgba(74, 40, 52, 0.2);
+}
+.sync-btn.secondary:hover { background: #2d1a22; }
+
+.sync-btn.success {
+    background: var(--success);
+    color: white;
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3);
+}
+.sync-btn.success:hover { background: #25a093; }
+
+.sync-btn.warning {
+    background: var(--warning);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 183, 3, 0.3);
+}
+.sync-btn.warning:hover { background: #e0a000; }
+
+.sync-info {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 15px;
+    padding: 12px;
+    background: var(--gray-light);
+    border-radius: 8px;
+    border-left: 3px solid var(--primary-pink);
+}
 
 @media (max-width: 900px) {
     .admin-content { grid-template-columns: 1fr; }
@@ -448,9 +550,10 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
         <div class="admin-sidebar">
             <div class="admin-brand-area">
                 <h3 id="sidebarBrandName">XIOLOVER ADMIN</h3>
-                <p>v2.0 • Frontend Consola</p>
+                <p>v3.0 • Consola con Respaldo</p>
                 <div class="admin-nav-menu">
-                    <button class="admin-nav-item active" onclick="switchTab('tab-tienda', this)">Apariencia y Tienda</button>
+                    <button class="admin-nav-item active" onclick="switchTab('tab-sincronizacion', this)">☁️ Sincronización</button>
+                    <button class="admin-nav-item" onclick="switchTab('tab-tienda', this)">Apariencia y Tienda</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-nuevo', this)">Agregar Producto</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-categorias', this)">Gestión de Categorías</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-inventario', this)">Control de Inventario</button>
@@ -461,17 +564,69 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 
         <div class="admin-main-container">
             <div class="admin-top-navbar">
-                <h2 id="adminSectionTitle">Personalización de Apariencia</h2>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <button onclick="descargarDatosDeNube().then(exito => { if(exito) { syncTiendaUI(); renderProductos(); updateLivePreview(); renderCategoriasAdmin(); } })" style="background:var(--primary-pink); color:white; border:none; padding:8px 16px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer;">⬇️ Sincronizar</button>
-                    <button onclick="subirDatosANube()" style="background:var(--text-dark); color:white; border:none; padding:8px 16px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer;">⬆️ Guardar en Nube</button>
-                    <div style="font-size:13px; font-weight:600; background:var(--light-pink); padding:6px 14px; border-radius:20px; color:var(--primary-pink)">☁️ Nube Activa</div>
+                <h2 id="adminSectionTitle">Centro de Sincronización</h2>
+                <div id="estadoConexionHeader" style="font-size:13px; font-weight:600; background:var(--warning); padding:6px 14px; border-radius:20px; color:white;">
+                    ⚠️ Verificando...
                 </div>
             </div>
 
             <div class="admin-body">
                 
-                <div id="tab-tienda" class="admin-view active">
+                <!-- NUEVA PESTAÑA: SINCRONIZACIÓN -->
+                <div id="tab-sincronizacion" class="admin-view active">
+                    <div class="sync-status-card">
+                        <h4>Estado de la Conexión con la Nube</h4>
+                        <div id="syncStatusIndicator" class="sync-status-indicator warning">
+                            <span style="font-size:20px;">️</span>
+                            <div>
+                                <div style="font-size:14px;">Verificando conexión...</div>
+                                <div style="font-size:12px; opacity:0.8;">Esperando respuesta del servidor</div>
+                            </div>
+                        </div>
+                        
+                        <div class="sync-info">
+                            <strong>💡 Información importante:</strong><br>
+                            • JSONBin gratuito tiene límite de <strong>100KB</strong> por archivo<br>
+                            • Las imágenes en base64 pueden ser muy grandes<br>
+                            • Usa <strong>URLs de imágenes</strong> en lugar de subirlas desde el dispositivo<br>
+                            • Siempre tienes un respaldo local automático
+                        </div>
+                    </div>
+
+                    <div class="sync-status-card">
+                        <h4>Acciones de Sincronización</h4>
+                        <div class="sync-buttons-grid">
+                            <button class="sync-btn primary" onclick="subirDatosANube(true)" id="btnSubirNube">
+                                ⬆️ Subir a la Nube
+                            </button>
+                            <button class="sync-btn secondary" onclick="descargarDatosDeNube()" id="btnDescargarNube">
+                                ️ Descargar de la Nube
+                            </button>
+                            <button class="sync-btn success" onclick="exportarDatosJSON()">
+                                 Exportar Respaldo (JSON)
+                            </button>
+                            <button class="sync-btn warning" onclick="document.getElementById('importarFileInput').click()">
+                                📂 Importar Respaldo (JSON)
+                            </button>
+                        </div>
+                        <input type="file" id="importarFileInput" accept=".json" style="display:none;" onchange="importarDatosJSON(this)">
+                        
+                        <div class="sync-info" style="margin-top:20px;">
+                            <strong>📊 Estadísticas actuales:</strong><br>
+                            <span id="statsInfo">Cargando...</span>
+                        </div>
+                    </div>
+
+                    <div class="sync-status-card">
+                        <h4>Registro de Actividad</h4>
+                        <div id="logActividad" style="max-height:300px; overflow-y:auto; font-family:monospace; font-size:12px; background:#f8fafc; padding:15px; border-radius:8px; border:1px solid var(--gray-border);">
+                            <div style="color:#64748b;">Sistema iniciado. Esperando acciones...</div>
+                        </div>
+                        <button class="sync-btn secondary" style="margin-top:15px; width:auto; padding:10px 20px;" onclick="limpiarLog()">️ Limpiar Registro</button>
+                    </div>
+                </div>
+
+                <div id="tab-tienda" class="admin-view">
                     <div class="dashboard-card">
                         <h4>Identidad de Marca y Contenido</h4>
                         <div class="grid-form-2">
@@ -616,7 +771,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     <div class="dashboard-card">
                         <h4>Categorías Existentes</h4>
                         <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">
-                            Haz hover sobre una categoría para ver el botón de eliminar. ️ No se puede eliminar una categoría que tenga productos asignados.
+                            Haz hover sobre una categoría para ver el botón de eliminar. ⚠️ No se puede eliminar una categoría que tenga productos asignados.
                         </p>
                         <div class="categorias-grid" id="categoriasGrid"></div>
                     </div>
@@ -654,7 +809,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 
 <script>
 // ==========================================
-// CONFIGURACIÓN JSONBIN.IO (SINCRONIZACIÓN EN LA NUBE)
+// CONFIGURACIÓN JSONBIN.IO
 // ==========================================
 const JSONBIN_CONFIG = {
     BIN_ID: '6a4c01f1f5f4af5e2968a7e7',
@@ -662,14 +817,99 @@ const JSONBIN_CONFIG = {
     API_URL: 'https://api.jsonbin.io/v3/b/6a4c01f1f5f4af5e2968a7e7'
 };
 
+// ==========================================
+// SISTEMA DE LOGS
+// ==========================================
+function agregarLog(mensaje, tipo = 'info') {
+    const logDiv = document.getElementById('logActividad');
+    if (!logDiv) return;
+    
+    const hora = new Date().toLocaleTimeString('es-CO');
+    const colores = {
+        'info': '#64748b',
+        'success': '#059669',
+        'error': '#dc2626',
+        'warning': '#d97706'
+    };
+    
+    const entry = document.createElement('div');
+    entry.style.cssText = `padding:6px 0; border-bottom:1px solid #e2e8f0; color:${colores[tipo] || colores.info};`;
+    entry.innerHTML = `<strong>[${hora}]</strong> ${mensaje}`;
+    
+    logDiv.insertBefore(entry, logDiv.firstChild);
+    
+    // Mantener solo los últimos 50 logs
+    while (logDiv.children.length > 50) {
+        logDiv.removeChild(logDiv.lastChild);
+    }
+}
+
+function limpiarLog() {
+    const logDiv = document.getElementById('logActividad');
+    if (logDiv) {
+        logDiv.innerHTML = '<div style="color:#64748b;">Registro limpiado.</div>';
+    }
+}
+
+// ==========================================
+// ACTUALIZAR ESTADO DE CONEXIÓN
+// ==========================================
+function actualizarEstadoConexion(estado, mensaje) {
+    const indicador = document.getElementById('syncStatusIndicator');
+    const header = document.getElementById('estadoConexionHeader');
+    
+    if (estado === 'success') {
+        indicador.className = 'sync-status-indicator success';
+        indicador.innerHTML = `<span style="font-size:20px;">✅</span><div><div style="font-size:14px;">${mensaje}</div><div style="font-size:12px; opacity:0.8;">Conectado correctamente</div></div>`;
+        if (header) { header.style.background = 'var(--success)'; header.textContent = '✅ Conectado'; }
+    } else if (estado === 'error') {
+        indicador.className = 'sync-status-indicator error';
+        indicador.innerHTML = `<span style="font-size:20px;">❌</span><div><div style="font-size:14px;">${mensaje}</div><div style="font-size:12px; opacity:0.8;">Usando datos locales</div></div>`;
+        if (header) { header.style.background = 'var(--danger)'; header.textContent = '❌ Error'; }
+    } else {
+        indicador.className = 'sync-status-indicator warning';
+        indicador.innerHTML = `<span style="font-size:20px;">⚠️</span><div><div style="font-size:14px;">${mensaje}</div><div style="font-size:12px; opacity:0.8;">Verificando...</div></div>`;
+        if (header) { header.style.background = 'var(--warning)'; header.textContent = '⚠️ Verificando'; }
+    }
+}
+
+function actualizarEstadisticas() {
+    const statsInfo = document.getElementById('statsInfo');
+    if (!statsInfo) return;
+    
+    const tamanoProductos = new Blob([JSON.stringify(productos)]).size;
+    const tamanoTotal = new Blob([JSON.stringify({productos, categorias, tiendaConfig})]).size;
+    
+    statsInfo.innerHTML = `
+        📦 <strong>${productos.length}</strong> productos registrados<br>
+        🏷️ <strong>${categorias.length}</strong> categorías activas<br>
+        💾 Tamaño de datos: <strong>${(tamanoTotal / 1024).toFixed(2)} KB</strong> 
+        ${tamanoTotal > 100000 ? '<span style="color:var(--danger);">⚠️ Excede el límite de 100KB de JSONBin</span>' : '<span style="color:var(--success);">✓ Dentro del límite</span>'}
+    `;
+}
+
+// ==========================================
+// FUNCIONES DE SINCRONIZACIÓN CON LA NUBE
+// ==========================================
 async function subirDatosANube(mostrarMensaje = true) {
     try {
+        agregarLog('Iniciando subida a la nube...', 'info');
+        
+        // Verificar tamaño antes de subir
         const datos = {
             productos: productos,
             tiendaConfig: tiendaConfig,
             categorias: categorias,
             ultimaActualizacion: new Date().toISOString()
         };
+        
+        const tamano = new Blob([JSON.stringify(datos)]).size;
+        if (tamano > 100000) {
+            const msg = `⚠️ Los datos pesan ${(tamano/1024).toFixed(2)}KB (límite: 100KB). Reduce imágenes en base64.`;
+            agregarLog(msg, 'warning');
+            if (mostrarMensaje) showToast(msg, 'warning');
+            return false;
+        }
         
         const response = await fetch(JSONBIN_CONFIG.API_URL, {
             method: 'PUT',
@@ -681,22 +921,32 @@ async function subirDatosANube(mostrarMensaje = true) {
         });
 
         if (response.ok) {
+            const result = await response.json();
+            agregarLog('✅ Datos subidos exitosamente a la nube', 'success');
+            actualizarEstadoConexion('success', 'Datos sincronizados con la nube');
             if (mostrarMensaje) showToast("✅ Cambios guardados en la nube", "success");
             return true;
         } else {
-            console.error('Error al subir:', response.status);
-            if (mostrarMensaje) showToast("❌ Error al guardar en la nube", "danger");
+            const errorText = await response.text();
+            const msg = `Error ${response.status}: ${errorText.substring(0, 100)}`;
+            agregarLog(`❌ ${msg}`, 'error');
+            actualizarEstadoConexion('error', 'Error al subir: ' + response.status);
+            if (mostrarMensaje) showToast("❌ Error: " + response.status, "danger");
             return false;
         }
     } catch (error) {
-        console.error('Error de conexión:', error);
-        if (mostrarMensaje) showToast("❌ Error de red al sincronizar", "danger");
+        const msg = `Error de red: ${error.message}`;
+        agregarLog(`❌ ${msg}`, 'error');
+        actualizarEstadoConexion('error', 'Error de conexión');
+        if (mostrarMensaje) showToast(" Error de red", "danger");
         return false;
     }
 }
 
 async function descargarDatosDeNube() {
     try {
+        agregarLog('Descargando datos desde la nube...', 'info');
+        
         const response = await fetch(`${JSONBIN_CONFIG.API_URL}/latest`, {
             method: 'GET',
             headers: { 'X-Master-Key': JSONBIN_CONFIG.MASTER_KEY }
@@ -709,6 +959,7 @@ async function descargarDatosDeNube() {
             if (datos && datos.productos) {
                 productos = datos.productos;
                 localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+                agregarLog(`📥 ${productos.length} productos descargados`, 'success');
             }
             
             if (datos && datos.tiendaConfig) {
@@ -721,18 +972,120 @@ async function descargarDatosDeNube() {
                 localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
             }
             
+            // Actualizar toda la interfaz
+            syncTiendaUI();
+            renderSelectCategorias();
+            renderCategoriasAdmin();
+            renderNavCategorias();
+            renderProductos();
+            updateLivePreview();
+            actualizarEstadisticas();
+            
+            actualizarEstadoConexion('success', 'Datos descargados de la nube');
             showToast("✅ Datos sincronizados desde la nube", "success");
             return true;
         } else {
-            console.error('Error al descargar:', response.status);
+            const msg = `Error ${response.status} al descargar`;
+            agregarLog(`❌ ${msg}`, 'error');
+            actualizarEstadoConexion('error', 'Error al descargar: ' + response.status);
+            showToast("❌ Error al descargar: " + response.status, "danger");
             return false;
         }
     } catch (error) {
-        console.error('Error de conexión:', error);
+        const msg = `Error de red: ${error.message}`;
+        agregarLog(` ${msg}`, 'error');
+        actualizarEstadoConexion('error', 'Error de conexión');
+        showToast("❌ Error de red", "danger");
         return false;
     }
 }
 
+// ==========================================
+// EXPORTAR E IMPORTAR JSON (RESPALDO LOCAL)
+// ==========================================
+function exportarDatosJSON() {
+    try {
+        const datos = {
+            productos: productos,
+            categorias: categorias,
+            tiendaConfig: tiendaConfig,
+            fechaExportacion: new Date().toISOString(),
+            version: '3.0'
+        };
+        
+        const jsonStr = JSON.stringify(datos, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `xiolover_respaldo_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        agregarLog(`💾 Respaldo exportado: ${productos.length} productos`, 'success');
+        showToast("✅ Respaldo descargado exitosamente", "success");
+    } catch (error) {
+        agregarLog(`❌ Error al exportar: ${error.message}`, 'error');
+        showToast("❌ Error al exportar", "danger");
+    }
+}
+
+function importarDatosJSON(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const datos = JSON.parse(e.target.result);
+            
+            if (!datos.productos || !Array.isArray(datos.productos)) {
+                throw new Error('El archivo no tiene el formato correcto');
+            }
+            
+            if (confirm(`¿Importar ${datos.productos.length} productos? Esto reemplazará los datos actuales.`)) {
+                productos = datos.productos;
+                if (datos.categorias) categorias = datos.categorias;
+                if (datos.tiendaConfig) tiendaConfig = datos.tiendaConfig;
+                
+                // Guardar en localStorage
+                localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+                localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
+                localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
+                
+                // Actualizar interfaz
+                syncTiendaUI();
+                renderSelectCategorias();
+                renderCategoriasAdmin();
+                renderNavCategorias();
+                renderProductos();
+                updateLivePreview();
+                renderInventarioTabla();
+                actualizarEstadisticas();
+                
+                agregarLog(`📂 Importados ${productos.length} productos desde respaldo`, 'success');
+                showToast("✅ Datos importados exitosamente", "success");
+                
+                // Opcional: subir a la nube después de importar
+                if (confirm('¿Deseas subir estos datos a la nube ahora?')) {
+                    subirDatosANube(true);
+                }
+            }
+        } catch (error) {
+            agregarLog(`❌ Error al importar: ${error.message}`, 'error');
+            showToast("❌ Error: " + error.message, "danger");
+        }
+    };
+    reader.readAsText(file);
+    input.value = ''; // Resetear para poder importar el mismo archivo otra vez
+}
+
+// ==========================================
+// DATOS Y VARIABLES GLOBALES
+// ==========================================
 const PIN_CORRECTO = "55555"; 
 let intentosFallidos = 0;
 let categoriaActual = "Todos";
@@ -786,6 +1139,9 @@ function showToast(message, type = "success") {
     setTimeout(() => { toast.remove(); }, 3500);
 }
 
+// ==========================================
+// FUNCIONES DE CATEGORÍAS
+// ==========================================
 function renderSelectCategorias() {
     const select = document.getElementById('prodCategoria');
     select.innerHTML = '';
@@ -799,6 +1155,7 @@ function renderSelectCategorias() {
 
 function renderCategoriasAdmin() {
     const grid = document.getElementById('categoriasGrid');
+    if (!grid) return;
     grid.innerHTML = '';
 
     if (categorias.length === 0) {
@@ -848,8 +1205,10 @@ function agregarCategoria() {
     renderSelectCategorias();
     renderCategoriasAdmin();
     renderNavCategorias();
+    actualizarEstadisticas();
     
     showToast(`✅ Categoría "${nombreNormalizado}" creada exitosamente`);
+    agregarLog(`🏷️ Categoría creada: ${nombreNormalizado}`, 'success');
     
     subirDatosANube(false);
 }
@@ -871,8 +1230,10 @@ function eliminarCategoria(index) {
         renderSelectCategorias();
         renderCategoriasAdmin();
         renderNavCategorias();
+        actualizarEstadisticas();
         
         showToast(`🗑️ Categoría "${categoriaAEliminar}" eliminada`, "danger");
+        agregarLog(`🗑️ Categoría eliminada: ${categoriaAEliminar}`, 'warning');
         
         subirDatosANube(false);
     }
@@ -880,6 +1241,7 @@ function eliminarCategoria(index) {
 
 function renderNavCategorias() {
     const nav = document.getElementById('navCategorias');
+    if (!nav) return;
     nav.innerHTML = '';
     
     const btnTodos = document.createElement('a');
@@ -900,11 +1262,17 @@ function renderNavCategorias() {
     });
 }
 
+// ==========================================
+// INICIALIZACIÓN
+// ==========================================
 window.addEventListener('DOMContentLoaded', async () => {
+    agregarLog('🚀 Sistema iniciado', 'info');
+    
+    // Intentar cargar desde la nube
     const exito = await descargarDatosDeNube();
     
     if (!exito) {
-        console.log('Usando datos locales como respaldo');
+        agregarLog('⚠️ Usando datos locales como respaldo', 'warning');
     }
     
     asignarIDsSiFaltan();
@@ -915,6 +1283,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     renderNavCategorias();
     renderProductos();
     updateLivePreview();
+    actualizarEstadisticas();
 });
 
 document.addEventListener('click', function(e) {
@@ -949,12 +1318,20 @@ function aplicarMarcaAgua() {
 function procesarImagenProducto(input) {
     const file = input.files[0];
     if (file) {
+        // Verificar tamaño (máximo 500KB para no saturar JSONBin)
+        if (file.size > 500000) {
+            showToast("⚠️ Imagen muy grande (máx 500KB). Usa una URL en su lugar.", "warning");
+            input.value = '';
+            return;
+        }
+        
         const reader = new FileReader();
         reader.onload = function(e) {
             imagenProductoBase64 = e.target.result;
             document.getElementById('prodUrlImg').value = ""; 
             updateLivePreview();
             showToast("Imagen de producto procesada");
+            agregarLog(`📷 Imagen cargada: ${(file.size/1024).toFixed(1)}KB`, 'info');
         };
         reader.readAsDataURL(file);
     }
@@ -980,6 +1357,7 @@ function switchTab(tabId, btn) {
     btn.classList.add('active');
     
     const titulos = { 
+        'tab-sincronizacion': 'Centro de Sincronización',
         'tab-tienda': 'Personalización de Apariencia', 
         'tab-nuevo': 'Gestión de Catálogo / Alta de Producto', 
         'tab-categorias': 'Gestión de Categorías',
@@ -989,6 +1367,31 @@ function switchTab(tabId, btn) {
     
     if(tabId === 'tab-inventario') renderInventarioTabla();
     if(tabId === 'tab-categorias') renderCategoriasAdmin();
+    if(tabId === 'tab-sincronizacion') {
+        actualizarEstadisticas();
+        // Verificar conexión al entrar a esta pestaña
+        verificarConexion();
+    }
+}
+
+async function verificarConexion() {
+    try {
+        const response = await fetch(`${JSONBIN_CONFIG.API_URL}/latest`, {
+            method: 'GET',
+            headers: { 'X-Master-Key': JSONBIN_CONFIG.MASTER_KEY }
+        });
+        
+        if (response.ok) {
+            actualizarEstadoConexion('success', 'Conectado a JSONBin.io');
+            agregarLog('✅ Conexión verificada con la nube', 'success');
+        } else {
+            actualizarEstadoConexion('error', 'Error: ' + response.status);
+            agregarLog(` Error de conexión: ${response.status}`, 'error');
+        }
+    } catch (error) {
+        actualizarEstadoConexion('error', 'Sin conexión');
+        agregarLog(`❌ Error: ${error.message}`, 'error');
+    }
 }
 
 function syncTiendaUI() {
@@ -1021,6 +1424,7 @@ async function guardarConfigTienda() {
     localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
     syncTiendaUI();
     showToast("Configuración general de identidad guardada");
+    agregarLog(' Configuración de tienda guardada', 'success');
     
     await subirDatosANube();
 }
@@ -1229,7 +1633,9 @@ async function guardarNuevoProducto() {
     renderProductos();
     updateLivePreview();
     renderCategoriasAdmin();
+    actualizarEstadisticas();
     showToast(`¡${nuevoP.nombre} ha sido publicado exitosamente!`);
+    agregarLog(`✨ Producto creado: ${nuevoP.nombre} (${nuevoP.codigo})`, 'success');
     
     await subirDatosANube();
 }
@@ -1267,6 +1673,7 @@ async function actualizarStockLinea(idx, nuevoStock) {
     productos[idx].stock = parseInt(nuevoStock) || 0;
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
     showToast("Inventario actualizado instantaneamente");
+    actualizarEstadisticas();
     await subirDatosANube(false);
 }
 
@@ -1285,12 +1692,15 @@ function filtrarTablaInventario(busqueda) {
 
 async function eliminarProducto(idx) {
     if(confirm("¿Estás seguro de que deseas retirar del catálogo este producto?")) {
+        const nombreProd = productos[idx].nombre;
         productos.splice(idx, 1);
         localStorage.setItem('db_prods_v2', JSON.stringify(productos));
         renderInventarioTabla();
         renderProductos();
         renderCategoriasAdmin();
+        actualizarEstadisticas();
         showToast("Producto removido del catálogo", "danger");
+        agregarLog(`🗑️ Producto eliminado: ${nombreProd}`, 'warning');
         await subirDatosANube();
     }
 }
@@ -1318,7 +1728,7 @@ function verificarPassword() {
         const panel = document.getElementById('adminPanel');
         panel.style.display = 'flex';
         setTimeout(() => panel.style.opacity = '1', 10);
-        switchTab('tab-tienda', document.querySelector('.admin-nav-item'));
+        switchTab('tab-sincronizacion', document.querySelector('.admin-nav-item'));
     } else {
         intentosFallidos++;
         document.getElementById('loginFormGroup').classList.add('invalid');
@@ -1399,8 +1809,9 @@ function comprar() {
     actualizarCarrito();
     toggleCart();
     renderProductos();
+    actualizarEstadisticas();
     
-    const urlFormat = "https://wa.me/573003896683?text=" + encodeURIComponent(mensaje);
+    const urlFormat = "https://wa.me/573133125208?text=" + encodeURIComponent(mensaje);
     window.open(urlFormat, "_blank");
 }
 </script>
