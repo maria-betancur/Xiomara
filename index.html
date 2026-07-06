@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GIRLY - Catálogo de Belleza y Consola Admin</title>
+<title>XIOLOVER - Catálogo de Belleza y Consola Admin</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
 <style>
 :root {
     --primary-pink: #e4578f; 
-    --girly-bg: #fcaecb;   
+    --xiolover-bg: #fcaecb;   
     --light-pink: #fff0f5;
     --text-dark: #4a2834;
     --card-bg: #ffffff;
@@ -33,7 +33,7 @@ body {
     margin: 0; padding: 0;
     font-family: var(--font-family);
     font-size: var(--font-size-base);
-    background: linear-gradient(to bottom, var(--girly-bg) 0%, #fcd0df 100%);
+    background: linear-gradient(to bottom, var(--xiolover-bg) 0%, #fcd0df 100%);
     color: var(--text-dark);
     min-height: 100vh;
     position: relative;
@@ -348,56 +348,26 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(228, 87, 143, 0.15);
 }
-.categoria-card .cat-nombre {
-    font-weight: 700;
-    font-size: 14px;
-    color: var(--text-dark);
-    margin-bottom: 8px;
-}
-.categoria-card .cat-count {
-    font-size: 11px;
-    color: #64748b;
-    font-weight: 600;
-}
+.categoria-card .cat-nombre { font-weight: 700; font-size: 14px; color: var(--text-dark); margin-bottom: 8px; }
+.categoria-card .cat-count { font-size: 11px; color: #64748b; font-weight: 600; }
 .categoria-card .cat-delete {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: var(--danger);
-    color: white;
-    border: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s;
+    position: absolute; top: 8px; right: 8px;
+    background: var(--danger); color: white; border: none;
+    width: 24px; height: 24px; border-radius: 50%;
+    cursor: pointer; font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s;
 }
 .categoria-card:hover .cat-delete { opacity: 1; }
 .categoria-card .cat-delete:hover { background: #c1121f; }
 
 .btn-add-categoria {
-    background: var(--primary-pink);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    background: var(--primary-pink); color: white; border: none;
+    padding: 12px 24px; border-radius: 10px;
+    font-weight: 700; font-size: 14px; cursor: pointer;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
 }
-.btn-add-categoria:hover {
-    background: var(--text-dark);
-    transform: translateY(-1px);
-}
+.btn-add-categoria:hover { background: var(--text-dark); transform: translateY(-1px); }
 
 @media (max-width: 900px) {
     .admin-content { grid-template-columns: 1fr; }
@@ -413,7 +383,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 <div class="toast-container" id="toastContainer"></div>
 
 <header id="mainHeader">
-    <div class="brand" id="storeNameView" onclick="filtrarCategoria('Todos', document.getElementById('btn-todos'))">GIRLY</div>
+    <div class="brand" id="storeNameView" onclick="filtrarCategoria('Todos', document.getElementById('btn-todos'))">XIOLOVER</div>
     <nav id="navCategorias">
         <a href="#" id="btn-todos" class="active" onclick="filtrarCategoria('Todos', this)">Todos</a>
     </nav>
@@ -424,7 +394,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 
 <main>
     <div class="promo-banner" id="bannerConfigBg">
-        <h1 id="bannerTitleView">Welcome to Girly World!</h1>
+        <h1 id="bannerTitleView">Welcome to Xiolover World!</h1>
         <p id="bannerDescView">Explora lo último en tendencias de belleza y maquillaje viral.</p>
     </div>
     
@@ -433,7 +403,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     </div>
     
     <div style="max-width: 500px; margin: 0 auto 30px auto; position: relative;">
-        <input type="text" id="buscadorCodigo" placeholder="🔍 Buscar producto por código (Ej: LAB-001)" 
+        <input type="text" id="buscadorCodigo" placeholder="xiolover" 
                oninput="buscarPorCodigo(this.value)" 
                style="width: 100%; padding: 14px 20px; border: 2px solid var(--gray-border); border-radius: 30px; 
                       font-family: inherit; font-size: 14px; font-weight: 600; color: var(--text-dark);
@@ -477,7 +447,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
         
         <div class="admin-sidebar">
             <div class="admin-brand-area">
-                <h3 id="sidebarBrandName">GIRLY ADMIN</h3>
+                <h3 id="sidebarBrandName">XIOLOVER ADMIN</h3>
                 <p>v2.0 • Frontend Consola</p>
                 <div class="admin-nav-menu">
                     <button class="admin-nav-item active" onclick="switchTab('tab-tienda', this)">Apariencia y Tienda</button>
@@ -531,9 +501,9 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Fondo Degradado (Girly BG)</label>
+                                <label>Fondo Degradado (Xiolover BG)</label>
                                 <div class="color-picker-wrapper">
-                                    <input type="color" id="cfgColorBg" onchange="cambiarEstiloDinamico('--girly-bg', this.value)">
+                                    <input type="color" id="cfgColorBg" onchange="cambiarEstiloDinamico('--xiolover-bg', this.value)">
                                     <span style="font-size:12px; font-weight:600; color:#475569;">Fondo Base</span>
                                 </div>
                             </div>
@@ -646,10 +616,9 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     <div class="dashboard-card">
                         <h4>Categorías Existentes</h4>
                         <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">
-                            Haz hover sobre una categoría para ver el botón de eliminar. ⚠️ No se puede eliminar una categoría que tenga productos asignados.
+                            Haz hover sobre una categoría para ver el botón de eliminar. ️ No se puede eliminar una categoría que tenga productos asignados.
                         </p>
-                        <div class="categorias-grid" id="categoriasGrid">
-                        </div>
+                        <div class="categorias-grid" id="categoriasGrid"></div>
                     </div>
                 </div>
 
@@ -776,7 +745,7 @@ let categorias = JSON.parse(localStorage.getItem('db_categorias_v1')) || [
 function generarIDProducto() {
     const timestamp = Date.now().toString(36).toUpperCase();
     const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-    return `GIRLY-${timestamp}-${random}`;
+    return `XIOLOVER-${timestamp}-${random}`;
 }
 
 function asignarIDsSiFaltan() {
@@ -789,7 +758,7 @@ function asignarIDsSiFaltan() {
 }
 
 const prodsDefecto = [
-    {id: generarIDProducto(), codigo: "LAB-001", nombre: "Caja Lip Combo Girly Premium", precio: "40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
+    {id: generarIDProducto(), codigo: "LAB-001", nombre: "Caja Lip Combo Xiolover Premium", precio: "40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
     {id: generarIDProducto(), codigo: "CEJ-001", nombre: "Tinte Fijador De Cejas Brow Set", precio: "38.000", categoria: "Cejas", img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=300", stock: 15},
     {id: generarIDProducto(), codigo: "MAQ-001", nombre: "Kit Base Humide + Obsequio Corrector", precio: "50.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300", stock: 5},
     {id: generarIDProducto(), codigo: "ACC-001", nombre: "Kit Brochas Fluffy x10 Montoc", precio: "60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0}
@@ -797,8 +766,8 @@ const prodsDefecto = [
 
 let productos = JSON.parse(localStorage.getItem('db_prods_v2')) || prodsDefecto;
 let tiendaConfig = JSON.parse(localStorage.getItem('db_store_cfg_v2')) || {
-    name: "GIRLY", 
-    title: "Welcome to Girly World!", 
+    name: "XIOLOVER", 
+    title: "Welcome to Xiolover World!", 
     desc: "Explora lo último en tendencias de belleza y maquillaje viral.",
     primaryColor: "#e4578f", 
     bgColor: "#fcaecb",
@@ -994,14 +963,14 @@ function procesarImagenProducto(input) {
 function cambiarEstiloDinamico(property, val) {
     document.documentElement.style.setProperty(property, val);
     if(property === '--primary-pink') tiendaConfig.primaryColor = val;
-    if(property === '--girly-bg') tiendaConfig.bgColor = val;
+    if(property === '--xiolover-bg') tiendaConfig.bgColor = val;
     if(property === '--font-family') tiendaConfig.typography = val;
     if(property === '--border-radius-base') tiendaConfig.borderRadius = val;
 }
 
 function liveUpdateStoreName(val) {
-    document.getElementById('storeNameView').textContent = val || "GIRLY";
-    document.getElementById('sidebarBrandName').textContent = (val || "GIRLY") + " ADMIN";
+    document.getElementById('storeNameView').textContent = val || "XIOLOVER";
+    document.getElementById('sidebarBrandName').textContent = (val || "XIOLOVER") + " ADMIN";
 }
 
 function switchTab(tabId, btn) {
@@ -1038,14 +1007,14 @@ function syncTiendaUI() {
     document.getElementById('cfgBorders').value = tiendaConfig.borderRadius;
 
     cambiarEstiloDinamico('--primary-pink', tiendaConfig.primaryColor);
-    cambiarEstiloDinamico('--girly-bg', tiendaConfig.bgColor);
+    cambiarEstiloDinamico('--xiolover-bg', tiendaConfig.bgColor);
     cambiarEstiloDinamico('--font-family', tiendaConfig.typography);
     cambiarEstiloDinamico('--border-radius-base', tiendaConfig.borderRadius);
     aplicarMarcaAgua();
 }
 
 async function guardarConfigTienda() {
-    tiendaConfig.name = document.getElementById('cfgStoreName').value || "GIRLY";
+    tiendaConfig.name = document.getElementById('cfgStoreName').value || "XIOLOVER";
     tiendaConfig.title = document.getElementById('cfgBannerTitle').value || "";
     tiendaConfig.desc = document.getElementById('cfgBannerDesc').value || "";
     
