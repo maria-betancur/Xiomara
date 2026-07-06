@@ -3,16 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> Xiolover - Catálogo de Belleza y Consola Admin</title>
+<title>GIRLY - Catálogo de Belleza y Consola Admin</title>
 
+<!-- Tipografías de Google Fonts para personalización interactiva -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
+/* VARIABLES DINÁMICAS (Tematización nativa mediante CSS Custom Properties) */
 :root {
     --primary-pink: #e4578f; 
-    --Xiolover-bg: #fcaecb;   
+    --girly-bg: #fcaecb;   
     --light-pink: #fff0f5;
     --text-dark: #4a2834;
     --card-bg: #ffffff;
@@ -20,6 +22,8 @@
     --font-size-base: 14px;
     --border-radius-base: 24px;
     --shadow-base: 0 8px 24px rgba(74, 40, 52, 0.08);
+    
+    /* Estados de UI */
     --success: #2ec4b6;
     --danger: #e63946;
     --warning: #ffb703;
@@ -27,13 +31,16 @@
     --gray-border: #e2e8f0;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after { 
+    box-sizing: border-box; 
+}
 
 body {
-    margin: 0; padding: 0;
+    margin: 0;
+    padding: 0;
     font-family: var(--font-family);
     font-size: var(--font-size-base);
-    background: linear-gradient(to bottom, var(--Xiolover-bg) 0%, #fcd0df 100%);
+    background: linear-gradient(to bottom, var(--girly-bg) 0%, #fcd0df 100%);
     color: var(--text-dark);
     min-height: 100vh;
     position: relative;
@@ -41,58 +48,80 @@ body {
     transition: background 0.4s ease;
 }
 
+/* MARCA DE AGUA */
 #watermark-bg {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    pointer-events: none; z-index: -1;
-    background-position: center; background-repeat: no-repeat;
-    background-size: 25%; opacity: 0.06;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 25%;
+    opacity: 0.06;
 }
 
+/* NAVBAR SUPERIOR */
 header {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     padding: 15px 40px;
-    position: sticky; top: 0; z-index: 100;
-    display: flex; justify-content: space-between; align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     box-shadow: 0 4px 30px rgba(74, 40, 52, 0.03);
 }
 
 header .brand {
-    font-size: 28px; font-weight: 900;
+    font-size: 28px;
+    font-weight: 900;
     color: var(--primary-pink);
-    text-transform: uppercase; letter-spacing: 2px;
-    cursor: pointer; transition: transform 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
 }
 header .brand:hover { transform: scale(1.03); }
 
 header nav {
-    display: flex; gap: 12px;
+    display: flex;
+    gap: 12px;
     background: rgba(255, 255, 255, 0.5);
-    padding: 6px; border-radius: 30px;
+    padding: 6px;
+    border-radius: 30px;
     border: 1px solid var(--gray-border);
 }
 
 header nav a {
-    color: var(--text-dark); text-decoration: none;
-    font-size: 13px; font-weight: 600;
-    padding: 8px 18px; border-radius: 20px;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 20px;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 header nav a:hover, header nav a.active {
-    background: var(--primary-pink); color: white;
+    background: var(--primary-pink);
+    color: white;
     box-shadow: 0 4px 12px rgba(228, 87, 143, 0.2);
 }
 
-.top-bar-buttons {
-    display: flex; align-items: center; gap: 10px;
-}
 .top-bar-buttons button {
-    background: white; border: 1px solid var(--gray-border);
-    color: var(--text-dark); padding: 10px 20px;
-    border-radius: 20px; font-weight: 600; cursor: pointer;
-    display: flex; align-items: center; gap: 8px;
+    background: white; 
+    border: 1px solid var(--gray-border); 
+    color: var(--text-dark); 
+    padding: 10px 20px; 
+    border-radius: 20px; 
+    font-weight: 600; 
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: all 0.2s ease;
 }
@@ -102,29 +131,51 @@ header nav a:hover, header nav a.active {
     transform: translateY(-1px);
 }
 
-main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+/* CONTENIDO PRINCIPAL */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
 
+/* HERO BANNER */
 .promo-banner {
     background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255, 240, 245, 0.95) 100%);
     border-radius: var(--border-radius-base);
-    padding: 50px 40px; color: var(--text-dark);
-    margin-bottom: 40px; text-align: center;
+    padding: 50px 40px;
+    color: var(--text-dark);
+    margin-bottom: 40px;
+    text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.6);
     box-shadow: var(--shadow-base);
-    position: relative; overflow: hidden;
+    position: relative;
+    overflow: hidden;
 }
-.promo-banner h1 { margin: 0 0 12px 0; font-size: 38px; font-weight: 800; color: var(--primary-pink); }
+
+.promo-banner h1 { 
+    margin: 0 0 12px 0; 
+    font-size: 38px; 
+    font-weight: 800; 
+    color: var(--primary-pink);
+}
 .promo-banner p { margin: 0; font-size: 16px; font-weight: 500; opacity: 0.8; }
 
 .category-title {
-    font-size: 18px; color: white; text-align: center;
-    margin: 0 auto 35px auto; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px;
-    background: var(--primary-pink); display: table;
-    padding: 8px 24px; border-radius: 30px;
+    font-size: 18px;
+    color: white;
+    text-align: center;
+    margin: 0 auto 35px auto;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--primary-pink);
+    display: table;
+    padding: 8px 24px;
+    border-radius: 30px;
     box-shadow: 0 4px 15px rgba(228, 87, 143, 0.3);
 }
 
+/* PRODUCTOS GRID */
 .container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -134,31 +185,51 @@ main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
 .card {
     background: var(--card-bg);
     border-radius: var(--border-radius-base);
-    overflow: hidden; display: flex; flex-direction: column;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     box-shadow: var(--shadow-base);
     border: 1px solid rgba(255, 255, 255, 0.5);
     position: relative;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(74, 40, 52, 0.15); }
+.card:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 20px 40px rgba(74, 40, 52, 0.15); 
+}
 
 .card-top {
-    background: var(--gray-light); padding: 20px;
-    text-align: center; position: relative;
-    display: flex; align-items: center; justify-content: center;
-    height: 220px; border-bottom: 1px solid rgba(0,0,0,0.02);
+    background: var(--gray-light);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 220px;
+    border-bottom: 1px solid rgba(0,0,0,0.02);
 }
 .card img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: transform 0.3s; }
 .card:hover .card-top img { transform: scale(1.05); }
 
 .add-btn-floating {
-    position: absolute; bottom: -22px; right: 20px;
-    background: var(--primary-pink); color: white; border: none;
-    width: 44px; height: 44px; border-radius: 50%;
-    cursor: pointer; font-size: 20px;
-    display: flex; align-items: center; justify-content: center;
+    position: absolute;
+    bottom: -22px;
+    right: 20px;
+    background: var(--primary-pink);
+    color: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-shadow: 0 6px 16px rgba(228, 87, 143, 0.4);
-    z-index: 2; transition: all 0.2s ease;
+    z-index: 2;
+    transition: all 0.2s ease;
 }
 .add-btn-floating:hover { transform: scale(1.1) rotate(90deg); background: var(--text-dark); }
 
@@ -172,6 +243,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
 .card.no-stock .add-btn-floating { background: #94a3b8; cursor: not-allowed; box-shadow: none; }
 .card.no-stock .add-btn-floating:hover { transform: none; }
 
+/* CARRITO FLOTANTE DESPLEGABLE */
 .cart-toggle-btn {
     position: fixed; bottom: 30px; right: 30px;
     background: var(--primary-pink); color: white; border: none;
@@ -205,8 +277,8 @@ main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
     box-shadow: 0 4px 15px rgba(228, 87, 143, 0.3); transition: all 0.2s;
 }
 .btn-buy:hover { background: var(--text-dark); box-shadow: 0 4px 15px rgba(74, 40, 52, 0.3); }
-.btn-buy:disabled { opacity: 0.6; cursor: not-allowed; }
 
+/* MODALES Y CONSOLA DE ADMINISTRACIÓN */
 .login-modal, .admin-panel {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(74, 40, 52, 0.4); backdrop-filter: blur(10px);
@@ -224,30 +296,48 @@ main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
     overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
+/* SIDEBAR DEL DASHBOARD */
 .admin-sidebar {
     background: white; border-right: 1px solid var(--gray-border);
     padding: 30px 20px; display: flex; flex-direction: column; justify-content: space-between;
 }
-.admin-brand-area h3 { margin: 0 0 5px 0; font-size: 20px; font-weight: 800; color: var(--primary-pink); }
-.admin-brand-area p { margin: 0 0 25px 0; font-size: 12px; color: #64748b; font-weight: 500; }
-.admin-nav-menu { display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
+.admin-brand-area h3 {
+    margin: 0 0 5px 0; font-size: 20px; font-weight: 800; color: var(--primary-pink);
+}
+.admin-brand-area p {
+    margin: 0 0 25px 0; font-size: 12px; color: #64748b; font-weight: 500;
+}
+.admin-nav-menu {
+    display: flex; flex-direction: column; gap: 8px; flex-grow: 1;
+}
 .admin-nav-item {
     display: flex; align-items: center; gap: 12px; padding: 12px 16px;
     background: transparent; border: none; border-radius: 12px;
     color: #475569; font-weight: 600; font-size: 14px; cursor: pointer;
     text-align: left; transition: all 0.2s ease;
 }
-.admin-nav-item:hover { background: var(--gray-light); color: var(--text-dark); }
-.admin-nav-item.active { background: var(--light-pink); color: var(--primary-pink); }
+.admin-nav-item:hover {
+    background: var(--gray-light);
+    color: var(--text-dark);
+}
+.admin-nav-item.active {
+    background: var(--light-pink);
+    color: var(--primary-pink);
+}
 
-.admin-main-container { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+/* CONTENEDOR VISTAS ADMIN */
+.admin-main-container {
+    display: flex; flex-direction: column; height: 100%; overflow: hidden;
+}
 .admin-top-navbar {
     background: white; padding: 20px 40px; display: flex; 
     justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gray-border);
 }
 .admin-top-navbar h2 { margin: 0; font-size: 20px; font-weight: 700; color: #1e293b; }
 
-.admin-body { flex: 1; padding: 35px 40px; overflow-y: auto; box-sizing: border-box; }
+.admin-body {
+    flex: 1; padding: 35px 40px; overflow-y: auto; box-sizing: border-box;
+}
 .admin-view { display: none; animation: fadeIn 0.25s ease-out; }
 .admin-view.active { display: block; }
 
@@ -263,7 +353,9 @@ main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
 }
 .dashboard-card h4 { margin: 0 0 20px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 1px solid var(--gray-light); padding-bottom: 10px;}
 
-.grid-form-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-form-2 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+}
 .form-group { margin-bottom: 20px; position: relative; }
 .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px; color: #334155; }
 .form-group input[type="text"], 
@@ -279,22 +371,29 @@ main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
     box-shadow: 0 0 0 3px rgba(228, 87, 143, 0.15);
 }
 
-.invalid-feedback { color: var(--danger); font-size: 11px; font-weight: 600; margin-top: 4px; display: none; }
+/* VALIDACIONES */
+.invalid-feedback {
+    color: var(--danger); font-size: 11px; font-weight: 600; margin-top: 4px; display: none;
+}
 .form-group.invalid input { border-color: var(--danger); background-color: #fef2f2; }
 .form-group.invalid .invalid-feedback { display: block; }
 
+/* FILE UPLOAD ACCENT */
 .custom-file-upload {
     border: 2px dashed var(--gray-border); border-radius: 12px; padding: 25px;
     text-align: center; cursor: pointer; background: #f8fafc; transition: all 0.2s ease;
     display: block; font-weight: 600; color: #475569;
 }
 .custom-file-upload:hover { border-color: var(--primary-pink); background: var(--light-pink); color: var(--primary-pink); }
-.custom-file-upload.uploading { border-color: var(--warning); background: #fffbeb; color: #92400e; cursor: wait; }
-.custom-file-upload.uploaded { border-color: var(--success); background: #ecfdf5; color: #065f46; }
 
-.product-split-layout { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
-.preview-sticky-box { position: sticky; top: 0; display: flex; flex-direction: column; align-items: center; }
+.product-split-layout {
+    display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px;
+}
+.preview-sticky-box {
+    position: sticky; top: 0; display: flex; flex-direction: column; align-items: center;
+}
 
+/* COMPONENTE TOAST */
 .toast-container {
     position: fixed; top: 20px; right: 20px; z-index: 9999;
     display: flex; flex-direction: column; gap: 10px;
@@ -308,16 +407,18 @@ main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
 }
 .toast.success { border-left-color: var(--success); }
 .toast.danger { border-left-color: var(--danger); }
-.toast.warning { border-left-color: var(--warning); }
 @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
+/* TABLA DE EXISTENCIAS */
 .table-wrapper { background: white; border-radius: 12px; border: 1px solid var(--gray-border); overflow: hidden; }
 table.modern-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
 table.modern-table th { background: #f8fafc; padding: 16px; font-weight: 700; color: #475569; border-bottom: 1px solid var(--gray-border); }
 table.modern-table td { padding: 16px; border-bottom: 1px solid var(--gray-light); color: #334155; vertical-align: middle; }
 table.modern-table tbody tr:hover { background: #f8fafc; }
 
-.appearance-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+.appearance-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;
+}
 .color-picker-wrapper {
     display: flex; align-items: center; gap: 15px; background: #f8fafc; padding: 10px; border-radius: 10px; border: 1px solid var(--gray-border);
 }
@@ -325,81 +426,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     -webkit-appearance: none; border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; background: none;
 }
 .color-picker-wrapper input[type="color"]::-webkit-color-swatch { border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); }
-
-.category-list-admin { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-.category-item-admin {
-    display: flex; align-items: center; justify-content: space-between;
-    background: #f8fafc; padding: 12px 18px; border-radius: 10px;
-    border: 1px solid var(--gray-border); transition: all 0.2s ease;
-}
-.category-item-admin:hover { border-color: var(--primary-pink); background: var(--light-pink); }
-.category-item-admin .cat-name { font-weight: 600; color: var(--text-dark); font-size: 14px; display: flex; align-items: center; gap: 10px; }
-.category-item-admin .cat-name .cat-count { font-size: 11px; background: var(--primary-pink); color: white; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
-.category-item-admin .cat-actions { display: flex; gap: 6px; }
-.category-item-admin .cat-actions button {
-    background: transparent; border: 1px solid var(--gray-border);
-    padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 13px;
-    transition: all 0.2s ease;
-}
-.category-item-admin .cat-actions button:hover { background: white; border-color: var(--primary-pink); }
-.category-item-admin .cat-actions button.delete-cat:hover { background: #fef2f2; border-color: var(--danger); color: var(--danger); }
-
-.add-category-row { display: flex; gap: 10px; margin-top: 15px; }
-.add-category-row input {
-    flex: 1; padding: 12px 16px; border: 1px solid var(--gray-border);
-    border-radius: 10px; font-family: inherit; font-size: 14px;
-    background: #f8fafc; color: var(--text-dark);
-}
-.add-category-row input:focus {
-    outline: none; border-color: var(--primary-pink); background: white;
-    box-shadow: 0 0 0 3px rgba(228, 87, 143, 0.15);
-}
-.add-category-row button {
-    background: var(--primary-pink); color: white; border: none;
-    padding: 12px 22px; border-radius: 10px; font-weight: 700;
-    cursor: pointer; font-family: inherit; font-size: 14px;
-    box-shadow: 0 4px 12px rgba(228, 87, 143, 0.3);
-    transition: all 0.2s ease; white-space: nowrap;
-}
-.add-category-row button:hover { background: var(--text-dark); }
-
-.code-badge {
-    display: inline-block; font-size: 10px; font-weight: 700;
-    background: #f1f5f9; color: #475569; padding: 3px 8px;
-    border-radius: 6px; border: 1px solid var(--gray-border);
-    letter-spacing: 0.5px; font-family: 'Inter', monospace; margin-top: 4px;
-}
-.card .code-badge { margin-top: 6px; }
-
-.inline-edit-input {
-    padding: 6px 10px; border: 1px solid var(--primary-pink);
-    border-radius: 6px; font-family: inherit; font-size: 14px;
-    font-weight: 600; background: white; color: var(--text-dark); width: 200px;
-}
-.inline-edit-input:focus { outline: none; box-shadow: 0 0 0 3px rgba(228, 87, 143, 0.15); }
-
-.firebase-status {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 11px; font-weight: 600; padding: 6px 12px;
-    border-radius: 20px; border: 1px solid var(--gray-border); background: white;
-}
-.firebase-status.connected { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
-.firebase-status.offline { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
-.firebase-status.error { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
-.firebase-status .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-.firebase-status.connected .dot { animation: pulse 2s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-.upload-progress {
-    margin-top: 10px; background: #f1f5f9; border-radius: 8px;
-    overflow: hidden; height: 8px; display: none;
-}
-.upload-progress.active { display: block; }
-.upload-progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary-pink), #f472b6);
-    width: 0%; transition: width 0.3s ease;
-}
 
 @media (max-width: 900px) {
     .admin-content { grid-template-columns: 1fr; }
@@ -414,22 +440,25 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 <div id="watermark-bg"></div>
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- NAVIGATION BAR -->
 <header id="mainHeader">
-    <div class="brand" id="storeNameView" onclick="filtrarCategoria('Todos', document.getElementById('btn-todos'))">Xiolover</div>
-    <nav id="mainNav">
+    <div class="brand" id="storeNameView" onclick="filtrarCategoria('Todos', document.getElementById('btn-todos'))">GIRLY</div>
+    <nav>
         <a href="#" id="btn-todos" class="active" onclick="filtrarCategoria('Todos', this)">Todos</a>
+        <a href="#" onclick="filtrarCategoria('Maquillaje', this)">Maquillaje</a>
+        <a href="#" onclick="filtrarCategoria('Skincare', this)">Skincare</a>
+        <a href="#" onclick="filtrarCategoria('Cejas', this)">Cejas</a>
+        <a href="#" onclick="filtrarCategoria('Accesorios', this)">Accesorios</a>
     </nav>
     <div class="top-bar-buttons">
-        <span id="firebaseStatusBadge" class="firebase-status offline" title="Estado de Firebase">
-            <span class="dot"></span> <span id="firebaseStatusText">Conectando...</span>
-        </span>
         <button onclick="abrirLogin()">Consola Admin</button>
     </div>
 </header>
 
 <main>
+    <!-- HERO BANNER -->
     <div class="promo-banner" id="bannerConfigBg">
-        <h1 id="bannerTitleView">Welcome to Xiolover World!</h1>
+        <h1 id="bannerTitleView">Welcome to Girly World!</h1>
         <p id="bannerDescView">Explora lo último en tendencias de belleza y maquillaje viral.</p>
     </div>
     
@@ -440,10 +469,12 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     <div class="container" id="productos"></div>
 </main>
 
+<!-- FLOATING CART BUTTON -->
 <button class="cart-toggle-btn" onclick="toggleCart()">
     🛒 <div class="cart-count" id="cartCount">0</div>
 </button>
 
+<!-- SIDEBAR CARRITO -->
 <div class="cart" id="cartSidebar">
     <h2>Mi Carrito <button class="close-cart" onclick="toggleCart()">✕</button></h2>
     <div id="carrito"></div>
@@ -453,6 +484,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     <button class="btn-buy" onclick="comprar()">Enviar Pedido por WhatsApp</button>
 </div>
 
+<!-- LOGIN MODAL -->
 <div class="login-modal" id="loginModal">
     <div class="login-content">
         <h3 style="margin:0 0 10px 0; font-size:20px;">Acceso Administrativo</h3>
@@ -466,32 +498,34 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     </div>
 </div>
 
+<!-- PANEL ADMINISTRATIVO PRINCIPAL -->
 <div class="admin-panel" id="adminPanel">
     <div class="admin-content">
         
+        <!-- DASHBOARD SIDEBAR -->
         <div class="admin-sidebar">
             <div class="admin-brand-area">
-                <h3 id="sidebarBrandName">Xiolover ADMIN</h3>
-                <p>v3.0 • Firebase Cloud Sync</p>
+                <h3 id="sidebarBrandName">GIRLY ADMIN</h3>
+                <p>v2.0 • Frontend Consola</p>
                 <div class="admin-nav-menu">
                     <button class="admin-nav-item active" onclick="switchTab('tab-tienda', this)">Apariencia y Tienda</button>
-                    <button class="admin-nav-item" onclick="switchTab('tab-categorias', this)">Gestión de Categorías</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-nuevo', this)">Agregar Producto</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-inventario', this)">Control de Inventario</button>
-                    <button class="admin-nav-item" onclick="switchTab('tab-firebase', this)">⚡ Estado Firebase</button>
                 </div>
             </div>
             <button class="admin-nav-item" style="color:var(--danger); background:#fef2f2; margin-top:auto;" onclick="cerrarAdmin()">✕ Salir del Panel</button>
         </div>
 
+        <!-- DASHBOARD MAIN WORKSPACE -->
         <div class="admin-main-container">
             <div class="admin-top-navbar">
                 <h2 id="adminSectionTitle">Personalización de Apariencia</h2>
-                <div id="adminModeBadge" style="font-size:13px; font-weight:600; background:var(--light-pink); padding:6px 14px; border-radius:20px; color:var(--primary-pink)">Conectando...</div>
+                <div style="font-size:13px; font-weight:600; background:var(--light-pink); padding:6px 14px; border-radius:20px; color:var(--primary-pink)">Entorno Local Activo</div>
             </div>
 
             <div class="admin-body">
                 
+                <!-- TAB APARIENCIA -->
                 <div id="tab-tienda" class="admin-view active">
                     <div class="dashboard-card">
                         <h4>Identidad de Marca y Contenido</h4>
@@ -522,9 +556,9 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Fondo Degradado (Xiolover BG)</label>
+                                <label>Fondo Degradado (Girly BG)</label>
                                 <div class="color-picker-wrapper">
-                                    <input type="color" id="cfgColorBg" onchange="cambiarEstiloDinamico('--Xiolover-bg', this.value)">
+                                    <input type="color" id="cfgColorBg" onchange="cambiarEstiloDinamico('--girly-bg', this.value)">
                                     <span style="font-size:12px; font-weight:600; color:#475569;">Fondo Base</span>
                                 </div>
                             </div>
@@ -551,14 +585,11 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     <div class="dashboard-card">
                         <h4>Elementos de Fondo Avanzados</h4>
                         <div class="form-group">
-                            <label>Cargar Marca de Agua (se sube a Firebase Storage ☁️)</label>
-                            <label class="custom-file-upload" id="watermarkUploadLabel">
+                            <label>Cargar Marca de Agua Directamente</label>
+                            <label class="custom-file-upload">
                                 <input type="file" id="cfgMarcaAgua" accept="image/*" style="display:none;">
-                                <span id="watermarkUploadText">📤 Seleccionar imagen de fondo (se sube a la nube)</span>
+                                <span>Seleccionar archivo de imagen para el fondo de pantalla</span>
                             </label>
-                            <div class="upload-progress" id="watermarkProgress">
-                                <div class="upload-progress-bar" id="watermarkProgressBar"></div>
-                            </div>
                             <span id="watermarkStatus" style="font-size:12px; color:var(--success); display:block; margin-top:5px; font-weight:600;"></span>
                         </div>
                     </div>
@@ -566,44 +597,16 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     <button class="btn-buy" style="width:auto; padding:14px 35px;" onclick="guardarConfigTienda()">💾 Guardar Cambios de Apariencia</button>
                 </div>
 
-                <div id="tab-categorias" class="admin-view">
-                    <div class="dashboard-card">
-                        <h4>Administrador de Categorías del Catálogo</h4>
-                        <p style="margin:0 0 20px 0; font-size:13px; color:#64748b; line-height:1.5;">
-                            Desde aquí puedes crear, editar o eliminar las categorías que aparecen en la barra de navegación principal del catálogo. 
-                            Los productos existentes se mantendrán aunque se elimine su categoría (se marcarán como "Sin Categoría").
-                        </p>
-                        
-                        <div class="category-list-admin" id="categoryListAdmin"></div>
-
-                        <div class="add-category-row">
-                            <input type="text" id="newCategoryInput" placeholder="Nombre de la nueva categoría (ej: Labios, Capilar, Corporal...)" maxlength="30">
-                            <button onclick="agregarNuevaCategoria()">+ Agregar Categoría</button>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <h4>Resumen de Productos por Categoría</h4>
-                        <div id="categorySummaryGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:15px;"></div>
-                    </div>
-                </div>
-
+                <!-- TAB NUEVO PRODUCTO -->
                 <div id="tab-nuevo" class="admin-view">
                     <div class="product-split-layout">
                         <div class="dashboard-card" style="margin:0;">
                             <h4>Atributos del Producto</h4>
                             
-                            <div class="grid-form-2">
-                                <div class="form-group" id="valCodigo">
-                                    <label>Código del Producto *</label>
-                                    <input type="text" id="prodCodigo" placeholder="Ej: LAB-001, SKN-015" oninput="updateLivePreview()">
-                                    <div class="invalid-feedback">El código es obligatorio (único).</div>
-                                </div>
-                                <div class="form-group" id="valNombre">
-                                    <label>Nombre del Producto *</label>
-                                    <input type="text" id="prodNombre" placeholder="Ej: Labial Matte Gloss 24h" oninput="updateLivePreview()">
-                                    <div class="invalid-feedback">El nombre es obligatorio (mínimo 3 caracteres).</div>
-                                </div>
+                            <div class="form-group" id="valNombre">
+                                <label>Nombre del Producto *</label>
+                                <input type="text" id="prodNombre" placeholder="Ej: Labial Matte Gloss 24h" oninput="updateLivePreview()">
+                                <div class="invalid-feedback">El nombre es obligatorio (mínimo 3 caracteres).</div>
                             </div>
 
                             <div class="grid-form-2">
@@ -621,25 +624,28 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 
                             <div class="form-group">
                                 <label>Categoría</label>
-                                <select id="prodCategoria" onchange="updateLivePreview()"></select>
+                                <select id="prodCategoria" onchange="updateLivePreview()">
+                                    <option value="Maquillaje">Maquillaje</option>
+                                    <option value="Skincare">Skincare</option>
+                                    <option value="Cejas">Cejas y Pestañas</option>
+                                    <option value="Accesorios">Accesorios</option>
+                                </select>
                             </div>
 
                             <div class="form-group">
-                                <label>Fotografía del Producto (se sube a Firebase Storage ☁️)</label>
-                                <label class="custom-file-upload" id="prodImgUploadLabel" style="padding:15px; margin-bottom:10px;">
+                                <label>Fotografía del Producto</label>
+                                <label class="custom-file-upload" style="padding:15px; margin-bottom:10px;">
                                     <input type="file" id="prodFileImg" accept="image/*" style="display:none;" onchange="procesarImagenProducto(this)">
-                                    <span id="prodImgUploadText">📤 Cargar imagen desde dispositivo (se sube a la nube)</span>
+                                    <span>Cargar Imagen desde Dispositivo</span>
                                 </label>
-                                <div class="upload-progress" id="prodImgProgress">
-                                    <div class="upload-progress-bar" id="prodImgProgressBar"></div>
-                                </div>
-                                <div style="text-align:center; font-size:11px; color:#64748b; margin:10px 0;">o proveer un enlace de internet:</div>
+                                <div style="text-align:center; font-size:11px; color:#64748b; margin-bottom:10px;">o proveer un enlace de internet:</div>
                                 <input type="text" id="prodUrlImg" placeholder="https://enlace.com/imagen.jpg" oninput="updateLivePreview()">
                             </div>
 
-                            <button class="btn-buy" style="width:100%;" id="btnPublicarProducto" onclick="guardarNuevoProducto()">Publicar Producto en Catálogo</button>
+                            <button class="btn-buy" style="width:100%;" onclick="guardarNuevoProducto()">Publicar Producto en Catálogo</button>
                         </div>
 
+                        <!-- Real-time Preview Split Panel -->
                         <div class="preview-sticky-box">
                             <div style="font-size:12px; font-weight:700; color:#64748b; margin-bottom:15px; text-transform:uppercase; letter-spacing:1px;">Previsualización en vivo</div>
                             <div id="liveProductPreviewCard" style="width:100%; max-width:280px;"></div>
@@ -647,17 +653,17 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     </div>
                 </div>
 
+                <!-- TAB CONTROL DE INVENTARIO -->
                 <div id="tab-inventario" class="admin-view">
                     <div class="dashboard-card">
                         <div style="display:flex; justify-content:between; align-items:center; margin-bottom:20px; gap:15px;">
-                            <input type="text" id="inventarioBuscador" placeholder="Buscar por nombre, código o categoría en el stock..." oninput="filtrarTablaInventario(this.value)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--gray-border); font-family:inherit;">
+                            <input type="text" id="inventarioBuscador" placeholder="Buscar por nombre o categoría en el stock..." oninput="filtrarTablaInventario(this.value)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--gray-border); font-family:inherit;">
                         </div>
                         <div class="table-wrapper">
                             <table class="modern-table">
                                 <thead>
                                     <tr>
                                         <th>Imagen</th>
-                                        <th>Código</th>
                                         <th>Nombre del Producto</th>
                                         <th>Categoría</th>
                                         <th>Precio</th>
@@ -672,102 +678,30 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     </div>
                 </div>
 
-                <div id="tab-firebase" class="admin-view">
-                    <div class="dashboard-card">
-                        <h4>⚡ Estado de Conexión a Firebase</h4>
-                        <div id="firebaseStatusDetail" style="font-size:14px; line-height:1.8;">
-                            <p>Verificando conexión...</p>
-                        </div>
-                    </div>
-                    <div class="dashboard-card">
-                        <h4>🔄 Sincronización Manual</h4>
-                        <p style="font-size:13px; color:#64748b; margin-bottom:15px;">
-                            Usa estos botones para forzar la sincronización entre tu navegador y la nube de Firebase.
-                        </p>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                            <button class="btn-buy" style="width:auto; margin:0; padding:12px 25px;" onclick="forzarSyncDesdeFirebase()">
-                                ⬇️ Descargar desde Firebase
-                            </button>
-                            <button class="btn-buy" style="width:auto; margin:0; padding:12px 25px; background:#1e293b;" onclick="forzarSyncHaciaFirebase()">
-                                ⬆️ Subir datos locales a Firebase
-                            </button>
-                        </div>
-                    </div>
-                    <div class="dashboard-card">
-                        <h4>📋 Configuración Actual</h4>
-                        <div id="firebaseConfigInfo" style="font-size:12px; font-family:'Inter',monospace; background:#f8fafc; padding:15px; border-radius:8px; color:#475569; overflow-x:auto;">
-                            Cargando...
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
     </div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-analytics.js";
-import { getFirestore, collection, doc, setDoc, deleteDoc, getDoc, getDocs, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyBCdbhrexfLXzL3BWJxm_LtFAEf8-vv7Mo",
-    authDomain: "xiolover.firebaseapp.com",
-    projectId: "xiolover",
-    storageBucket: "xiolover.firebasestorage.app",
-    messagingSenderId: "888336446125",
-    appId: "1:888336446125:web:b0781c935a4abf0e884c24",
-    measurementId: "G-P9XYDCRNS6"
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-window.__firebase = {
-    app, db, storage, analytics,
-    collection, doc, setDoc, deleteDoc, getDoc, getDocs, onSnapshot, writeBatch,
-    ref, uploadBytesResumable, getDownloadURL, deleteObject
-};
-
-window.dispatchEvent(new CustomEvent('firebase-ready'));
-console.log("✅ Firebase inicializado correctamente");
-</script>
-
 <script>
 const PIN_CORRECTO = "55555"; 
 let intentosFallidos = 0;
 let categoriaActual = "Todos";
 let imagenProductoBase64 = ""; 
-let imagenProductoURL = "";
 
-let firebaseDisponible = false;
-let fb = null;
-let listenersActivos = [];
-
+// BASE DE DATOS MOCK INITIAL
 const prodsDefecto = [
-    {codigo: "MKP-001", nombre: "Caja Lip Combo Xiolover Premium", precio: "40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
-    {codigo: "CEJ-001", nombre: "Tinte Fijador De Cejas Brow Set", precio: "38.000", categoria: "Cejas", img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=300", stock: 15},
-    {codigo: "MKP-002", nombre: "Kit Base Humide + Obsequio Corrector", precio: "50.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300", stock: 5},
-    {codigo: "ACC-001", nombre: "Kit Brochas Fluffy x10 Montoc", precio: "60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0}
+    {nombre: "Caja Lip Combo Girly Premium", precio: "40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
+    {nombre: "Tinte Fijador De Cejas Brow Set", precio: "38.000", categoria: "Cejas", img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=300", stock: 15},
+    {nombre: "Kit Base Humide + Obsequio Corrector", precio: "50.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300", stock: 5},
+    {nombre: "Kit Brochas Fluffy x10 Montoc", precio: "60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0}
 ];
 
-const categoriasDefecto = ["Maquillaje", "Skincare", "Cejas", "Accesorios"];
-let categoriasCatalogo = JSON.parse(localStorage.getItem('db_categorias_v2')) || categoriasDefecto.slice();
 let productos = JSON.parse(localStorage.getItem('db_prods_v2')) || prodsDefecto;
-
-productos.forEach((p, i) => {
-    if (!p.codigo) p.codigo = "GEN-" + String(i + 1).padStart(3, '0');
-});
-localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-
 let tiendaConfig = JSON.parse(localStorage.getItem('db_store_cfg_v2')) || {
-    name: "Xiolover", 
-    title: "Welcome to Xiolover World!", 
+    name: "GIRLY", 
+    title: "Welcome to Girly World!", 
     desc: "Explora lo último en tendencias de belleza y maquillaje viral.",
     primaryColor: "#e4578f", 
     bgColor: "#fcaecb",
@@ -777,6 +711,7 @@ let tiendaConfig = JSON.parse(localStorage.getItem('db_store_cfg_v2')) || {
 };
 let carrito = [];
 
+// TOAST NOTIFICATION SYSTEM
 function showToast(message, type = "success") {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
@@ -786,585 +721,26 @@ function showToast(message, type = "success") {
     setTimeout(() => { toast.remove(); }, 3500);
 }
 
-function actualizarEstadoFirebase(estado, mensaje) {
-    const badge = document.getElementById('firebaseStatusBadge');
-    const statusText = document.getElementById('firebaseStatusText');
-    const modeBadge = document.getElementById('adminModeBadge');
-    if (!badge) return;
-    
-    badge.className = 'firebase-status ' + estado;
-    if (statusText) statusText.textContent = mensaje;
-    
-    if (modeBadge) {
-        if (estado === 'connected') {
-            modeBadge.textContent = '☁️ Firebase Cloud Activo';
-            modeBadge.style.background = '#d1fae5';
-            modeBadge.style.color = '#065f46';
-        } else if (estado === 'offline') {
-            modeBadge.textContent = '💾 Modo Local';
-            modeBadge.style.background = '#fef3c7';
-            modeBadge.style.color = '#92400e';
-        } else {
-            modeBadge.textContent = '⚠️ Error Firebase';
-            modeBadge.style.background = '#fee2e2';
-            modeBadge.style.color = '#991b1b';
-        }
-    }
-}
-
-function renderizarDetalleFirebase() {
-    const detail = document.getElementById('firebaseStatusDetail');
-    const configInfo = document.getElementById('firebaseConfigInfo');
-    if (!detail) return;
-    
-    if (firebaseDisponible) {
-        detail.innerHTML = `
-            <div style="background:#d1fae5; padding:15px; border-radius:10px; border-left:4px solid var(--success);">
-                <strong style="color:#065f46;">✅ Firebase conectado correctamente</strong>
-                <p style="margin:8px 0 0 0; color:#064e3b; font-size:13px;">
-                    Project ID: <strong>xiolover</strong><br>
-                    Storage: <strong>xiolover.firebasestorage.app</strong><br>
-                    Los cambios se sincronizan en tiempo real con la nube.
-                </p>
-            </div>
-        `;
-    } else {
-        detail.innerHTML = `
-            <div style="background:#fee2e2; padding:15px; border-radius:10px; border-left:4px solid var(--danger);">
-                <strong style="color:#991b1b;">❌ Error de conexión a Firebase</strong>
-                <p style="margin:8px 0 0 0; color:#7f1d1d; font-size:13px;">
-                    La aplicación funciona en modo local como respaldo.<br>
-                    Verifica las reglas de Firestore y Storage en Firebase Console.
-                </p>
-            </div>
-        `;
-    }
-    
-    if (configInfo) {
-        configInfo.innerHTML = `
-            <div>apiKey: "AIzaSyBCd...vv7Mo"</div>
-            <div>projectId: "xiolover"</div>
-            <div>storageBucket: "xiolover.firebasestorage.app"</div>
-            <div>appId: "1:888336446125:web:b0781c935a4abf0e884c24"</div>
-            <div>measurementId: "G-P9XYDCRNS6"</div>
-            <div>Modo activo: <strong>${firebaseDisponible ? 'CLOUD (Firebase)' : 'LOCAL (localStorage)'}</strong></div>
-        `;
-    }
-}
-
-function subirImagenAStorage(file, carpeta, nombreArchivo, onProgress) {
-    return new Promise((resolve, reject) => {
-        if (!firebaseDisponible || !fb) {
-            const reader = new FileReader();
-            reader.onload = e => resolve(e.target.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-            return;
-        }
-        
-        try {
-            const timestamp = Date.now();
-            const extension = file.name.split('.').pop() || 'jpg';
-            const path = `${carpeta}/${nombreArchivo}_${timestamp}.${extension}`;
-            const storageRef = fb.ref(fb.storage, path);
-            const uploadTask = fb.uploadBytesResumable(storageRef, file);
-            
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    if (onProgress) onProgress(progress);
-                },
-                (error) => {
-                    console.error("Error al subir imagen:", error);
-                    const reader = new FileReader();
-                    reader.onload = e => resolve(e.target.result);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                },
-                async () => {
-                    try {
-                        const downloadURL = await fb.getDownloadURL(uploadTask.snapshot.ref);
-                        resolve(downloadURL);
-                    } catch (err) {
-                        reject(err);
-                    }
-                }
-            );
-        } catch (error) {
-            console.error("Error en upload:", error);
-            const reader = new FileReader();
-            reader.onload = e => resolve(e.target.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        }
-    });
-}
-
-async function guardarProductoEnFirestore(producto) {
-    if (!firebaseDisponible || !fb) return false;
-    try {
-        const docRef = fb.doc(fb.collection(db, 'productos'), producto.codigo);
-        await fb.setDoc(docRef, producto);
-        return true;
-    } catch (error) {
-        console.error("Error al guardar producto:", error);
-        return false;
-    }
-}
-
-async function eliminarProductoDeFirestore(codigo) {
-    if (!firebaseDisponible || !fb) return false;
-    try {
-        const docRef = fb.doc(fb.collection(db, 'productos'), codigo);
-        await fb.deleteDoc(docRef);
-        return true;
-    } catch (error) {
-        console.error("Error al eliminar producto:", error);
-        return false;
-    }
-}
-
-async function guardarConfigYcategoriasEnFirestore() {
-    if (!firebaseDisponible || !fb) return false;
-    try {
-        const docRef = fb.doc(fb.collection(db, 'config'), 'tienda');
-        await fb.setDoc(docRef, {
-            categorias: categoriasCatalogo,
-            configuracion: tiendaConfig
-        });
-        return true;
-    } catch (error) {
-        console.error("Error al guardar config:", error);
-        return false;
-    }
-}
-
-async function cargarDesdeFirebase() {
-    if (!fb) return false;
-    
-    try {
-        await fb.getDoc(fb.doc(fb.collection(db, 'config'), 'tienda'));
-        firebaseDisponible = true;
-        actualizarEstadoFirebase('connected', '☁️ Firebase');
-        
-        const configDoc = await fb.getDoc(fb.doc(fb.collection(db, 'config'), 'tienda'));
-        if (configDoc.exists()) {
-            const data = configDoc.data();
-            if (data.configuracion) {
-                tiendaConfig = { ...tiendaConfig, ...data.configuracion };
-                localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
-            }
-            if (data.categorias && Array.isArray(data.categorias)) {
-                categoriasCatalogo = data.categorias;
-                localStorage.setItem('db_categorias_v2', JSON.stringify(categoriasCatalogo));
-            }
-        }
-        
-        const productosSnap = await fb.getDocs(fb.collection(db, 'productos'));
-        if (!productosSnap.empty) {
-            productos = [];
-            productosSnap.forEach(docSnap => {
-                productos.push(docSnap.data());
-            });
-            localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-        }
-        
-        suscribirseACambios();
-        return true;
-    } catch (error) {
-        console.error("Error al conectar con Firebase:", error);
-        firebaseDisponible = false;
-        actualizarEstadoFirebase('error', '⚠️ Error');
-        return false;
-    }
-}
-
-function suscribirseACambios() {
-    if (!firebaseDisponible || !fb) return;
-    
-    listenersActivos.forEach(unsub => unsub());
-    listenersActivos = [];
-    
-    const unsubProds = fb.onSnapshot(fb.collection(db, 'productos'), (snapshot) => {
-        const nuevosProds = [];
-        snapshot.forEach(docSnap => nuevosProds.push(docSnap.data()));
-        
-        if (JSON.stringify(nuevosProds) !== JSON.stringify(productos)) {
-            productos = nuevosProds;
-            localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-            renderProductos();
-            renderizarResumenCategorias();
-            if (document.getElementById('tablaInventario').children.length > 0) {
-                renderInventarioTabla();
-            }
-        }
-    }, (error) => {
-        console.error("Error en listener productos:", error);
-    });
-    listenersActivos.push(unsubProds);
-    
-    const unsubConfig = fb.onSnapshot(fb.doc(fb.collection(db, 'config'), 'tienda'), (docSnap) => {
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            let cambio = false;
-            
-            if (data.configuracion && JSON.stringify(data.configuracion) !== JSON.stringify(tiendaConfig)) {
-                tiendaConfig = { ...tiendaConfig, ...data.configuracion };
-                localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
-                cambio = true;
-            }
-            if (data.categorias && JSON.stringify(data.categorias) !== JSON.stringify(categoriasCatalogo)) {
-                categoriasCatalogo = data.categorias;
-                localStorage.setItem('db_categorias_v2', JSON.stringify(categoriasCatalogo));
-                cambio = true;
-            }
-            
-            if (cambio) {
-                syncTiendaUI();
-                renderizarNavbarCategorias();
-                renderizarSelectCategorias();
-                renderProductos();
-            }
-        }
-    }, (error) => {
-        console.error("Error en listener config:", error);
-    });
-    listenersActivos.push(unsubConfig);
-}
-
-async function forzarSyncDesdeFirebase() {
-    showToast("⬇️ Descargando datos desde Firebase...");
-    const ok = await cargarDesdeFirebase();
-    if (ok) {
-        syncTiendaUI();
-        renderizarNavbarCategorias();
-        renderizarSelectCategorias();
-        renderProductos();
-        renderizarListaCategoriasAdmin();
-        renderizarResumenCategorias();
-        renderInventarioTabla();
-        showToast("✅ Datos descargados desde Firebase");
-    } else {
-        showToast("❌ No se pudo conectar con Firebase", "danger");
-    }
-    renderizarDetalleFirebase();
-}
-
-async function forzarSyncHaciaFirebase() {
-    if (!firebaseDisponible) {
-        showToast("❌ Firebase no está disponible", "danger");
-        return;
-    }
-    showToast("⬆️ Subiendo datos locales a Firebase...");
-    
-    try {
-        await guardarConfigYcategoriasEnFirestore();
-        
-        const batch = fb.writeBatch(db);
-        productos.forEach(p => {
-            const docRef = fb.doc(fb.collection(db, 'productos'), p.codigo);
-            batch.set(docRef, p);
-        });
-        await batch.commit();
-        
-        showToast("✅ Datos subidos a Firebase exitosamente");
-    } catch (error) {
-        console.error(error);
-        showToast("⚠️ Error al subir datos", "danger");
-    }
-}
-
-function guardarCategorias() {
-    localStorage.setItem('db_categorias_v2', JSON.stringify(categoriasCatalogo));
-    guardarConfigYcategoriasEnFirestore();
-}
-
-function renderizarNavbarCategorias() {
-    const nav = document.getElementById('mainNav');
-    nav.innerHTML = `<a href="#" id="btn-todos" class="${categoriaActual === 'Todos' ? 'active' : ''}" onclick="filtrarCategoria('Todos', this)">Todos</a>`;
-    categoriasCatalogo.forEach(cat => {
-        const link = document.createElement('a');
-        link.href = '#';
-        link.textContent = cat;
-        if (categoriaActual === cat) link.classList.add('active');
-        link.onclick = function(e) {
-            e.preventDefault();
-            filtrarCategoria(cat, this);
-        };
-        nav.appendChild(link);
-    });
-}
-
-function renderizarSelectCategorias() {
-    const select = document.getElementById('prodCategoria');
-    if (!select) return;
-    select.innerHTML = '';
-    if (categoriasCatalogo.length === 0) {
-        select.innerHTML = '<option value="">-- Sin categorías disponibles --</option>';
-        return;
-    }
-    categoriasCatalogo.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        select.appendChild(opt);
-    });
-}
-
-function renderizarListaCategoriasAdmin() {
-    const cont = document.getElementById('categoryListAdmin');
-    if (!cont) return;
-    cont.innerHTML = '';
-    
-    if (categoriasCatalogo.length === 0) {
-        cont.innerHTML = '<div style="text-align:center; padding:30px; color:#94a3b8; font-size:13px;">No hay categorías creadas. Agrega una nueva para comenzar.</div>';
-        return;
-    }
-    
-    categoriasCatalogo.forEach((cat, idx) => {
-        const count = productos.filter(p => p.categoria === cat).length;
-        const item = document.createElement('div');
-        item.className = 'category-item-admin';
-        item.id = `cat-item-${idx}`;
-        item.innerHTML = `
-            <div class="cat-name">
-                <span class="cat-label" id="cat-label-${idx}">${cat}</span>
-                <span class="cat-count">${count} prod.</span>
-            </div>
-            <div class="cat-actions">
-                <button onclick="editarCategoria(${idx})" title="Editar nombre">✏️</button>
-                <button class="delete-cat" onclick="eliminarCategoria(${idx})" title="Eliminar categoría">🗑️</button>
-            </div>
-        `;
-        cont.appendChild(item);
-    });
-}
-
-function renderizarResumenCategorias() {
-    const grid = document.getElementById('categorySummaryGrid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    
-    categoriasCatalogo.forEach(cat => {
-        const count = productos.filter(p => p.categoria === cat).length;
-        const sinStock = productos.filter(p => p.categoria === cat && p.stock <= 0).length;
-        const div = document.createElement('div');
-        div.style.cssText = 'background:#f8fafc; padding:18px; border-radius:12px; border:1px solid var(--gray-border); text-align:center;';
-        div.innerHTML = `
-            <div style="font-weight:700; color:var(--primary-pink); font-size:14px; margin-bottom:8px;">${cat}</div>
-            <div style="font-size:24px; font-weight:800; color:var(--text-dark);">${count}</div>
-            <div style="font-size:11px; color:#64748b; margin-top:4px;">${sinStock > 0 ? `<span style="color:var(--danger);">${sinStock} agotado(s)</span>` : 'Todo en stock ✓'}</div>
-        `;
-        grid.appendChild(div);
-    });
-    
-    const sinCat = productos.filter(p => !categoriasCatalogo.includes(p.categoria)).length;
-    if (sinCat > 0) {
-        const div = document.createElement('div');
-        div.style.cssText = 'background:#fef2f2; padding:18px; border-radius:12px; border:1px solid #fecaca; text-align:center;';
-        div.innerHTML = `
-            <div style="font-weight:700; color:var(--danger); font-size:14px; margin-bottom:8px;">Sin Categoría</div>
-            <div style="font-size:24px; font-weight:800; color:var(--text-dark);">${sinCat}</div>
-            <div style="font-size:11px; color:#64748b; margin-top:4px;">Requieren asignación</div>
-        `;
-        grid.appendChild(div);
-    }
-}
-
-function agregarNuevaCategoria() {
-    const input = document.getElementById('newCategoryInput');
-    const nombre = input.value.trim();
-    
-    if (!nombre) { showToast("Ingresa un nombre para la categoría", "danger"); return; }
-    if (nombre.length < 2) { showToast("El nombre debe tener al menos 2 caracteres", "danger"); return; }
-    if (categoriasCatalogo.some(c => c.toLowerCase() === nombre.toLowerCase())) {
-        showToast("Ya existe una categoría con ese nombre", "danger"); return;
-    }
-    
-    categoriasCatalogo.push(nombre);
-    guardarCategorias();
-    input.value = '';
-    
-    renderizarListaCategoriasAdmin();
-    renderizarResumenCategorias();
-    renderizarNavbarCategorias();
-    renderizarSelectCategorias();
-    
-    showToast(`✓ Categoría "${nombre}" creada exitosamente`);
-}
-
-function editarCategoria(idx) {
-    const label = document.getElementById(`cat-label-${idx}`);
-    const nombreActual = categoriasCatalogo[idx];
-    
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.value = nombreActual;
-    input.className = 'inline-edit-input';
-    input.maxLength = 30;
-    
-    label.replaceWith(input);
-    input.focus();
-    input.select();
-    
-    const guardar = () => {
-        const nuevoNombre = input.value.trim();
-        
-        if (!nuevoNombre || nuevoNombre.length < 2) {
-            showToast("Nombre inválido. Cancelado.", "danger");
-            renderizarListaCategoriasAdmin();
-            return;
-        }
-        
-        if (nuevoNombre.toLowerCase() !== nombreActual.toLowerCase() && 
-            categoriasCatalogo.some((c, i) => i !== idx && c.toLowerCase() === nuevoNombre.toLowerCase())) {
-            showToast("Ya existe una categoría con ese nombre", "danger");
-            renderizarListaCategoriasAdmin();
-            return;
-        }
-        
-        productos.forEach(p => {
-            if (p.categoria === nombreActual) p.categoria = nuevoNombre;
-        });
-        localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-        if (firebaseDisponible) {
-            productos.forEach(p => guardarProductoEnFirestore(p));
-        }
-        
-        categoriasCatalogo[idx] = nuevoNombre;
-        guardarCategorias();
-        
-        renderizarListaCategoriasAdmin();
-        renderizarResumenCategorias();
-        renderizarNavbarCategorias();
-        renderizarSelectCategorias();
-        renderProductos();
-        
-        showToast(`✓ Categoría actualizada a "${nuevoNombre}"`);
-    };
-    
-    input.addEventListener('blur', guardar);
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
-        if (e.key === 'Escape') { renderizarListaCategoriasAdmin(); }
-    });
-}
-
-function eliminarCategoria(idx) {
-    const cat = categoriasCatalogo[idx];
-    const productosEnCat = productos.filter(p => p.categoria === cat).length;
-    
-    let mensaje = `¿Eliminar la categoría "${cat}"?`;
-    if (productosEnCat > 0) {
-        mensaje += `\n\nHay ${productosEnCat} producto(s) en esta categoría. Serán marcados como "Sin Categoría".`;
-    }
-    
-    if (!confirm(mensaje)) return;
-    
-    productos.forEach(p => {
-        if (p.categoria === cat) p.categoria = "Sin Categoría";
-    });
-    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-    if (firebaseDisponible) {
-        productos.forEach(p => guardarProductoEnFirestore(p));
-    }
-    
-    categoriasCatalogo.splice(idx, 1);
-    guardarCategorias();
-    
-    if (categoriaActual === cat) {
-        categoriaActual = "Todos";
-        document.getElementById('seccionTitulo').textContent = "Todos los Productos";
-    }
-    
-    renderizarListaCategoriasAdmin();
-    renderizarResumenCategorias();
-    renderizarNavbarCategorias();
-    renderizarSelectCategorias();
-    renderProductos();
-    
-    showToast(`Categoría "${cat}" eliminada`, "danger");
-}
-
-window.addEventListener('DOMContentLoaded', async () => {
+// APP SYSTEM INITIALIZER
+window.addEventListener('DOMContentLoaded', () => {
     syncTiendaUI();
-    renderizarNavbarCategorias();
-    renderizarSelectCategorias();
     renderProductos();
     updateLivePreview();
-    renderizarDetalleFirebase();
-    
-    actualizarEstadoFirebase('offline', 'Conectando...');
-    
-    const esperarFirebase = () => new Promise(resolve => {
-        if (window.__firebase) {
-            resolve(true);
-        } else {
-            const handler = () => {
-                window.removeEventListener('firebase-ready', handler);
-                resolve(true);
-            };
-            window.addEventListener('firebase-ready', handler);
-            setTimeout(() => resolve(false), 5000);
-        }
-    });
-    
-    await esperarFirebase();
-    fb = window.__firebase;
-    
-    if (fb) {
-        const conectado = await cargarDesdeFirebase();
-        if (conectado) {
-            syncTiendaUI();
-            renderizarNavbarCategorias();
-            renderizarSelectCategorias();
-            renderProductos();
-        }
-    } else {
-        actualizarEstadoFirebase('error', '⚠️ Error');
-    }
 });
 
-document.getElementById('cfgMarcaAgua').addEventListener('change', async function(e) {
+// MEDIA LOADER DIRECTO PARA MARCA DE AGUA
+document.getElementById('cfgMarcaAgua').addEventListener('change', function(e) {
     const file = e.target.files[0];
-    if (!file) return;
-    
-    const label = document.getElementById('watermarkUploadLabel');
-    const text = document.getElementById('watermarkUploadText');
-    const progress = document.getElementById('watermarkProgress');
-    const progressBar = document.getElementById('watermarkProgressBar');
-    const status = document.getElementById('watermarkStatus');
-    
-    label.classList.add('uploading');
-    text.textContent = '⏳ Subiendo imagen a Firebase Storage...';
-    progress.classList.add('active');
-    progressBar.style.width = '0%';
-    
-    try {
-        const url = await subirImagenAStorage(file, 'watermarks', 'marca_agua', (p) => {
-            progressBar.style.width = p + '%';
-        });
-        
-        tiendaConfig.watermark = url;
-        aplicarMarcaAgua();
-        localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
-        guardarConfigYcategoriasEnFirestore();
-        
-        label.classList.remove('uploading');
-        label.classList.add('uploaded');
-        text.textContent = '✅ Imagen subida exitosamente a la nube';
-        status.textContent = "✓ Marca de agua cargada en Firebase Storage";
-        showToast("✅ Marca de agua subida a Firebase");
-        
-        setTimeout(() => {
-            label.classList.remove('uploaded');
-            text.textContent = '📤 Seleccionar imagen de fondo (se sube a la nube)';
-        }, 3000);
-    } catch (error) {
-        console.error(error);
-        label.classList.remove('uploading');
-        text.textContent = '❌ Error al subir. Intenta de nuevo.';
-        showToast("❌ Error al subir la imagen", "danger");
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            tiendaConfig.watermark = event.target.result;
+            aplicarMarcaAgua();
+            document.getElementById('watermarkStatus').textContent = "✓ Fondo multimedia cargado correctamente";
+            localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
+            showToast("Marca de agua actualizada");
+        };
+        reader.readAsDataURL(file);
     }
 });
 
@@ -1374,86 +750,49 @@ function aplicarMarcaAgua() {
     }
 }
 
-async function procesarImagenProducto(input) {
+// MEDIA LOADER DIRECTO PARA IMAGEN DEL PRODUCTO
+function procesarImagenProducto(input) {
     const file = input.files[0];
-    if (!file) return;
-    
-    const label = document.getElementById('prodImgUploadLabel');
-    const text = document.getElementById('prodImgUploadText');
-    const progress = document.getElementById('prodImgProgress');
-    const progressBar = document.getElementById('prodImgProgressBar');
-    
-    label.classList.add('uploading');
-    text.textContent = '⏳ Subiendo imagen a Firebase Storage...';
-    progress.classList.add('active');
-    progressBar.style.width = '0%';
-    
-    try {
-        const codigo = document.getElementById('prodCodigo').value.trim() || 'preview';
-        const url = await subirImagenAStorage(file, 'productos', codigo, (p) => {
-            progressBar.style.width = p + '%';
-        });
-        
-        imagenProductoURL = url;
-        imagenProductoBase64 = "";
-        document.getElementById('prodUrlImg').value = "";
-        
-        label.classList.remove('uploading');
-        label.classList.add('uploaded');
-        text.textContent = `✅ Imagen subida: ${file.name}`;
-        showToast("✅ Imagen subida a Firebase Storage");
-        
-        updateLivePreview();
-        
-        setTimeout(() => {
-            label.classList.remove('uploaded');
-            text.textContent = '📤 Cargar imagen desde dispositivo (se sube a la nube)';
-        }, 3000);
-    } catch (error) {
-        console.error(error);
-        label.classList.remove('uploading');
-        text.textContent = '❌ Error al subir. Intenta de nuevo.';
-        showToast("❌ Error al subir la imagen", "danger");
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imagenProductoBase64 = e.target.result;
+            document.getElementById('prodUrlImg').value = ""; 
+            updateLivePreview();
+            showToast("Imagen de producto procesada");
+        };
+        reader.readAsDataURL(file);
     }
 }
 
+// DYNAMIC INLINE CSS INJECTOR
 function cambiarEstiloDinamico(property, val) {
     document.documentElement.style.setProperty(property, val);
     if(property === '--primary-pink') tiendaConfig.primaryColor = val;
-    if(property === '--Xiolover-bg') tiendaConfig.bgColor = val;
+    if(property === '--girly-bg') tiendaConfig.bgColor = val;
     if(property === '--font-family') tiendaConfig.typography = val;
     if(property === '--border-radius-base') tiendaConfig.borderRadius = val;
 }
 
 function liveUpdateStoreName(val) {
-    document.getElementById('storeNameView').textContent = val || "Xiolover";
-    document.getElementById('sidebarBrandName').textContent = (val || "Xiolover") + " ADMIN";
+    document.getElementById('storeNameView').textContent = val || "GIRLY";
+    document.getElementById('sidebarBrandName').textContent = (val || "GIRLY") + " ADMIN";
 }
 
+// CONSOLE TAB MANAGER
 function switchTab(tabId, btn) {
     document.querySelectorAll('.admin-view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.admin-nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
     btn.classList.add('active');
     
-    const titulos = { 
-        'tab-tienda': 'Personalización de Apariencia', 
-        'tab-categorias': 'Gestión de Categorías del Catálogo',
-        'tab-nuevo': 'Gestión de Catálogo / Alta de Producto', 
-        'tab-inventario': 'Consola de Control de Existencias',
-        'tab-firebase': 'Estado de Conexión Firebase'
-    };
+    const titulos = { 'tab-tienda': 'Personalización de Apariencia', 'tab-nuevo': 'Gestión de Catálogo / Alta de Producto', 'tab-inventario': 'Consola de Control de Existencias' };
     document.getElementById('adminSectionTitle').textContent = titulos[tabId];
     
     if(tabId === 'tab-inventario') renderInventarioTabla();
-    if(tabId === 'tab-categorias') {
-        renderizarListaCategoriasAdmin();
-        renderizarResumenCategorias();
-    }
-    if(tabId === 'tab-nuevo') renderizarSelectCategorias();
-    if(tabId === 'tab-firebase') renderizarDetalleFirebase();
 }
 
+// DATA SYNC MANAGER
 function syncTiendaUI() {
     document.getElementById('storeNameView').textContent = tiendaConfig.name;
     document.getElementById('sidebarBrandName').textContent = tiendaConfig.name + " ADMIN";
@@ -1470,23 +809,23 @@ function syncTiendaUI() {
     document.getElementById('cfgBorders').value = tiendaConfig.borderRadius;
 
     cambiarEstiloDinamico('--primary-pink', tiendaConfig.primaryColor);
-    cambiarEstiloDinamico('--Xiolover-bg', tiendaConfig.bgColor);
+    cambiarEstiloDinamico('--girly-bg', tiendaConfig.bgColor);
     cambiarEstiloDinamico('--font-family', tiendaConfig.typography);
     cambiarEstiloDinamico('--border-radius-base', tiendaConfig.borderRadius);
     aplicarMarcaAgua();
 }
 
 function guardarConfigTienda() {
-    tiendaConfig.name = document.getElementById('cfgStoreName').value || "Xiolover";
+    tiendaConfig.name = document.getElementById('cfgStoreName').value || "GIRLY";
     tiendaConfig.title = document.getElementById('cfgBannerTitle').value || "";
     tiendaConfig.desc = document.getElementById('cfgBannerDesc').value || "";
     
     localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
-    guardarConfigYcategoriasEnFirestore();
     syncTiendaUI();
-    showToast("💾 Configuración guardada" + (firebaseDisponible ? " en Firebase" : " localmente"));
+    showToast("Configuración general de identidad guardada");
 }
 
+// CATALOG RENDER ENGINE
 function renderProductos() {
     const contenedor = document.getElementById("productos");
     contenedor.innerHTML = "";
@@ -1505,7 +844,6 @@ function renderProductos() {
                 </div>
                 <div class="card-info">
                     <span class="category-tag">${p.categoria}</span>
-                    ${p.codigo ? `<span class="code-badge">COD: ${p.codigo}</span>` : ''}
                     <h3>${p.nombre}</h3>
                     <p class="price">$${p.precio}</p>
                     <span class="stock-tag">${sinStock ? 'AGOTADO EN ALMACÉN' : `Disponibles: ${p.stock} u.`}</span>
@@ -1524,15 +862,15 @@ function filtrarCategoria(cat, elem) {
     renderProductos();
 }
 
+// LIVE PREVIEW GENERATOR
 function updateLivePreview() {
-    const codigo = document.getElementById('prodCodigo').value || "COD-000";
     const nombre = document.getElementById('prodNombre').value || "Nombre de tu Producto Estrella";
     const precio = document.getElementById('prodPrecio').value || "0.000";
-    const categoria = document.getElementById('prodCategoria').value || "Sin Categoría";
+    const categoria = document.getElementById('prodCategoria').value;
     const stock = parseInt(document.getElementById('prodStock').value) || 0;
     const urlImg = document.getElementById('prodUrlImg').value;
     
-    const srcFinal = imagenProductoURL || imagenProductoBase64 || urlImg || 'https://via.placeholder.com/300?text=Previsualizacion';
+    const srcFinal = imagenProductoBase64 || urlImg || 'https://via.placeholder.com/300?text=Previsualizacion';
     const sinStock = stock <= 0;
     
     const previewBox = document.getElementById('liveProductPreviewCard');
@@ -1544,37 +882,23 @@ function updateLivePreview() {
             </div>
             <div class="card-info">
                 <span class="category-tag">${categoria}</span>
-                <span class="code-badge">COD: ${codigo}</span>
                 <h3>${nombre}</h3>
-                <p class="price">$${precio}</p>
+                <p class="price">$${previewBox ? precio : '0.000'}</p>
                 <span class="stock-tag">${sinStock ? 'AGOTADO EN ALMACÉN' : `Disponibles: ${stock} u.`}</span>
             </div>
         </div>
     `;
 }
 
-async function guardarNuevoProducto() {
+// FORM VALIDATION & CORE LOGIC
+function guardarNuevoProducto() {
     let isValid = true;
     
-    const codigoInput = document.getElementById('prodCodigo');
     const nombreInput = document.getElementById('prodNombre');
     const precioInput = document.getElementById('prodPrecio');
     const stockInput = document.getElementById('prodStock');
     const catSelect = document.getElementById('prodCategoria');
     const urlImgInput = document.getElementById('prodUrlImg');
-    const btn = document.getElementById('btnPublicarProducto');
-
-    if (!codigoInput.value || codigoInput.value.trim().length < 2) {
-        document.getElementById('valCodigo').classList.add('invalid');
-        isValid = false;
-    } else if (productos.some(p => p.codigo && p.codigo.toLowerCase() === codigoInput.value.trim().toLowerCase())) {
-        document.getElementById('valCodigo').classList.add('invalid');
-        document.querySelector('#valCodigo .invalid-feedback').textContent = "Este código ya existe en otro producto.";
-        isValid = false;
-    } else { 
-        document.getElementById('valCodigo').classList.remove('invalid');
-        document.querySelector('#valCodigo .invalid-feedback').textContent = "El código es obligatorio (único).";
-    }
 
     if (!nombreInput.value || nombreInput.value.trim().length < 3) {
         document.getElementById('valNombre').classList.add('invalid');
@@ -1597,48 +921,30 @@ async function guardarNuevoProducto() {
         return;
     }
 
-    const imgFinal = imagenProductoURL || imagenProductoBase64 || urlImgInput.value || 'https://via.placeholder.com/300?text=Cosmetico';
-
     const nuevoP = {
-        codigo: codigoInput.value.trim().toUpperCase(),
         nombre: nombreInput.value.trim(),
         precio: precioInput.value.trim(),
-        categoria: catSelect.value || "Sin Categoría",
-        img: imgFinal,
+        categoria: catSelect.value,
+        img: imagenProductoBase64 || urlImgInput.value || 'https://via.placeholder.com/300?text=Cosmetico',
         stock: parseInt(stockInput.value)
     };
-
-    btn.disabled = true;
-    btn.textContent = '⏳ Publicando...';
 
     productos.unshift(nuevoP); 
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
     
-    if (firebaseDisponible) {
-        await guardarProductoEnFirestore(nuevoP);
-    }
-    
-    codigoInput.value = "";
     nombreInput.value = "";
     precioInput.value = "";
     stockInput.value = "10";
     urlImgInput.value = "";
     imagenProductoBase64 = "";
-    imagenProductoURL = "";
     document.getElementById('prodFileImg').value = "";
-    
-    const text = document.getElementById('prodImgUploadText');
-    text.textContent = '📤 Cargar imagen desde dispositivo (se sube a la nube)';
     
     renderProductos();
     updateLivePreview();
-    
-    btn.disabled = false;
-    btn.textContent = 'Publicar Producto en Catálogo';
-    
-    showToast(`¡${nuevoP.nombre} (${nuevoP.codigo}) publicado${firebaseDisponible ? ' en Firebase' : ''}!`);
+    showToast(`¡${nuevoP.nombre} ha sido publicado exitosamente!`);
 }
 
+// INVENTORY SPREADSHEET MANAGER
 function renderInventarioTabla() {
     const tbody = document.getElementById('tablaInventario');
     tbody.innerHTML = "";
@@ -1650,7 +956,6 @@ function renderInventarioTabla() {
         tbody.innerHTML += `
             <tr id="row-inv-${index}">
                 <td><img src="${p.img || 'https://via.placeholder.com/50?text=Item'}" style="width:40px; height:40px; object-fit:contain; border-radius:6px; background:#f8fafc; border:1px solid var(--gray-border);"></td>
-                <td><span class="code-badge">${p.codigo || '—'}</span></td>
                 <td style="font-weight:600;">${p.nombre}</td>
                 <td><span style="font-size:11px; font-weight:700; background:var(--light-pink); padding:4px 8px; border-radius:10px; color:var(--primary-pink);">${p.categoria}</span></td>
                 <td style="font-weight:700;">$${p.precio}</td>
@@ -1659,7 +964,6 @@ function renderInventarioTabla() {
                 </td>
                 <td><span style="${statusClass}">${statusText}</span></td>
                 <td style="text-align:center;">
-                    <button style="background:none; border:none; font-size:16px; cursor:pointer; padding:6px;" onclick="editarCodigoProducto(${index})" title="Editar código">🔖</button>
                     <button style="background:none; border:none; font-size:16px; cursor:pointer; padding:6px;" onclick="eliminarProducto(${index})">🗑️</button>
                 </td>
             </tr>
@@ -1667,43 +971,10 @@ function renderInventarioTabla() {
     });
 }
 
-function editarCodigoProducto(idx) {
-    const nuevoCodigo = prompt(`Editar código del producto "${productos[idx].nombre}":`, productos[idx].codigo || '');
-    if (nuevoCodigo === null) return;
-    
-    const codigoLimpio = nuevoCodigo.trim().toUpperCase();
-    
-    if (!codigoLimpio || codigoLimpio.length < 2) {
-        showToast("Código inválido (mínimo 2 caracteres)", "danger");
-        return;
-    }
-    
-    if (productos.some((p, i) => i !== idx && p.codigo && p.codigo.toLowerCase() === codigoLimpio.toLowerCase())) {
-        showToast("Ya existe otro producto con ese código", "danger");
-        return;
-    }
-    
-    const codigoAnterior = productos[idx].codigo;
-    productos[idx].codigo = codigoLimpio;
-    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-    
-    if (firebaseDisponible) {
-        eliminarProductoDeFirestore(codigoAnterior);
-        guardarProductoEnFirestore(productos[idx]);
-    }
-    
-    renderInventarioTabla();
-    renderProductos();
-    showToast(`Código actualizado a "${codigoLimpio}"`);
-}
-
 function actualizarStockLinea(idx, nuevoStock) {
     productos[idx].stock = parseInt(nuevoStock) || 0;
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-    if (firebaseDisponible) {
-        guardarProductoEnFirestore(productos[idx]);
-    }
-    showToast("Inventario actualizado" + (firebaseDisponible ? " en Firebase" : ""));
+    showToast("Inventario actualizado instantaneamente");
 }
 
 function filtrarTablaInventario(busqueda) {
@@ -1711,10 +982,7 @@ function filtrarTablaInventario(busqueda) {
     productos.forEach((p, index) => {
         const fila = document.getElementById(`row-inv-${index}`);
         if(!fila) return;
-        const matchNombre = p.nombre.toLowerCase().includes(query);
-        const matchCategoria = p.categoria.toLowerCase().includes(query);
-        const matchCodigo = (p.codigo || '').toLowerCase().includes(query);
-        if(matchNombre || matchCategoria || matchCodigo){
+        if(p.nombre.toLowerCase().includes(query) || p.categoria.toLowerCase().includes(query)){
             fila.style.display = "table-row";
         } else {
             fila.style.display = "none";
@@ -1722,22 +990,17 @@ function filtrarTablaInventario(busqueda) {
     });
 }
 
-async function eliminarProducto(idx) {
-    if(!confirm("¿Estás seguro de que deseas retirar del catálogo este producto?")) return;
-    
-    const codigo = productos[idx].codigo;
-    productos.splice(idx, 1);
-    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-    
-    if (firebaseDisponible) {
-        await eliminarProductoDeFirestore(codigo);
+function eliminarProducto(idx) {
+    if(confirm("¿Estás seguro de que deseas retirar del catálogo este producto?")) {
+        productos.splice(idx, 1);
+        localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+        renderInventarioTabla();
+        renderProductos();
+        showToast("Producto removido del catálogo", "danger");
     }
-    
-    renderInventarioTabla();
-    renderProductos();
-    showToast("Producto removido del catálogo", "danger");
 }
 
+// VIEW & SECURITY ENGINE
 function abrirLogin() {
     const modal = document.getElementById('loginModal');
     modal.style.display = 'flex';
@@ -1786,6 +1049,7 @@ function toggleCart() {
     document.getElementById('cartSidebar').classList.toggle('open');
 }
 
+// CHECKOUT & CART OPERATIONS
 function agregarAlCarro(index) {
     const prod = productos[index];
     const enCarro = carrito.filter(x => x.nombre === prod.nombre).length;
@@ -1808,7 +1072,7 @@ function actualizarCarrito() {
     carrito.forEach((item) => {
         div.innerHTML += `
             <div class="cart-item">
-                <span><b>${item.nombre}</b>${item.codigo ? `<br><small style="color:#64748b;">Cod: ${item.codigo}</small>` : ''}</span> 
+                <span><b>${item.nombre}</b></span> 
                 <span>$${item.precio}</span>
             </div>`;
         suma += parseInt(item.precio.replace(/\./g, ''));
@@ -1817,18 +1081,22 @@ function actualizarCarrito() {
     count.textContent = carrito.length;
 }
 
-async function comprar() {
+// ENVÍO DE FORMULARIO LIMPIO OPTIMIZADO PARA MÓVILES (iOS / ANDROID)
+function comprar() {
     if (carrito.length === 0) return;
     
+    // Formato ultra-compatible en texto plano estructurado
     let mensaje = "*NUEVO PEDIDO - " + tiendaConfig.name.toUpperCase() + "*\n\n";
+    
     mensaje += "*DATOS DE ENTREGA*\n";
     mensaje += "Nombre: [Escribir Nombre Aquí]\n";
     mensaje += "Direccion: [Escribir Direccion Aquí]\n\n";
+    
     mensaje += "*PRODUCTOS SOLICITADOS*\n";
     let total = 0;
     
     carrito.forEach(item => {
-        mensaje += "- [" + (item.codigo || 'S/C') + "] " + item.nombre + " ($" + item.precio + ")\n";
+        mensaje += "- " + item.nombre + " ($" + (item.price || item.precio) + ")\n";
         total += parseInt(item.precio.replace(/\./g, ''));
         const ori = productos.find(p => p.nombre === item.nombre);
         if (ori) ori.stock--;
@@ -1838,13 +1106,6 @@ async function comprar() {
     mensaje += "Muchas gracias por tu compra.";
     
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-    
-    if (firebaseDisponible) {
-        for (const p of productos) {
-            await guardarProductoEnFirestore(p);
-        }
-    }
-    
     carrito = [];
     actualizarCarrito();
     toggleCart();
@@ -1854,7 +1115,5 @@ async function comprar() {
     window.open(urlFormat, "_blank");
 }
 </script>
-
 </body>
 </html>
-
