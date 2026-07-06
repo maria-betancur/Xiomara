@@ -5,13 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GIRLY - Catálogo de Belleza y Consola Admin</title>
 
-<!-- Tipografías de Google Fonts para personalización interactiva -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
-/* VARIABLES DINÁMICAS (Tematización nativa mediante CSS Custom Properties) */
 :root {
     --primary-pink: #e4578f; 
     --girly-bg: #fcaecb;   
@@ -22,8 +20,6 @@
     --font-size-base: 14px;
     --border-radius-base: 24px;
     --shadow-base: 0 8px 24px rgba(74, 40, 52, 0.08);
-    
-    /* Estados de UI */
     --success: #2ec4b6;
     --danger: #e63946;
     --warning: #ffb703;
@@ -31,13 +27,10 @@
     --gray-border: #e2e8f0;
 }
 
-*, *::before, *::after { 
-    box-sizing: border-box; 
-}
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     font-family: var(--font-family);
     font-size: var(--font-size-base);
     background: linear-gradient(to bottom, var(--girly-bg) 0%, #fcd0df 100%);
@@ -48,80 +41,56 @@ body {
     transition: background 0.4s ease;
 }
 
-/* MARCA DE AGUA */
 #watermark-bg {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    pointer-events: none;
-    z-index: -1;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 25%;
-    opacity: 0.06;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none; z-index: -1;
+    background-position: center; background-repeat: no-repeat;
+    background-size: 25%; opacity: 0.06;
 }
 
-/* NAVBAR SUPERIOR */
 header {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     padding: 15px 40px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
     box-shadow: 0 4px 30px rgba(74, 40, 52, 0.03);
 }
 
 header .brand {
-    font-size: 28px;
-    font-weight: 900;
+    font-size: 28px; font-weight: 900;
     color: var(--primary-pink);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+    text-transform: uppercase; letter-spacing: 2px;
+    cursor: pointer; transition: transform 0.2s ease;
 }
 header .brand:hover { transform: scale(1.03); }
 
 header nav {
-    display: flex;
-    gap: 12px;
+    display: flex; gap: 12px;
     background: rgba(255, 255, 255, 0.5);
-    padding: 6px;
-    border-radius: 30px;
+    padding: 6px; border-radius: 30px;
     border: 1px solid var(--gray-border);
+    flex-wrap: wrap;
 }
 
 header nav a {
-    color: var(--text-dark);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 8px 18px;
-    border-radius: 20px;
+    color: var(--text-dark); text-decoration: none;
+    font-size: 13px; font-weight: 600;
+    padding: 8px 18px; border-radius: 20px;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 header nav a:hover, header nav a.active {
-    background: var(--primary-pink);
-    color: white;
+    background: var(--primary-pink); color: white;
     box-shadow: 0 4px 12px rgba(228, 87, 143, 0.2);
 }
 
 .top-bar-buttons button {
-    background: white; 
-    border: 1px solid var(--gray-border); 
-    color: var(--text-dark); 
-    padding: 10px 20px; 
-    border-radius: 20px; 
-    font-weight: 600; 
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    background: white; border: 1px solid var(--gray-border);
+    color: var(--text-dark); padding: 10px 20px;
+    border-radius: 20px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: all 0.2s ease;
 }
@@ -131,51 +100,30 @@ header nav a:hover, header nav a.active {
     transform: translateY(-1px);
 }
 
-/* CONTENIDO PRINCIPAL */
-main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-}
+main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
 
-/* HERO BANNER */
 .promo-banner {
     background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255, 240, 245, 0.95) 100%);
     border-radius: var(--border-radius-base);
-    padding: 50px 40px;
-    color: var(--text-dark);
-    margin-bottom: 40px;
-    text-align: center;
+    padding: 50px 40px; color: var(--text-dark);
+    margin-bottom: 40px; text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.6);
     box-shadow: var(--shadow-base);
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
 }
 
-.promo-banner h1 { 
-    margin: 0 0 12px 0; 
-    font-size: 38px; 
-    font-weight: 800; 
-    color: var(--primary-pink);
-}
+.promo-banner h1 { margin: 0 0 12px 0; font-size: 38px; font-weight: 800; color: var(--primary-pink); }
 .promo-banner p { margin: 0; font-size: 16px; font-weight: 500; opacity: 0.8; }
 
 .category-title {
-    font-size: 18px;
-    color: white;
-    text-align: center;
-    margin: 0 auto 35px auto;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background: var(--primary-pink);
-    display: table;
-    padding: 8px 24px;
-    border-radius: 30px;
+    font-size: 18px; color: white; text-align: center;
+    margin: 0 auto 35px auto; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    background: var(--primary-pink); display: table;
+    padding: 8px 24px; border-radius: 30px;
     box-shadow: 0 4px 15px rgba(228, 87, 143, 0.3);
 }
 
-/* PRODUCTOS GRID */
 .container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -186,55 +134,37 @@ main {
     background: var(--card-bg);
     border-radius: var(--border-radius-base);
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
     box-shadow: var(--shadow-base);
     border: 1px solid rgba(255, 255, 255, 0.5);
     position: relative;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.card:hover { 
-    transform: translateY(-8px); 
-    box-shadow: 0 20px 40px rgba(74, 40, 52, 0.15); 
-}
+.card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(74, 40, 52, 0.15); }
 
 .card-top {
-    background: var(--gray-light);
-    padding: 20px;
-    text-align: center;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 220px;
-    border-bottom: 1px solid rgba(0,0,0,0.02);
+    background: var(--gray-light); padding: 20px;
+    text-align: center; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    height: 220px; border-bottom: 1px solid rgba(0,0,0,0.02);
 }
 .card img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: transform 0.3s; }
 .card:hover .card-top img { transform: scale(1.05); }
 
 .add-btn-floating {
-    position: absolute;
-    bottom: -22px;
-    right: 20px;
-    background: var(--primary-pink);
-    color: white;
-    border: none;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute; bottom: -22px; right: 20px;
+    background: var(--primary-pink); color: white; border: none;
+    width: 44px; height: 44px; border-radius: 50%;
+    cursor: pointer; font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
     box-shadow: 0 6px 16px rgba(228, 87, 143, 0.4);
-    z-index: 2;
-    transition: all 0.2s ease;
+    z-index: 2; transition: all 0.2s ease;
 }
 .add-btn-floating:hover { transform: scale(1.1) rotate(90deg); background: var(--text-dark); }
 
 .card-info { padding: 30px 22px 22px 22px; text-align: left; }
 .card .category-tag { font-size: 11px; text-transform: uppercase; color: var(--primary-pink); font-weight: 700; margin-bottom: 6px; display: block; letter-spacing: 0.5px; }
+.card .product-code { font-size: 11px; color: var(--primary-pink); font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
 .card h3 { font-size: 16px; margin: 0 0 10px 0; font-weight: 600; color: var(--text-dark); min-height: 44px; line-height: 1.4; }
 .card .price { font-size: 20px; font-weight: 800; color: var(--primary-pink); margin: 0; }
 .card .stock-tag { font-size: 11px; color: #64748b; background: var(--gray-light); padding: 4px 10px; border-radius: 20px; display: inline-block; margin-top: 12px; font-weight: 600; border: 1px solid var(--gray-border); }
@@ -243,7 +173,6 @@ main {
 .card.no-stock .add-btn-floating { background: #94a3b8; cursor: not-allowed; box-shadow: none; }
 .card.no-stock .add-btn-floating:hover { transform: none; }
 
-/* CARRITO FLOTANTE DESPLEGABLE */
 .cart-toggle-btn {
     position: fixed; bottom: 30px; right: 30px;
     background: var(--primary-pink); color: white; border: none;
@@ -254,16 +183,19 @@ main {
 }
 .cart-toggle-btn:hover { transform: scale(1.05); }
 .cart-count {
-    position: absolute; top: -2px; right: -2px; background: var(--text-dark); color: white;
-    border-radius: 50%; width: 22px; height: 22px; font-size: 11px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center; border: 2px solid white;
+    position: absolute; top: -2px; right: -2px;
+    background: var(--text-dark); color: white;
+    border-radius: 50%; width: 22px; height: 22px;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid white;
 }
 
 .cart {
     position: fixed; right: -400px; top: 0; width: 380px; height: 100%;
-    background: white; border-left: 1px solid var(--gray-border); padding: 40px 30px;
-    overflow-y: auto; box-sizing: border-box; z-index: 101;
-    transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white; border-left: 1px solid var(--gray-border);
+    padding: 40px 30px; overflow-y: auto; box-sizing: border-box;
+    z-index: 101; transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: -15px 0 40px rgba(74, 40, 52, 0.08);
 }
 .cart.open { right: 0; }
@@ -272,72 +204,62 @@ main {
 .close-cart { background: var(--gray-light); border: none; font-size: 16px; color: var(--text-dark); cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;}
 
 .btn-buy {
-    background: var(--primary-pink); color: white; border: none; padding: 16px; margin-top: 25px;
-    cursor: pointer; border-radius: 14px; width: 100%; font-weight: 700; font-size: 15px;
+    background: var(--primary-pink); color: white; border: none;
+    padding: 16px; margin-top: 25px; cursor: pointer;
+    border-radius: 14px; width: 100%; font-weight: 700; font-size: 15px;
     box-shadow: 0 4px 15px rgba(228, 87, 143, 0.3); transition: all 0.2s;
 }
 .btn-buy:hover { background: var(--text-dark); box-shadow: 0 4px 15px rgba(74, 40, 52, 0.3); }
 
-/* MODALES Y CONSOLA DE ADMINISTRACIÓN */
 .login-modal, .admin-panel {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    display: none; position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(74, 40, 52, 0.4); backdrop-filter: blur(10px);
     z-index: 110; justify-content: center; align-items: center;
     opacity: 0; transition: opacity 0.3s ease;
 }
 .login-content {
-    background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 380px;
-    text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.15); border: 1px solid var(--gray-border);
+    background: white; padding: 40px; border-radius: 24px;
+    width: 100%; max-width: 380px; text-align: center;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+    border: 1px solid var(--gray-border);
 }
 
 .admin-content {
     background: #f1f5f9; width: 95vw; max-width: 1300px; height: 90vh; 
-    border-radius: 24px; display: grid; grid-template-columns: 260px 1fr; 
-    overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    border-radius: 24px; display: grid;
+    grid-template-columns: 260px 1fr; 
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
-/* SIDEBAR DEL DASHBOARD */
 .admin-sidebar {
     background: white; border-right: 1px solid var(--gray-border);
-    padding: 30px 20px; display: flex; flex-direction: column; justify-content: space-between;
+    padding: 30px 20px;
+    display: flex; flex-direction: column; justify-content: space-between;
 }
-.admin-brand-area h3 {
-    margin: 0 0 5px 0; font-size: 20px; font-weight: 800; color: var(--primary-pink);
-}
-.admin-brand-area p {
-    margin: 0 0 25px 0; font-size: 12px; color: #64748b; font-weight: 500;
-}
-.admin-nav-menu {
-    display: flex; flex-direction: column; gap: 8px; flex-grow: 1;
-}
+.admin-brand-area h3 { margin: 0 0 5px 0; font-size: 20px; font-weight: 800; color: var(--primary-pink); }
+.admin-brand-area p { margin: 0 0 25px 0; font-size: 12px; color: #64748b; font-weight: 500; }
+.admin-nav-menu { display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
 .admin-nav-item {
-    display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-    background: transparent; border: none; border-radius: 12px;
-    color: #475569; font-weight: 600; font-size: 14px; cursor: pointer;
-    text-align: left; transition: all 0.2s ease;
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; background: transparent; border: none;
+    border-radius: 12px; color: #475569; font-weight: 600;
+    font-size: 14px; cursor: pointer; text-align: left;
+    transition: all 0.2s ease;
 }
-.admin-nav-item:hover {
-    background: var(--gray-light);
-    color: var(--text-dark);
-}
-.admin-nav-item.active {
-    background: var(--light-pink);
-    color: var(--primary-pink);
-}
+.admin-nav-item:hover { background: var(--gray-light); color: var(--text-dark); }
+.admin-nav-item.active { background: var(--light-pink); color: var(--primary-pink); }
 
-/* CONTENEDOR VISTAS ADMIN */
-.admin-main-container {
-    display: flex; flex-direction: column; height: 100%; overflow: hidden;
-}
+.admin-main-container { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
 .admin-top-navbar {
-    background: white; padding: 20px 40px; display: flex; 
-    justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gray-border);
+    background: white; padding: 20px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--gray-border);
 }
 .admin-top-navbar h2 { margin: 0; font-size: 20px; font-weight: 700; color: #1e293b; }
 
-.admin-body {
-    flex: 1; padding: 35px 40px; overflow-y: auto; box-sizing: border-box;
-}
+.admin-body { flex: 1; padding: 35px 40px; overflow-y: auto; box-sizing: border-box; }
 .admin-view { display: none; animation: fadeIn 0.25s ease-out; }
 .admin-view.active { display: block; }
 
@@ -348,14 +270,12 @@ main {
 
 .dashboard-card {
     background: white; padding: 30px; border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid var(--gray-border);
-    margin-bottom: 25px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--gray-border); margin-bottom: 25px;
 }
 .dashboard-card h4 { margin: 0 0 20px 0; font-size: 16px; font-weight: 700; color: #0f172a; border-bottom: 1px solid var(--gray-light); padding-bottom: 10px;}
 
-.grid-form-2 {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-}
+.grid-form-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .form-group { margin-bottom: 20px; position: relative; }
 .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px; color: #334155; }
 .form-group input[type="text"], 
@@ -371,33 +291,21 @@ main {
     box-shadow: 0 0 0 3px rgba(228, 87, 143, 0.15);
 }
 
-/* VALIDACIONES */
-.invalid-feedback {
-    color: var(--danger); font-size: 11px; font-weight: 600; margin-top: 4px; display: none;
-}
+.invalid-feedback { color: var(--danger); font-size: 11px; font-weight: 600; margin-top: 4px; display: none; }
 .form-group.invalid input { border-color: var(--danger); background-color: #fef2f2; }
 .form-group.invalid .invalid-feedback { display: block; }
 
-/* FILE UPLOAD ACCENT */
 .custom-file-upload {
     border: 2px dashed var(--gray-border); border-radius: 12px; padding: 25px;
-    text-align: center; cursor: pointer; background: #f8fafc; transition: all 0.2s ease;
-    display: block; font-weight: 600; color: #475569;
+    text-align: center; cursor: pointer; background: #f8fafc;
+    transition: all 0.2s ease; display: block; font-weight: 600; color: #475569;
 }
 .custom-file-upload:hover { border-color: var(--primary-pink); background: var(--light-pink); color: var(--primary-pink); }
 
-.product-split-layout {
-    display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px;
-}
-.preview-sticky-box {
-    position: sticky; top: 0; display: flex; flex-direction: column; align-items: center;
-}
+.product-split-layout { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
+.preview-sticky-box { position: sticky; top: 0; display: flex; flex-direction: column; align-items: center; }
 
-/* COMPONENTE TOAST */
-.toast-container {
-    position: fixed; top: 20px; right: 20px; z-index: 9999;
-    display: flex; flex-direction: column; gap: 10px;
-}
+.toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
 .toast {
     background: white; padding: 16px 24px; border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-left: 4px solid var(--primary-pink);
@@ -409,23 +317,87 @@ main {
 .toast.danger { border-left-color: var(--danger); }
 @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-/* TABLA DE EXISTENCIAS */
 .table-wrapper { background: white; border-radius: 12px; border: 1px solid var(--gray-border); overflow: hidden; }
 table.modern-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
 table.modern-table th { background: #f8fafc; padding: 16px; font-weight: 700; color: #475569; border-bottom: 1px solid var(--gray-border); }
 table.modern-table td { padding: 16px; border-bottom: 1px solid var(--gray-light); color: #334155; vertical-align: middle; }
 table.modern-table tbody tr:hover { background: #f8fafc; }
 
-.appearance-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;
-}
-.color-picker-wrapper {
-    display: flex; align-items: center; gap: 15px; background: #f8fafc; padding: 10px; border-radius: 10px; border: 1px solid var(--gray-border);
-}
-.color-picker-wrapper input[type="color"] {
-    -webkit-appearance: none; border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; background: none;
-}
+.appearance-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+.color-picker-wrapper { display: flex; align-items: center; gap: 15px; background: #f8fafc; padding: 10px; border-radius: 10px; border: 1px solid var(--gray-border); }
+.color-picker-wrapper input[type="color"] { -webkit-appearance: none; border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; background: none; }
 .color-picker-wrapper input[type="color"]::-webkit-color-swatch { border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); }
+
+.categorias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+.categoria-card {
+    background: var(--gray-light);
+    border: 2px solid var(--gray-border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+}
+.categoria-card:hover {
+    border-color: var(--primary-pink);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(228, 87, 143, 0.15);
+}
+.categoria-card .cat-nombre {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+.categoria-card .cat-count {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 600;
+}
+.categoria-card .cat-delete {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--danger);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.categoria-card:hover .cat-delete { opacity: 1; }
+.categoria-card .cat-delete:hover { background: #c1121f; }
+
+.btn-add-categoria {
+    background: var(--primary-pink);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-add-categoria:hover {
+    background: var(--text-dark);
+    transform: translateY(-1px);
+}
 
 @media (max-width: 900px) {
     .admin-content { grid-template-columns: 1fr; }
@@ -440,15 +412,10 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 <div id="watermark-bg"></div>
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- NAVIGATION BAR -->
 <header id="mainHeader">
     <div class="brand" id="storeNameView" onclick="filtrarCategoria('Todos', document.getElementById('btn-todos'))">GIRLY</div>
-    <nav>
+    <nav id="navCategorias">
         <a href="#" id="btn-todos" class="active" onclick="filtrarCategoria('Todos', this)">Todos</a>
-        <a href="#" onclick="filtrarCategoria('Maquillaje', this)">Maquillaje</a>
-        <a href="#" onclick="filtrarCategoria('Skincare', this)">Skincare</a>
-        <a href="#" onclick="filtrarCategoria('Cejas', this)">Cejas</a>
-        <a href="#" onclick="filtrarCategoria('Accesorios', this)">Accesorios</a>
     </nav>
     <div class="top-bar-buttons">
         <button onclick="abrirLogin()">Consola Admin</button>
@@ -456,7 +423,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 </header>
 
 <main>
-    <!-- HERO BANNER -->
     <div class="promo-banner" id="bannerConfigBg">
         <h1 id="bannerTitleView">Welcome to Girly World!</h1>
         <p id="bannerDescView">Explora lo último en tendencias de belleza y maquillaje viral.</p>
@@ -466,15 +432,24 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
         <div class="category-title" id="seccionTitulo">Todos los Productos</div>
     </div>
     
+    <div style="max-width: 500px; margin: 0 auto 30px auto; position: relative;">
+        <input type="text" id="buscadorCodigo" placeholder="🔍 Buscar producto por código (Ej: LAB-001)" 
+               oninput="buscarPorCodigo(this.value)" 
+               style="width: 100%; padding: 14px 20px; border: 2px solid var(--gray-border); border-radius: 30px; 
+                      font-family: inherit; font-size: 14px; font-weight: 600; color: var(--text-dark);
+                      background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease;">
+        <div id="resultadoBusqueda" style="position: absolute; top: 100%; left: 0; right: 0; background: white; 
+             border-radius: 12px; margin-top: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); display: none; z-index: 50;
+             max-height: 300px; overflow-y: auto;"></div>
+    </div>
+    
     <div class="container" id="productos"></div>
 </main>
 
-<!-- FLOATING CART BUTTON -->
 <button class="cart-toggle-btn" onclick="toggleCart()">
     🛒 <div class="cart-count" id="cartCount">0</div>
 </button>
 
-<!-- SIDEBAR CARRITO -->
 <div class="cart" id="cartSidebar">
     <h2>Mi Carrito <button class="close-cart" onclick="toggleCart()">✕</button></h2>
     <div id="carrito"></div>
@@ -484,7 +459,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     <button class="btn-buy" onclick="comprar()">Enviar Pedido por WhatsApp</button>
 </div>
 
-<!-- LOGIN MODAL -->
 <div class="login-modal" id="loginModal">
     <div class="login-content">
         <h3 style="margin:0 0 10px 0; font-size:20px;">Acceso Administrativo</h3>
@@ -498,11 +472,9 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     </div>
 </div>
 
-<!-- PANEL ADMINISTRATIVO PRINCIPAL -->
 <div class="admin-panel" id="adminPanel">
     <div class="admin-content">
         
-        <!-- DASHBOARD SIDEBAR -->
         <div class="admin-sidebar">
             <div class="admin-brand-area">
                 <h3 id="sidebarBrandName">GIRLY ADMIN</h3>
@@ -510,22 +482,25 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                 <div class="admin-nav-menu">
                     <button class="admin-nav-item active" onclick="switchTab('tab-tienda', this)">Apariencia y Tienda</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-nuevo', this)">Agregar Producto</button>
+                    <button class="admin-nav-item" onclick="switchTab('tab-categorias', this)">Gestión de Categorías</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-inventario', this)">Control de Inventario</button>
                 </div>
             </div>
             <button class="admin-nav-item" style="color:var(--danger); background:#fef2f2; margin-top:auto;" onclick="cerrarAdmin()">✕ Salir del Panel</button>
         </div>
 
-        <!-- DASHBOARD MAIN WORKSPACE -->
         <div class="admin-main-container">
             <div class="admin-top-navbar">
                 <h2 id="adminSectionTitle">Personalización de Apariencia</h2>
-                <div style="font-size:13px; font-weight:600; background:var(--light-pink); padding:6px 14px; border-radius:20px; color:var(--primary-pink)">Entorno Local Activo</div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <button onclick="descargarDatosDeNube().then(exito => { if(exito) { syncTiendaUI(); renderProductos(); updateLivePreview(); renderCategoriasAdmin(); } })" style="background:var(--primary-pink); color:white; border:none; padding:8px 16px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer;">⬇️ Sincronizar</button>
+                    <button onclick="subirDatosANube()" style="background:var(--text-dark); color:white; border:none; padding:8px 16px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer;">⬆️ Guardar en Nube</button>
+                    <div style="font-size:13px; font-weight:600; background:var(--light-pink); padding:6px 14px; border-radius:20px; color:var(--primary-pink)">☁️ Nube Activa</div>
+                </div>
             </div>
 
             <div class="admin-body">
                 
-                <!-- TAB APARIENCIA -->
                 <div id="tab-tienda" class="admin-view active">
                     <div class="dashboard-card">
                         <h4>Identidad de Marca y Contenido</h4>
@@ -597,12 +572,17 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     <button class="btn-buy" style="width:auto; padding:14px 35px;" onclick="guardarConfigTienda()">💾 Guardar Cambios de Apariencia</button>
                 </div>
 
-                <!-- TAB NUEVO PRODUCTO -->
                 <div id="tab-nuevo" class="admin-view">
                     <div class="product-split-layout">
                         <div class="dashboard-card" style="margin:0;">
                             <h4>Atributos del Producto</h4>
                             
+                            <div class="form-group" id="valCodigo">
+                                <label>Código del Producto * (para búsqueda interna)</label>
+                                <input type="text" id="prodCodigo" placeholder="Ej: LAB-001, SKIN-042" oninput="updateLivePreview()" style="text-transform: uppercase;">
+                                <div class="invalid-feedback">El código es obligatorio (mínimo 2 caracteres) y debe ser único.</div>
+                            </div>
+
                             <div class="form-group" id="valNombre">
                                 <label>Nombre del Producto *</label>
                                 <input type="text" id="prodNombre" placeholder="Ej: Labial Matte Gloss 24h" oninput="updateLivePreview()">
@@ -625,10 +605,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                             <div class="form-group">
                                 <label>Categoría</label>
                                 <select id="prodCategoria" onchange="updateLivePreview()">
-                                    <option value="Maquillaje">Maquillaje</option>
-                                    <option value="Skincare">Skincare</option>
-                                    <option value="Cejas">Cejas y Pestañas</option>
-                                    <option value="Accesorios">Accesorios</option>
                                 </select>
                             </div>
 
@@ -645,7 +621,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                             <button class="btn-buy" style="width:100%;" onclick="guardarNuevoProducto()">Publicar Producto en Catálogo</button>
                         </div>
 
-                        <!-- Real-time Preview Split Panel -->
                         <div class="preview-sticky-box">
                             <div style="font-size:12px; font-weight:700; color:#64748b; margin-bottom:15px; text-transform:uppercase; letter-spacing:1px;">Previsualización en vivo</div>
                             <div id="liveProductPreviewCard" style="width:100%; max-width:280px;"></div>
@@ -653,18 +628,42 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     </div>
                 </div>
 
-                <!-- TAB CONTROL DE INVENTARIO -->
+                <div id="tab-categorias" class="admin-view">
+                    <div class="dashboard-card">
+                        <h4>Agregar Nueva Categoría</h4>
+                        <div style="display: flex; gap: 15px; align-items: flex-end;">
+                            <div class="form-group" id="valNuevaCategoria" style="flex: 1; margin-bottom: 0;">
+                                <label>Nombre de la Categoría *</label>
+                                <input type="text" id="nuevaCategoriaInput" placeholder="Ej: Labiales, Cuidado Capilar..." style="text-transform: capitalize;">
+                                <div class="invalid-feedback">El nombre es obligatorio (mínimo 2 caracteres) y debe ser único.</div>
+                            </div>
+                            <button class="btn-add-categoria" onclick="agregarCategoria()">
+                                ➕ Agregar Categoría
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h4>Categorías Existentes</h4>
+                        <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">
+                            Haz hover sobre una categoría para ver el botón de eliminar. ⚠️ No se puede eliminar una categoría que tenga productos asignados.
+                        </p>
+                        <div class="categorias-grid" id="categoriasGrid">
+                        </div>
+                    </div>
+                </div>
+
                 <div id="tab-inventario" class="admin-view">
                     <div class="dashboard-card">
                         <div style="display:flex; justify-content:between; align-items:center; margin-bottom:20px; gap:15px;">
-                            <input type="text" id="inventarioBuscador" placeholder="Buscar por nombre o categoría en el stock..." oninput="filtrarTablaInventario(this.value)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--gray-border); font-family:inherit;">
+                            <input type="text" id="inventarioBuscador" placeholder="Buscar por nombre, código o categoría en el stock..." oninput="filtrarTablaInventario(this.value)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--gray-border); font-family:inherit;">
                         </div>
                         <div class="table-wrapper">
                             <table class="modern-table">
                                 <thead>
                                     <tr>
                                         <th>Imagen</th>
-                                        <th>Nombre del Producto</th>
+                                        <th>Producto</th>
                                         <th>Categoría</th>
                                         <th>Precio</th>
                                         <th>Existencias</th>
@@ -685,17 +684,115 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 </div>
 
 <script>
+// ==========================================
+// CONFIGURACIÓN JSONBIN.IO (SINCRONIZACIÓN EN LA NUBE)
+// ==========================================
+const JSONBIN_CONFIG = {
+    BIN_ID: '6a4c01f1f5f4af5e2968a7e7',
+    MASTER_KEY: '$2a$10$PeUlx/tKsPsZjtR./Ntz.eudxh0ZP0zHj7NAxc4XX7dFxsn.XzCy.',
+    API_URL: 'https://api.jsonbin.io/v3/b/6a4c01f1f5f4af5e2968a7e7'
+};
+
+async function subirDatosANube(mostrarMensaje = true) {
+    try {
+        const datos = {
+            productos: productos,
+            tiendaConfig: tiendaConfig,
+            categorias: categorias,
+            ultimaActualizacion: new Date().toISOString()
+        };
+        
+        const response = await fetch(JSONBIN_CONFIG.API_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': JSONBIN_CONFIG.MASTER_KEY
+            },
+            body: JSON.stringify(datos)
+        });
+
+        if (response.ok) {
+            if (mostrarMensaje) showToast("✅ Cambios guardados en la nube", "success");
+            return true;
+        } else {
+            console.error('Error al subir:', response.status);
+            if (mostrarMensaje) showToast("❌ Error al guardar en la nube", "danger");
+            return false;
+        }
+    } catch (error) {
+        console.error('Error de conexión:', error);
+        if (mostrarMensaje) showToast("❌ Error de red al sincronizar", "danger");
+        return false;
+    }
+}
+
+async function descargarDatosDeNube() {
+    try {
+        const response = await fetch(`${JSONBIN_CONFIG.API_URL}/latest`, {
+            method: 'GET',
+            headers: { 'X-Master-Key': JSONBIN_CONFIG.MASTER_KEY }
+        });
+
+        if (response.ok) {
+            const json = await response.json();
+            const datos = json.record;
+            
+            if (datos && datos.productos) {
+                productos = datos.productos;
+                localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+            }
+            
+            if (datos && datos.tiendaConfig) {
+                tiendaConfig = datos.tiendaConfig;
+                localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
+            }
+
+            if (datos && datos.categorias) {
+                categorias = datos.categorias;
+                localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
+            }
+            
+            showToast("✅ Datos sincronizados desde la nube", "success");
+            return true;
+        } else {
+            console.error('Error al descargar:', response.status);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error de conexión:', error);
+        return false;
+    }
+}
+
 const PIN_CORRECTO = "55555"; 
 let intentosFallidos = 0;
 let categoriaActual = "Todos";
 let imagenProductoBase64 = ""; 
 
-// BASE DE DATOS MOCK INITIAL
+let categorias = JSON.parse(localStorage.getItem('db_categorias_v1')) || [
+    'Maquillaje', 'Skincare', 'Cejas', 'Accesorios'
+];
+
+function generarIDProducto() {
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+    return `GIRLY-${timestamp}-${random}`;
+}
+
+function asignarIDsSiFaltan() {
+    productos.forEach(prod => {
+        if (!prod.id) {
+            prod.id = generarIDProducto();
+        }
+    });
+    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+}
+
 const prodsDefecto = [
-    {nombre: "Caja Lip Combo Girly Premium", precio: "40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
-    {nombre: "Tinte Fijador De Cejas Brow Set", precio: "38.000", categoria: "Cejas", img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=300", stock: 15},
-    {nombre: "Kit Base Humide + Obsequio Corrector", precio: "50.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300", stock: 5},
-    {nombre: "Kit Brochas Fluffy x10 Montoc", precio: "60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0}
+    {id: generarIDProducto(), codigo: "LAB-001", nombre: "Caja Lip Combo Girly Premium", precio: "40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
+    {id: generarIDProducto(), codigo: "CEJ-001", nombre: "Tinte Fijador De Cejas Brow Set", precio: "38.000", categoria: "Cejas", img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=300", stock: 15},
+    {id: generarIDProducto(), codigo: "MAQ-001", nombre: "Kit Base Humide + Obsequio Corrector", precio: "50.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300", stock: 5},
+    {id: generarIDProducto(), codigo: "ACC-001", nombre: "Kit Brochas Fluffy x10 Montoc", precio: "60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0}
 ];
 
 let productos = JSON.parse(localStorage.getItem('db_prods_v2')) || prodsDefecto;
@@ -711,7 +808,6 @@ let tiendaConfig = JSON.parse(localStorage.getItem('db_store_cfg_v2')) || {
 };
 let carrito = [];
 
-// TOAST NOTIFICATION SYSTEM
 function showToast(message, type = "success") {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
@@ -721,14 +817,145 @@ function showToast(message, type = "success") {
     setTimeout(() => { toast.remove(); }, 3500);
 }
 
-// APP SYSTEM INITIALIZER
-window.addEventListener('DOMContentLoaded', () => {
+function renderSelectCategorias() {
+    const select = document.getElementById('prodCategoria');
+    select.innerHTML = '';
+    categorias.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
+    });
+}
+
+function renderCategoriasAdmin() {
+    const grid = document.getElementById('categoriasGrid');
+    grid.innerHTML = '';
+
+    if (categorias.length === 0) {
+        grid.innerHTML = '<p style="color: #94a3b8; text-align: center; grid-column: 1/-1;">No hay categorías creadas. Agrega la primera arriba.</p>';
+        return;
+    }
+
+    categorias.forEach((cat, index) => {
+        const productosEnCategoria = productos.filter(p => p.categoria === cat).length;
+        
+        const card = document.createElement('div');
+        card.className = 'categoria-card';
+        card.innerHTML = `
+            <button class="cat-delete" onclick="eliminarCategoria(${index})" title="Eliminar categoría">✕</button>
+            <div class="cat-nombre">${cat}</div>
+            <div class="cat-count">${productosEnCategoria} producto${productosEnCategoria !== 1 ? 's' : ''}</div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+function agregarCategoria() {
+    const input = document.getElementById('nuevaCategoriaInput');
+    const nombre = input.value.trim();
+    
+    if (!nombre || nombre.length < 2) {
+        document.getElementById('valNuevaCategoria').classList.add('invalid');
+        showToast("⚠️ El nombre de la categoría es obligatorio (mínimo 2 caracteres)", "danger");
+        return;
+    }
+    
+    document.getElementById('valNuevaCategoria').classList.remove('invalid');
+    
+    const nombreNormalizado = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
+    
+    if (categorias.some(c => c.toLowerCase() === nombreNormalizado.toLowerCase())) {
+        document.getElementById('valNuevaCategoria').classList.add('invalid');
+        showToast("⚠️ Ya existe una categoría con ese nombre", "danger");
+        return;
+    }
+    
+    categorias.push(nombreNormalizado);
+    localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
+    
+    input.value = '';
+    
+    renderSelectCategorias();
+    renderCategoriasAdmin();
+    renderNavCategorias();
+    
+    showToast(`✅ Categoría "${nombreNormalizado}" creada exitosamente`);
+    
+    subirDatosANube(false);
+}
+
+function eliminarCategoria(index) {
+    const categoriaAEliminar = categorias[index];
+    
+    const productosEnCategoria = productos.filter(p => p.categoria === categoriaAEliminar).length;
+    
+    if (productosEnCategoria > 0) {
+        showToast(`⚠️ No se puede eliminar "${categoriaAEliminar}" porque tiene ${productosEnCategoria} producto(s) asignado(s)`, "danger");
+        return;
+    }
+    
+    if (confirm(`¿Estás seguro de eliminar la categoría "${categoriaAEliminar}"?`)) {
+        categorias.splice(index, 1);
+        localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
+        
+        renderSelectCategorias();
+        renderCategoriasAdmin();
+        renderNavCategorias();
+        
+        showToast(`🗑️ Categoría "${categoriaAEliminar}" eliminada`, "danger");
+        
+        subirDatosANube(false);
+    }
+}
+
+function renderNavCategorias() {
+    const nav = document.getElementById('navCategorias');
+    nav.innerHTML = '';
+    
+    const btnTodos = document.createElement('a');
+    btnTodos.href = '#';
+    btnTodos.id = 'btn-todos';
+    btnTodos.className = categoriaActual === 'Todos' ? 'active' : '';
+    btnTodos.textContent = 'Todos';
+    btnTodos.onclick = function(e) { e.preventDefault(); filtrarCategoria('Todos', this); };
+    nav.appendChild(btnTodos);
+    
+    categorias.forEach(cat => {
+        const link = document.createElement('a');
+        link.href = '#';
+        link.className = categoriaActual === cat ? 'active' : '';
+        link.textContent = cat;
+        link.onclick = function(e) { e.preventDefault(); filtrarCategoria(cat, this); };
+        nav.appendChild(link);
+    });
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+    const exito = await descargarDatosDeNube();
+    
+    if (!exito) {
+        console.log('Usando datos locales como respaldo');
+    }
+    
+    asignarIDsSiFaltan();
+    
     syncTiendaUI();
+    renderSelectCategorias();
+    renderCategoriasAdmin();
+    renderNavCategorias();
     renderProductos();
     updateLivePreview();
 });
 
-// MEDIA LOADER DIRECTO PARA MARCA DE AGUA
+document.addEventListener('click', function(e) {
+    const buscador = document.getElementById('buscadorCodigo');
+    const resultado = document.getElementById('resultadoBusqueda');
+    if (buscador && resultado && !buscador.contains(e.target) && !resultado.contains(e.target)) {
+        resultado.style.display = 'none';
+    }
+});
+
 document.getElementById('cfgMarcaAgua').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -750,7 +977,6 @@ function aplicarMarcaAgua() {
     }
 }
 
-// MEDIA LOADER DIRECTO PARA IMAGEN DEL PRODUCTO
 function procesarImagenProducto(input) {
     const file = input.files[0];
     if (file) {
@@ -765,7 +991,6 @@ function procesarImagenProducto(input) {
     }
 }
 
-// DYNAMIC INLINE CSS INJECTOR
 function cambiarEstiloDinamico(property, val) {
     document.documentElement.style.setProperty(property, val);
     if(property === '--primary-pink') tiendaConfig.primaryColor = val;
@@ -779,20 +1004,24 @@ function liveUpdateStoreName(val) {
     document.getElementById('sidebarBrandName').textContent = (val || "GIRLY") + " ADMIN";
 }
 
-// CONSOLE TAB MANAGER
 function switchTab(tabId, btn) {
     document.querySelectorAll('.admin-view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.admin-nav-item').forEach(b => b.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
     btn.classList.add('active');
     
-    const titulos = { 'tab-tienda': 'Personalización de Apariencia', 'tab-nuevo': 'Gestión de Catálogo / Alta de Producto', 'tab-inventario': 'Consola de Control de Existencias' };
+    const titulos = { 
+        'tab-tienda': 'Personalización de Apariencia', 
+        'tab-nuevo': 'Gestión de Catálogo / Alta de Producto', 
+        'tab-categorias': 'Gestión de Categorías',
+        'tab-inventario': 'Consola de Control de Existencias' 
+    };
     document.getElementById('adminSectionTitle').textContent = titulos[tabId];
     
     if(tabId === 'tab-inventario') renderInventarioTabla();
+    if(tabId === 'tab-categorias') renderCategoriasAdmin();
 }
 
-// DATA SYNC MANAGER
 function syncTiendaUI() {
     document.getElementById('storeNameView').textContent = tiendaConfig.name;
     document.getElementById('sidebarBrandName').textContent = tiendaConfig.name + " ADMIN";
@@ -815,7 +1044,7 @@ function syncTiendaUI() {
     aplicarMarcaAgua();
 }
 
-function guardarConfigTienda() {
+async function guardarConfigTienda() {
     tiendaConfig.name = document.getElementById('cfgStoreName').value || "GIRLY";
     tiendaConfig.title = document.getElementById('cfgBannerTitle').value || "";
     tiendaConfig.desc = document.getElementById('cfgBannerDesc').value || "";
@@ -823,9 +1052,10 @@ function guardarConfigTienda() {
     localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
     syncTiendaUI();
     showToast("Configuración general de identidad guardada");
+    
+    await subirDatosANube();
 }
 
-// CATALOG RENDER ENGINE
 function renderProductos() {
     const contenedor = document.getElementById("productos");
     contenedor.innerHTML = "";
@@ -844,6 +1074,7 @@ function renderProductos() {
                 </div>
                 <div class="card-info">
                     <span class="category-tag">${p.categoria}</span>
+                    <div class="product-code">Código: ${p.codigo || 'N/A'}</div>
                     <h3>${p.nombre}</h3>
                     <p class="price">$${p.precio}</p>
                     <span class="stock-tag">${sinStock ? 'AGOTADO EN ALMACÉN' : `Disponibles: ${p.stock} u.`}</span>
@@ -859,11 +1090,81 @@ function filtrarCategoria(cat, elem) {
     document.getElementById('seccionTitulo').textContent = cat === "Todos" ? "Todos los Productos" : `Categoría: ${cat}`;
     document.querySelectorAll('header nav a').forEach(a => a.classList.remove('active'));
     elem.classList.add('active');
+    document.getElementById('buscadorCodigo').value = '';
     renderProductos();
 }
 
-// LIVE PREVIEW GENERATOR
+function buscarPorCodigo(query) {
+    const resultadoDiv = document.getElementById('resultadoBusqueda');
+    const contenedor = document.getElementById("productos");
+    
+    if (!query || query.trim().length === 0) {
+        resultadoDiv.style.display = 'none';
+        renderProductos();
+        return;
+    }
+    
+    const queryUpper = query.toUpperCase().trim();
+    const productosEncontrados = productos.filter(p => 
+        p.codigo && p.codigo.toUpperCase().includes(queryUpper)
+    );
+    
+    if (productosEncontrados.length === 0) {
+        resultadoDiv.innerHTML = '<div style="padding: 15px; text-align: center; color: #94a3b8; font-weight: 600;">No se encontraron productos con ese código</div>';
+        resultadoDiv.style.display = 'block';
+        contenedor.innerHTML = '';
+        return;
+    }
+    
+    resultadoDiv.innerHTML = productosEncontrados.map(p => `
+        <div style="padding: 12px 20px; border-bottom: 1px solid var(--gray-light); cursor: pointer; 
+                    display: flex; justify-content: space-between; align-items: center; transition: background 0.2s;"
+             onmouseover="this.style.background='var(--light-pink)'" 
+             onmouseout="this.style.background='white'"
+             onclick="seleccionarProductoPorCodigo('${p.codigo}')">
+            <div>
+                <div style="font-weight: 700; color: var(--primary-pink); font-size: 13px;">${p.codigo}</div>
+                <div style="font-size: 12px; color: var(--text-dark);">${p.nombre}</div>
+            </div>
+            <div style="font-weight: 700; color: var(--text-dark);">$${p.precio}</div>
+        </div>
+    `).join('');
+    
+    resultadoDiv.style.display = 'block';
+    
+    contenedor.innerHTML = '';
+    productosEncontrados.forEach((p) => {
+        const sinStock = p.stock <= 0;
+        const indexOriginal = productos.indexOf(p);
+        
+        contenedor.innerHTML += `
+            <div class="card ${sinStock ? 'no-stock' : ''}">
+                <div class="card-top">
+                    <img src="${p.img || 'https://via.placeholder.com/300?text=Beauty+Cosmetics'}" alt="${p.nombre}">
+                    <button class="add-btn-floating" onclick="${sinStock ? '' : `agregarAlCarro(${indexOriginal})`}">
+                        ${sinStock ? '✕' : '＋'}
+                    </button>
+                </div>
+                <div class="card-info">
+                    <span class="category-tag">${p.categoria}</span>
+                    <div class="product-code">Código: ${p.codigo}</div>
+                    <h3>${p.nombre}</h3>
+                    <p class="price">$${p.precio}</p>
+                    <span class="stock-tag">${sinStock ? 'AGOTADO EN ALMACÉN' : `Disponibles: ${p.stock} u.`}</span>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function seleccionarProductoPorCodigo(codigo) {
+    document.getElementById('buscadorCodigo').value = codigo;
+    document.getElementById('resultadoBusqueda').style.display = 'none';
+    buscarPorCodigo(codigo);
+}
+
 function updateLivePreview() {
+    const codigo = document.getElementById('prodCodigo').value || "COD-000";
     const nombre = document.getElementById('prodNombre').value || "Nombre de tu Producto Estrella";
     const precio = document.getElementById('prodPrecio').value || "0.000";
     const categoria = document.getElementById('prodCategoria').value;
@@ -882,23 +1183,29 @@ function updateLivePreview() {
             </div>
             <div class="card-info">
                 <span class="category-tag">${categoria}</span>
+                <div class="product-code">Código: ${codigo.toUpperCase()}</div>
                 <h3>${nombre}</h3>
-                <p class="price">$${previewBox ? precio : '0.000'}</p>
+                <p class="price">$${precio}</p>
                 <span class="stock-tag">${sinStock ? 'AGOTADO EN ALMACÉN' : `Disponibles: ${stock} u.`}</span>
             </div>
         </div>
     `;
 }
 
-// FORM VALIDATION & CORE LOGIC
-function guardarNuevoProducto() {
+async function guardarNuevoProducto() {
     let isValid = true;
     
+    const codigoInput = document.getElementById('prodCodigo');
     const nombreInput = document.getElementById('prodNombre');
     const precioInput = document.getElementById('prodPrecio');
     const stockInput = document.getElementById('prodStock');
     const catSelect = document.getElementById('prodCategoria');
     const urlImgInput = document.getElementById('prodUrlImg');
+
+    if (!codigoInput.value || codigoInput.value.trim().length < 2) {
+        document.getElementById('valCodigo').classList.add('invalid');
+        isValid = false;
+    } else { document.getElementById('valCodigo').classList.remove('invalid'); }
 
     if (!nombreInput.value || nombreInput.value.trim().length < 3) {
         document.getElementById('valNombre').classList.add('invalid');
@@ -921,7 +1228,17 @@ function guardarNuevoProducto() {
         return;
     }
 
+    const codigoNuevo = codigoInput.value.trim().toUpperCase();
+    const productoExistente = productos.find(p => p.codigo === codigoNuevo);
+    if (productoExistente) {
+        document.getElementById('valCodigo').classList.add('invalid');
+        showToast("⚠️ Ya existe un producto con ese código", "danger");
+        return;
+    }
+
     const nuevoP = {
+        id: generarIDProducto(),
+        codigo: codigoNuevo,
         nombre: nombreInput.value.trim(),
         precio: precioInput.value.trim(),
         categoria: catSelect.value,
@@ -932,6 +1249,7 @@ function guardarNuevoProducto() {
     productos.unshift(nuevoP); 
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
     
+    codigoInput.value = "";
     nombreInput.value = "";
     precioInput.value = "";
     stockInput.value = "10";
@@ -941,10 +1259,12 @@ function guardarNuevoProducto() {
     
     renderProductos();
     updateLivePreview();
+    renderCategoriasAdmin();
     showToast(`¡${nuevoP.nombre} ha sido publicado exitosamente!`);
+    
+    await subirDatosANube();
 }
 
-// INVENTORY SPREADSHEET MANAGER
 function renderInventarioTabla() {
     const tbody = document.getElementById('tablaInventario');
     tbody.innerHTML = "";
@@ -956,7 +1276,10 @@ function renderInventarioTabla() {
         tbody.innerHTML += `
             <tr id="row-inv-${index}">
                 <td><img src="${p.img || 'https://via.placeholder.com/50?text=Item'}" style="width:40px; height:40px; object-fit:contain; border-radius:6px; background:#f8fafc; border:1px solid var(--gray-border);"></td>
-                <td style="font-weight:600;">${p.nombre}</td>
+                <td>
+                    <div style="font-weight:600;">${p.nombre}</div>
+                    <div style="font-size:11px; color:var(--primary-pink); font-weight:700; margin-top:2px;">${p.codigo || 'N/A'}</div>
+                </td>
                 <td><span style="font-size:11px; font-weight:700; background:var(--light-pink); padding:4px 8px; border-radius:10px; color:var(--primary-pink);">${p.categoria}</span></td>
                 <td style="font-weight:700;">$${p.precio}</td>
                 <td>
@@ -971,10 +1294,11 @@ function renderInventarioTabla() {
     });
 }
 
-function actualizarStockLinea(idx, nuevoStock) {
+async function actualizarStockLinea(idx, nuevoStock) {
     productos[idx].stock = parseInt(nuevoStock) || 0;
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
     showToast("Inventario actualizado instantaneamente");
+    await subirDatosANube(false);
 }
 
 function filtrarTablaInventario(busqueda) {
@@ -982,7 +1306,7 @@ function filtrarTablaInventario(busqueda) {
     productos.forEach((p, index) => {
         const fila = document.getElementById(`row-inv-${index}`);
         if(!fila) return;
-        if(p.nombre.toLowerCase().includes(query) || p.categoria.toLowerCase().includes(query)){
+        if(p.nombre.toLowerCase().includes(query) || p.categoria.toLowerCase().includes(query) || (p.codigo && p.codigo.toLowerCase().includes(query))){
             fila.style.display = "table-row";
         } else {
             fila.style.display = "none";
@@ -990,17 +1314,18 @@ function filtrarTablaInventario(busqueda) {
     });
 }
 
-function eliminarProducto(idx) {
+async function eliminarProducto(idx) {
     if(confirm("¿Estás seguro de que deseas retirar del catálogo este producto?")) {
         productos.splice(idx, 1);
         localStorage.setItem('db_prods_v2', JSON.stringify(productos));
         renderInventarioTabla();
         renderProductos();
+        renderCategoriasAdmin();
         showToast("Producto removido del catálogo", "danger");
+        await subirDatosANube();
     }
 }
 
-// VIEW & SECURITY ENGINE
 function abrirLogin() {
     const modal = document.getElementById('loginModal');
     modal.style.display = 'flex';
@@ -1021,11 +1346,9 @@ function verificarPassword() {
     if(pInput.value === PIN_CORRECTO) {
         intentosFallidos = 0; 
         cerrarLogin();
-        
         const panel = document.getElementById('adminPanel');
         panel.style.display = 'flex';
         setTimeout(() => panel.style.opacity = '1', 10);
-        
         switchTab('tab-tienda', document.querySelector('.admin-nav-item'));
     } else {
         intentosFallidos++;
@@ -1049,7 +1372,6 @@ function toggleCart() {
     document.getElementById('cartSidebar').classList.toggle('open');
 }
 
-// CHECKOUT & CART OPERATIONS
 function agregarAlCarro(index) {
     const prod = productos[index];
     const enCarro = carrito.filter(x => x.nombre === prod.nombre).length;
@@ -1081,22 +1403,20 @@ function actualizarCarrito() {
     count.textContent = carrito.length;
 }
 
-// ENVÍO DE FORMULARIO LIMPIO OPTIMIZADO PARA MÓVILES (iOS / ANDROID)
 function comprar() {
     if (carrito.length === 0) return;
     
-    // Formato ultra-compatible en texto plano estructurado
     let mensaje = "*NUEVO PEDIDO - " + tiendaConfig.name.toUpperCase() + "*\n\n";
-    
     mensaje += "*DATOS DE ENTREGA*\n";
     mensaje += "Nombre: [Escribir Nombre Aquí]\n";
     mensaje += "Direccion: [Escribir Direccion Aquí]\n\n";
-    
     mensaje += "*PRODUCTOS SOLICITADOS*\n";
     let total = 0;
     
     carrito.forEach(item => {
-        mensaje += "- " + item.nombre + " ($" + (item.price || item.precio) + ")\n";
+        mensaje += "- " + item.nombre;
+        if (item.codigo) mensaje += " (Código: " + item.codigo + ")";
+        mensaje += " ($" + (item.price || item.precio) + ")\n";
         total += parseInt(item.precio.replace(/\./g, ''));
         const ori = productos.find(p => p.nombre === item.nombre);
         if (ori) ori.stock--;
