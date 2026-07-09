@@ -9,6 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
 
+<!-- Librería SheetJS para leer Excel -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
 <style>
 :root {
     --primary-pink: #e4578f; 
@@ -139,6 +142,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
     border: 1px solid rgba(255, 255, 255, 0.5);
     position: relative;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
 }
 .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(74, 40, 52, 0.15); }
 
@@ -371,7 +375,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 }
 .btn-add-categoria:hover { background: var(--text-dark); transform: translateY(-1px); }
 
-/* ESTILOS PARA PANEL DE SINCRONIZACIÓN */
 .sync-status-card {
     background: white;
     border-radius: 16px;
@@ -471,11 +474,286 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     border-left: 3px solid var(--primary-pink);
 }
 
+.product-detail-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(74, 40, 52, 0.5);
+    backdrop-filter: blur(12px);
+    z-index: 115;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 20px;
+}
+.product-detail-modal.open {
+    display: flex;
+    opacity: 1;
+}
+.product-detail-content {
+    background: white;
+    border-radius: 24px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+    position: relative;
+    animation: modalZoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalZoomIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.product-detail-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: white;
+    border: 1px solid var(--gray-border);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.product-detail-close:hover {
+    background: var(--primary-pink);
+    color: white;
+    transform: rotate(90deg);
+}
+.product-detail-image {
+    background: var(--gray-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    min-height: 400px;
+    border-radius: 24px 0 0 24px;
+}
+.product-detail-image img {
+    max-width: 100%;
+    max-height: 450px;
+    object-fit: contain;
+    border-radius: 12px;
+}
+.product-detail-info {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.product-detail-info .category-tag {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--primary-pink);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+.product-detail-info .product-code {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+.product-detail-info h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin: 0 0 20px 0;
+    line-height: 1.2;
+}
+.product-detail-info .price-large {
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--primary-pink);
+    margin-bottom: 20px;
+}
+.product-detail-info .stock-info {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--gray-light);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #475569;
+    border: 1px solid var(--gray-border);
+    margin-bottom: 25px;
+}
+.product-detail-info .btn-add-detail {
+    background: var(--primary-pink);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(228, 87, 143, 0.3);
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.product-detail-info .btn-add-detail:hover {
+    background: var(--text-dark);
+    transform: translateY(-2px);
+}
+.product-detail-info .btn-add-detail:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Estilos para modal de edición */
+.edit-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(74, 40, 52, 0.5);
+    backdrop-filter: blur(12px);
+    z-index: 120;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 20px;
+}
+.edit-modal.open {
+    display: flex;
+    opacity: 1;
+}
+.edit-modal-content {
+    background: white;
+    border-radius: 24px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+    animation: modalZoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.edit-modal-header {
+    padding: 25px 30px;
+    border-bottom: 1px solid var(--gray-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.edit-modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+.edit-modal-body {
+    padding: 30px;
+}
+.edit-modal-footer {
+    padding: 20px 30px;
+    border-top: 1px solid var(--gray-border);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+.btn-edit-modal {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.btn-edit-modal.primary {
+    background: var(--primary-pink);
+    color: white;
+}
+.btn-edit-modal.primary:hover {
+    background: var(--text-dark);
+}
+.btn-edit-modal.secondary {
+    background: var(--gray-light);
+    color: var(--text-dark);
+    border: 1px solid var(--gray-border);
+}
+.btn-edit-modal.secondary:hover {
+    background: white;
+}
+.close-edit-modal {
+    background: var(--gray-light);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+.close-edit-modal:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* Botones de acción en tabla */
+.btn-action {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: inherit;
+    margin: 2px;
+}
+.btn-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.btn-action.edit {
+    background: var(--warning);
+    color: white;
+}
+.btn-action.delete {
+    background: var(--danger);
+    color: white;
+}
+
 @media (max-width: 900px) {
     .admin-content { grid-template-columns: 1fr; }
     .admin-sidebar { display: none; }
     .product-split-layout { grid-template-columns: 1fr; }
     header { padding: 15px 20px; flex-direction: column; gap: 10px; }
+    .product-detail-content {
+        grid-template-columns: 1fr;
+        max-height: 95vh;
+    }
+    .product-detail-image {
+        border-radius: 24px 24px 0 0;
+        min-height: 250px;
+        padding: 25px;
+    }
+    .product-detail-info { padding: 25px; }
+    .product-detail-info h2 { font-size: 22px; }
+    .product-detail-info .price-large { font-size: 28px; }
 }
 </style>
 </head>
@@ -555,6 +833,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     <button class="admin-nav-item active" onclick="switchTab('tab-sincronizacion', this)">☁️ Sincronización</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-tienda', this)">Apariencia y Tienda</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-nuevo', this)">Agregar Producto</button>
+                    <button class="admin-nav-item" onclick="switchTab('tab-carga-masiva', this)">📦 Carga Masiva</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-categorias', this)">Gestión de Categorías</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-inventario', this)">Control de Inventario</button>
                 </div>
@@ -572,7 +851,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 
             <div class="admin-body">
                 
-                <!-- NUEVA PESTAÑA: SINCRONIZACIÓN -->
                 <div id="tab-sincronizacion" class="admin-view active">
                     <div class="sync-status-card">
                         <h4>Estado de la Conexión con la Nube</h4>
@@ -717,8 +995,8 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                             <div class="grid-form-2">
                                 <div class="form-group" id="valPrecio">
                                     <label>Precio de Venta ($) *</label>
-                                    <input type="text" id="prodPrecio" placeholder="35.000" oninput="updateLivePreview()">
-                                    <div class="invalid-feedback">Formato requerido (Ej: 25.000).</div>
+                                    <input type="text" id="prodPrecio" placeholder="35.000 o $35.000" oninput="updateLivePreview()">
+                                    <div class="invalid-feedback">Formato requerido (Ej: 25.000, $25.000, 25000).</div>
                                 </div>
                                 <div class="form-group" id="valStock">
                                     <label>Stock Inicial *</label>
@@ -750,6 +1028,50 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                             <div style="font-size:12px; font-weight:700; color:#64748b; margin-bottom:15px; text-transform:uppercase; letter-spacing:1px;">Previsualización en vivo</div>
                             <div id="liveProductPreviewCard" style="width:100%; max-width:280px;"></div>
                         </div>
+                    </div>
+                </div>
+
+                <div id="tab-carga-masiva" class="admin-view">
+                    <div class="dashboard-card">
+                        <h4>📦 Carga Masiva de Productos</h4>
+                        <p style="font-size: 13px; color: #64748b; margin: 0 0 20px 0;">
+                            Sube un archivo Excel (.xlsx, .xls) o CSV para cargar múltiples productos automáticamente.
+                        </p>
+                        
+                        <div class="form-group">
+                            <label>Seleccionar archivo Excel o CSV</label>
+                            <input type="file" id="archivoExcel" accept=".xlsx,.xls,.csv" 
+                                   style="padding: 10px; border: 1px solid var(--gray-border); border-radius: 8px; width: 100%;">
+                            <small style="color: #64748b; margin-top: 5px; display: block;">
+                                Columnas requeridas: nombre, codigo, categoria, precio, url, stock
+                            </small>
+                        </div>
+
+                        <button class="btn-buy" onclick="procesarArchivoExcel()" style="margin-top: 10px;">
+                             Procesar Archivo
+                        </button>
+
+                        <div id="resultadoCarga" style="margin-top: 15px; padding: 15px; border-radius: 8px; display: none;"></div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h4> Plantilla de Ejemplo</h4>
+                        <p style="font-size: 13px; color: #64748b; margin: 0 0 15px 0;">
+                            Descarga esta plantilla CSV para ver el formato correcto:
+                        </p>
+                        <button class="btn-buy" onclick="descargarPlantillaCSV()" style="background: var(--success);">
+                            ⬇️ Descargar Plantilla CSV
+                        </button>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h4>ℹ️ Información Importante</h4>
+                        <ul style="font-size: 13px; color: #475569; line-height: 1.8; margin: 0; padding-left: 20px;">
+                            <li><strong>Formatos de precio aceptados:</strong> $50.000, 50000, 50,000</li>
+                            <li><strong>Si el código existe:</strong> Se actualiza el producto (no se duplica)</li>
+                            <li><strong>Si el código no existe:</strong> Se crea un nuevo producto</li>
+                            <li><strong>Columnas requeridas:</strong> nombre, codigo, categoria, precio, url, stock</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -807,19 +1129,102 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     </div>
 </div>
 
+<!-- Modal de Edición de Producto -->
+<div class="edit-modal" id="editModal">
+    <div class="edit-modal-content">
+        <div class="edit-modal-header">
+            <h3>✏️ Editar Producto</h3>
+            <button class="close-edit-modal" onclick="cerrarModalEdicion()">✕</button>
+        </div>
+        <div class="edit-modal-body">
+            <div class="form-group">
+                <label>Código del Producto *</label>
+                <input type="text" id="editCodigo" style="text-transform: uppercase;">
+            </div>
+            <div class="form-group">
+                <label>Nombre del Producto *</label>
+                <input type="text" id="editNombre">
+            </div>
+            <div class="form-group">
+                <label>Precio *</label>
+                <input type="text" id="editPrecio" placeholder="Ej: $50.000 o 50000">
+            </div>
+            <div class="form-group">
+                <label>URL de Imagen</label>
+                <input type="text" id="editUrl" placeholder="https://ejemplo.com/imagen.jpg">
+            </div>
+            <div class="form-group">
+                <label>Categoría</label>
+                <select id="editCategoria"></select>
+            </div>
+            <div class="form-group">
+                <label>Stock</label>
+                <input type="number" id="editStock" min="0">
+            </div>
+        </div>
+        <div class="edit-modal-footer">
+            <button class="btn-edit-modal secondary" onclick="cerrarModalEdicion()">Cancelar</button>
+            <button class="btn-edit-modal primary" onclick="guardarEdicionProducto()">💾 Guardar Cambios</button>
+        </div>
+    </div>
+</div>
+
+<div class="product-detail-modal" id="productDetailModal" onclick="if(event.target===this) cerrarDetalleProducto()">
+    <div class="product-detail-content">
+        <button class="product-detail-close" onclick="cerrarDetalleProducto()">✕</button>
+        <div class="product-detail-image">
+            <img id="detailImg" src="" alt="Producto">
+        </div>
+        <div class="product-detail-info">
+            <span class="category-tag" id="detailCategoria"></span>
+            <div class="product-code" id="detailCodigo"></div>
+            <h2 id="detailNombre"></h2>
+            <div class="price-large" id="detailPrecio"></div>
+            <div class="stock-info" id="detailStock"></div>
+            <button class="btn-add-detail" id="detailAddBtn" onclick="agregarDetalleAlCarrito()">
+                🛒 Agregar al Carrito
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
-// ==========================================
-// CONFIGURACIÓN JSONBIN.IO
-// ==========================================
 const JSONBIN_CONFIG = {
     BIN_ID: '6a4c01f1f5f4af5e2968a7e7',
     MASTER_KEY: '$2a$10$PeUlx/tKsPsZjtR./Ntz.eudxh0ZP0zHj7NAxc4XX7dFxsn.XzCy.',
     API_URL: 'https://api.jsonbin.io/v3/b/6a4c01f1f5f4af5e2968a7e7'
 };
 
-// ==========================================
-// SISTEMA DE LOGS
-// ==========================================
+let productoEditandoIndex = null;
+
+function limpiarPrecio(precio) {
+    if (precio === null || precio === undefined) return 0;
+    if (typeof precio === 'number') return precio;
+    
+    let precioStr = precio.toString().trim();
+    precioStr = precioStr.replace(/\$/g, '').trim();
+    precioStr = precioStr.replace(/\./g, '');
+    precioStr = precioStr.replace(/,/g, '');
+    
+    const numero = parseFloat(precioStr);
+    return isNaN(numero) ? 0 : numero;
+}
+
+function formatearPrecio(numero) {
+    if (numero === null || numero === undefined) return "$0";
+    
+    const num = typeof numero === 'string' ? limpiarPrecio(numero) : numero;
+    
+    if (isNaN(num) || num === 0) return "$0";
+    
+    return '$' + num.toLocaleString('es-CO');
+}
+
+function validarPrecio(precio) {
+    const limpio = limpiarPrecio(precio);
+    return limpio > 0;
+}
+
 function agregarLog(mensaje, tipo = 'info') {
     const logDiv = document.getElementById('logActividad');
     if (!logDiv) return;
@@ -838,7 +1243,6 @@ function agregarLog(mensaje, tipo = 'info') {
     
     logDiv.insertBefore(entry, logDiv.firstChild);
     
-    // Mantener solo los últimos 50 logs
     while (logDiv.children.length > 50) {
         logDiv.removeChild(logDiv.lastChild);
     }
@@ -851,9 +1255,6 @@ function limpiarLog() {
     }
 }
 
-// ==========================================
-// ACTUALIZAR ESTADO DE CONEXIÓN
-// ==========================================
 function actualizarEstadoConexion(estado, mensaje) {
     const indicador = document.getElementById('syncStatusIndicator');
     const header = document.getElementById('estadoConexionHeader');
@@ -868,7 +1269,7 @@ function actualizarEstadoConexion(estado, mensaje) {
         if (header) { header.style.background = 'var(--danger)'; header.textContent = '❌ Error'; }
     } else {
         indicador.className = 'sync-status-indicator warning';
-        indicador.innerHTML = `<span style="font-size:20px;">⚠️</span><div><div style="font-size:14px;">${mensaje}</div><div style="font-size:12px; opacity:0.8;">Verificando...</div></div>`;
+        indicador.innerHTML = `<span style="font-size:20px;">️</span><div><div style="font-size:14px;">${mensaje}</div><div style="font-size:12px; opacity:0.8;">Verificando...</div></div>`;
         if (header) { header.style.background = 'var(--warning)'; header.textContent = '⚠️ Verificando'; }
     }
 }
@@ -888,14 +1289,10 @@ function actualizarEstadisticas() {
     `;
 }
 
-// ==========================================
-// FUNCIONES DE SINCRONIZACIÓN CON LA NUBE
-// ==========================================
 async function subirDatosANube(mostrarMensaje = true) {
     try {
         agregarLog('Iniciando subida a la nube...', 'info');
         
-        // Verificar tamaño antes de subir
         const datos = {
             productos: productos,
             tiendaConfig: tiendaConfig,
@@ -938,7 +1335,7 @@ async function subirDatosANube(mostrarMensaje = true) {
         const msg = `Error de red: ${error.message}`;
         agregarLog(`❌ ${msg}`, 'error');
         actualizarEstadoConexion('error', 'Error de conexión');
-        if (mostrarMensaje) showToast(" Error de red", "danger");
+        if (mostrarMensaje) showToast("❌ Error de red", "danger");
         return false;
     }
 }
@@ -972,7 +1369,6 @@ async function descargarDatosDeNube() {
                 localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
             }
             
-            // Actualizar toda la interfaz
             syncTiendaUI();
             renderSelectCategorias();
             renderCategoriasAdmin();
@@ -986,23 +1382,20 @@ async function descargarDatosDeNube() {
             return true;
         } else {
             const msg = `Error ${response.status} al descargar`;
-            agregarLog(`❌ ${msg}`, 'error');
+            agregarLog(` ${msg}`, 'error');
             actualizarEstadoConexion('error', 'Error al descargar: ' + response.status);
             showToast("❌ Error al descargar: " + response.status, "danger");
             return false;
         }
     } catch (error) {
         const msg = `Error de red: ${error.message}`;
-        agregarLog(` ${msg}`, 'error');
+        agregarLog(`❌ ${msg}`, 'error');
         actualizarEstadoConexion('error', 'Error de conexión');
         showToast("❌ Error de red", "danger");
         return false;
     }
 }
 
-// ==========================================
-// EXPORTAR E IMPORTAR JSON (RESPALDO LOCAL)
-// ==========================================
 function exportarDatosJSON() {
     try {
         const datos = {
@@ -1051,12 +1444,10 @@ function importarDatosJSON(input) {
                 if (datos.categorias) categorias = datos.categorias;
                 if (datos.tiendaConfig) tiendaConfig = datos.tiendaConfig;
                 
-                // Guardar en localStorage
                 localStorage.setItem('db_prods_v2', JSON.stringify(productos));
                 localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
                 localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
                 
-                // Actualizar interfaz
                 syncTiendaUI();
                 renderSelectCategorias();
                 renderCategoriasAdmin();
@@ -1069,7 +1460,6 @@ function importarDatosJSON(input) {
                 agregarLog(`📂 Importados ${productos.length} productos desde respaldo`, 'success');
                 showToast("✅ Datos importados exitosamente", "success");
                 
-                // Opcional: subir a la nube después de importar
                 if (confirm('¿Deseas subir estos datos a la nube ahora?')) {
                     subirDatosANube(true);
                 }
@@ -1080,12 +1470,9 @@ function importarDatosJSON(input) {
         }
     };
     reader.readAsText(file);
-    input.value = ''; // Resetear para poder importar el mismo archivo otra vez
+    input.value = '';
 }
 
-// ==========================================
-// DATOS Y VARIABLES GLOBALES
-// ==========================================
 const PIN_CORRECTO = "55555"; 
 let intentosFallidos = 0;
 let categoriaActual = "Todos";
@@ -1111,10 +1498,10 @@ function asignarIDsSiFaltan() {
 }
 
 const prodsDefecto = [
-    {id: generarIDProducto(), codigo: "LAB-001", nombre: "Caja Lip Combo Xiolover Premium", precio: "40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
-    {id: generarIDProducto(), codigo: "CEJ-001", nombre: "Tinte Fijador De Cejas Brow Set", precio: "38.000", categoria: "Cejas", img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=300", stock: 15},
-    {id: generarIDProducto(), codigo: "MAQ-001", nombre: "Kit Base Humide + Obsequio Corrector", precio: "50.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300", stock: 5},
-    {id: generarIDProducto(), codigo: "ACC-001", nombre: "Kit Brochas Fluffy x10 Montoc", precio: "60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0}
+    {id: generarIDProducto(), codigo: "LAB-001", nombre: "Caja Lip Combo Xiolover Premium", precio: "$40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
+    {id: generarIDProducto(), codigo: "CEJ-001", nombre: "Tinte Fijador De Cejas Brow Set", precio: "$38.000", categoria: "Cejas", img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=300", stock: 15},
+    {id: generarIDProducto(), codigo: "MAQ-001", nombre: "Kit Base Humide + Obsequio Corrector", precio: "$50.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300", stock: 5},
+    {id: generarIDProducto(), codigo: "ACC-001", nombre: "Kit Brochas Fluffy x10 Montoc", precio: "$60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0}
 ];
 
 let productos = JSON.parse(localStorage.getItem('db_prods_v2')) || prodsDefecto;
@@ -1139,11 +1526,9 @@ function showToast(message, type = "success") {
     setTimeout(() => { toast.remove(); }, 3500);
 }
 
-// ==========================================
-// FUNCIONES DE CATEGORÍAS
-// ==========================================
 function renderSelectCategorias() {
     const select = document.getElementById('prodCategoria');
+    if (!select) return;
     select.innerHTML = '';
     categorias.forEach(cat => {
         const option = document.createElement('option');
@@ -1193,7 +1578,7 @@ function agregarCategoria() {
     
     if (categorias.some(c => c.toLowerCase() === nombreNormalizado.toLowerCase())) {
         document.getElementById('valNuevaCategoria').classList.add('invalid');
-        showToast("⚠️ Ya existe una categoría con ese nombre", "danger");
+        showToast("️ Ya existe una categoría con ese nombre", "danger");
         return;
     }
     
@@ -1233,7 +1618,7 @@ function eliminarCategoria(index) {
         actualizarEstadisticas();
         
         showToast(`🗑️ Categoría "${categoriaAEliminar}" eliminada`, "danger");
-        agregarLog(`🗑️ Categoría eliminada: ${categoriaAEliminar}`, 'warning');
+        agregarLog(`️ Categoría eliminada: ${categoriaAEliminar}`, 'warning');
         
         subirDatosANube(false);
     }
@@ -1262,13 +1647,9 @@ function renderNavCategorias() {
     });
 }
 
-// ==========================================
-// INICIALIZACIÓN
-// ==========================================
 window.addEventListener('DOMContentLoaded', async () => {
     agregarLog('🚀 Sistema iniciado', 'info');
     
-    // Intentar cargar desde la nube
     const exito = await descargarDatosDeNube();
     
     if (!exito) {
@@ -1318,7 +1699,6 @@ function aplicarMarcaAgua() {
 function procesarImagenProducto(input) {
     const file = input.files[0];
     if (file) {
-        // Verificar tamaño (máximo 500KB para no saturar JSONBin)
         if (file.size > 500000) {
             showToast("⚠️ Imagen muy grande (máx 500KB). Usa una URL en su lugar.", "warning");
             input.value = '';
@@ -1360,6 +1740,7 @@ function switchTab(tabId, btn) {
         'tab-sincronizacion': 'Centro de Sincronización',
         'tab-tienda': 'Personalización de Apariencia', 
         'tab-nuevo': 'Gestión de Catálogo / Alta de Producto', 
+        'tab-carga-masiva': 'Carga Masiva de Productos',
         'tab-categorias': 'Gestión de Categorías',
         'tab-inventario': 'Consola de Control de Existencias' 
     };
@@ -1369,7 +1750,6 @@ function switchTab(tabId, btn) {
     if(tabId === 'tab-categorias') renderCategoriasAdmin();
     if(tabId === 'tab-sincronizacion') {
         actualizarEstadisticas();
-        // Verificar conexión al entrar a esta pestaña
         verificarConexion();
     }
 }
@@ -1386,7 +1766,7 @@ async function verificarConexion() {
             agregarLog('✅ Conexión verificada con la nube', 'success');
         } else {
             actualizarEstadoConexion('error', 'Error: ' + response.status);
-            agregarLog(` Error de conexión: ${response.status}`, 'error');
+            agregarLog(`❌ Error de conexión: ${response.status}`, 'error');
         }
     } catch (error) {
         actualizarEstadoConexion('error', 'Sin conexión');
@@ -1424,7 +1804,7 @@ async function guardarConfigTienda() {
     localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
     syncTiendaUI();
     showToast("Configuración general de identidad guardada");
-    agregarLog(' Configuración de tienda guardada', 'success');
+    agregarLog('💾 Configuración de tienda guardada', 'success');
     
     await subirDatosANube();
 }
@@ -1436,12 +1816,13 @@ function renderProductos() {
     productos.forEach((p, index) => {
         if (categoriaActual !== "Todos" && p.categoria !== categoriaActual) return;
         const sinStock = p.stock <= 0;
+        const precioFormateado = formatearPrecio(p.precio);
         
         contenedor.innerHTML += `
-            <div class="card ${sinStock ? 'no-stock' : ''}">
+            <div class="card ${sinStock ? 'no-stock' : ''}" data-index="${index}">
                 <div class="card-top">
                     <img src="${p.img || 'https://via.placeholder.com/300?text=Beauty+Cosmetics'}" alt="${p.nombre}">
-                    <button class="add-btn-floating" onclick="${sinStock ? '' : `agregarAlCarro(${index})`}">
+                    <button class="add-btn-floating" onclick="event.stopPropagation(); ${sinStock ? '' : `agregarAlCarro(${index})`}">
                         ${sinStock ? '✕' : '＋'}
                     </button>
                 </div>
@@ -1449,7 +1830,7 @@ function renderProductos() {
                     <span class="category-tag">${p.categoria}</span>
                     <div class="product-code">Código: ${p.codigo || 'N/A'}</div>
                     <h3>${p.nombre}</h3>
-                    <p class="price">$${p.precio}</p>
+                    <p class="price">${precioFormateado}</p>
                     <span class="stock-tag">${sinStock ? 'AGOTADO EN ALMACÉN' : `Disponibles: ${p.stock} u.`}</span>
                 </div>
             </div>
@@ -1499,7 +1880,7 @@ function buscarPorCodigo(query) {
                 <div style="font-weight: 700; color: var(--primary-pink); font-size: 13px;">${p.codigo}</div>
                 <div style="font-size: 12px; color: var(--text-dark);">${p.nombre}</div>
             </div>
-            <div style="font-weight: 700; color: var(--text-dark);">$${p.precio}</div>
+            <div style="font-weight: 700; color: var(--text-dark);">${formatearPrecio(p.precio)}</div>
         </div>
     `).join('');
     
@@ -1509,12 +1890,13 @@ function buscarPorCodigo(query) {
     productosEncontrados.forEach((p) => {
         const sinStock = p.stock <= 0;
         const indexOriginal = productos.indexOf(p);
+        const precioFormateado = formatearPrecio(p.precio);
         
         contenedor.innerHTML += `
-            <div class="card ${sinStock ? 'no-stock' : ''}">
+            <div class="card ${sinStock ? 'no-stock' : ''}" data-index="${indexOriginal}">
                 <div class="card-top">
                     <img src="${p.img || 'https://via.placeholder.com/300?text=Beauty+Cosmetics'}" alt="${p.nombre}">
-                    <button class="add-btn-floating" onclick="${sinStock ? '' : `agregarAlCarro(${indexOriginal})`}">
+                    <button class="add-btn-floating" onclick="event.stopPropagation(); ${sinStock ? '' : `agregarAlCarro(${indexOriginal})`}">
                         ${sinStock ? '✕' : '＋'}
                     </button>
                 </div>
@@ -1522,7 +1904,7 @@ function buscarPorCodigo(query) {
                     <span class="category-tag">${p.categoria}</span>
                     <div class="product-code">Código: ${p.codigo}</div>
                     <h3>${p.nombre}</h3>
-                    <p class="price">$${p.precio}</p>
+                    <p class="price">${precioFormateado}</p>
                     <span class="stock-tag">${sinStock ? 'AGOTADO EN ALMACÉN' : `Disponibles: ${p.stock} u.`}</span>
                 </div>
             </div>
@@ -1544,6 +1926,7 @@ function updateLivePreview() {
     const stock = parseInt(document.getElementById('prodStock').value) || 0;
     const urlImg = document.getElementById('prodUrlImg').value;
     
+    const precioFormateado = formatearPrecio(precio);
     const srcFinal = imagenProductoBase64 || urlImg || 'https://via.placeholder.com/300?text=Previsualizacion';
     const sinStock = stock <= 0;
     
@@ -1558,7 +1941,7 @@ function updateLivePreview() {
                 <span class="category-tag">${categoria}</span>
                 <div class="product-code">Código: ${codigo.toUpperCase()}</div>
                 <h3>${nombre}</h3>
-                <p class="price">$${precio}</p>
+                <p class="price">${precioFormateado}</p>
                 <span class="stock-tag">${sinStock ? 'AGOTADO EN ALMACÉN' : `Disponibles: ${stock} u.`}</span>
             </div>
         </div>
@@ -1585,8 +1968,7 @@ async function guardarNuevoProducto() {
         isValid = false;
     } else { document.getElementById('valNombre').classList.remove('invalid'); }
 
-    const precioRegex = /^[0-9]{2,}\.[0-9]{3}$/; 
-    if (!precioInput.value || !precioRegex.test(precioInput.value)) {
+    if (!validarPrecio(precioInput.value)) {
         document.getElementById('valPrecio').classList.add('invalid');
         isValid = false;
     } else { document.getElementById('valPrecio').classList.remove('invalid'); }
@@ -1609,11 +1991,13 @@ async function guardarNuevoProducto() {
         return;
     }
 
+    const precioFormateado = formatearPrecio(precioInput.value);
+
     const nuevoP = {
         id: generarIDProducto(),
         codigo: codigoNuevo,
         nombre: nombreInput.value.trim(),
-        precio: precioInput.value.trim(),
+        precio: precioFormateado,
         categoria: catSelect.value,
         img: imagenProductoBase64 || urlImgInput.value || 'https://via.placeholder.com/300?text=Cosmetico',
         stock: parseInt(stockInput.value)
@@ -1646,7 +2030,8 @@ function renderInventarioTabla() {
     
     productos.forEach((p, index) => {
         const statusClass = p.stock <= 0 ? 'color:var(--danger); font-weight:700;' : (p.stock < 5 ? 'color:var(--warning); font-weight:700;' : 'color:var(--success);');
-        const statusText = p.stock <= 0 ? 'Sin existencias' : (p.stock < 5 ? 'Stock Critico' : 'Saludable');
+        const statusText = p.stock <= 0 ? 'Sin existencias' : (p.stock < 5 ? 'Stock Crítico' : 'Saludable');
+        const precioFormateado = formatearPrecio(p.precio);
         
         tbody.innerHTML += `
             <tr id="row-inv-${index}">
@@ -1656,13 +2041,14 @@ function renderInventarioTabla() {
                     <div style="font-size:11px; color:var(--primary-pink); font-weight:700; margin-top:2px;">${p.codigo || 'N/A'}</div>
                 </td>
                 <td><span style="font-size:11px; font-weight:700; background:var(--light-pink); padding:4px 8px; border-radius:10px; color:var(--primary-pink);">${p.categoria}</span></td>
-                <td style="font-weight:700;">$${p.precio}</td>
+                <td style="font-weight:700;">${precioFormateado}</td>
                 <td>
                     <input type="number" value="${p.stock}" min="0" onchange="actualizarStockLinea(${index}, this.value)" style="width:70px; padding:6px; border-radius:6px; border:1px solid var(--gray-border); text-align:center; font-family:inherit; font-weight:700;">
                 </td>
                 <td><span style="${statusClass}">${statusText}</span></td>
                 <td style="text-align:center;">
-                    <button style="background:none; border:none; font-size:16px; cursor:pointer; padding:6px;" onclick="eliminarProducto(${index})">🗑️</button>
+                    <button class="btn-action edit" onclick="abrirModalEdicion(${index})">✏️ Editar</button>
+                    <button class="btn-action delete" onclick="eliminarProducto(${index})">🗑️</button>
                 </td>
             </tr>
         `;
@@ -1774,9 +2160,9 @@ function actualizarCarrito() {
         div.innerHTML += `
             <div class="cart-item">
                 <span><b>${item.nombre}</b></span> 
-                <span>$${item.precio}</span>
+                <span>${formatearPrecio(item.precio)}</span>
             </div>`;
-        suma += parseInt(item.precio.replace(/\./g, ''));
+        suma += limpiarPrecio(item.precio);
     });
     total.textContent = suma.toLocaleString('es-CO');
     count.textContent = carrito.length;
@@ -1795,13 +2181,13 @@ function comprar() {
     carrito.forEach(item => {
         mensaje += "- " + item.nombre;
         if (item.codigo) mensaje += " (Código: " + item.codigo + ")";
-        mensaje += " ($" + (item.price || item.precio) + ")\n";
-        total += parseInt(item.precio.replace(/\./g, ''));
+        mensaje += " (" + formatearPrecio(item.precio) + ")\n";
+        total += limpiarPrecio(item.precio);
         const ori = productos.find(p => p.nombre === item.nombre);
         if (ori) ori.stock--;
     });
     
-    mensaje += "\n*TOTAL A PAGAR: $" + total.toLocaleString('es-CO') + "*\n\n";
+    mensaje += "\n*TOTAL A PAGAR: " + formatearPrecio(total) + "*\n\n";
     mensaje += "Muchas gracias por tu compra.";
     
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
@@ -1813,6 +2199,329 @@ function comprar() {
     
     const urlFormat = "https://wa.me/573133125208?text=" + encodeURIComponent(mensaje);
     window.open(urlFormat, "_blank");
+}
+
+let productoDetalleActual = null;
+
+function abrirDetalleProducto(index) {
+    const prod = productos[index];
+    if (!prod) return;
+    productoDetalleActual = { index, prod };
+
+    document.getElementById('detailImg').src = prod.img || 'https://via.placeholder.com/500?text=Producto';
+    document.getElementById('detailImg').alt = prod.nombre;
+    document.getElementById('detailCategoria').textContent = prod.categoria || 'Sin categoría';
+    document.getElementById('detailCodigo').textContent = 'Código: ' + (prod.codigo || 'N/A');
+    document.getElementById('detailNombre').textContent = prod.nombre;
+    document.getElementById('detailPrecio').textContent = formatearPrecio(prod.precio);
+
+    const stock = parseInt(prod.stock) || 0;
+    const stockEl = document.getElementById('detailStock');
+    const addBtn = document.getElementById('detailAddBtn');
+
+    if (stock <= 0) {
+        stockEl.textContent = '⚠️ AGOTADO EN ALMACÉN';
+        stockEl.style.color = 'var(--danger)';
+        addBtn.disabled = true;
+        addBtn.textContent = 'Sin Stock Disponible';
+    } else {
+        stockEl.textContent = '✓ Disponibles: ' + stock + ' unidades';
+        stockEl.style.color = 'var(--success)';
+        addBtn.disabled = false;
+        addBtn.textContent = '🛒 Agregar al Carrito';
+    }
+
+    const modal = document.getElementById('productDetailModal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('open'), 10);
+}
+
+function cerrarDetalleProducto() {
+    const modal = document.getElementById('productDetailModal');
+    modal.classList.remove('open');
+    setTimeout(() => {
+        modal.style.display = 'none';
+        productoDetalleActual = null;
+    }, 300);
+}
+
+function agregarDetalleAlCarrito() {
+    if (!productoDetalleActual) return;
+    agregarAlCarro(productoDetalleActual.index);
+    cerrarDetalleProducto();
+}
+
+document.addEventListener('click', function(e) {
+    const card = e.target.closest('.card');
+    if (card && !e.target.closest('.add-btn-floating')) {
+        const contenedor = card.parentElement;
+        if (contenedor && contenedor.id === 'productos') {
+            const index = parseInt(card.getAttribute('data-index'));
+            if (!isNaN(index) && productos[index]) {
+                abrirDetalleProducto(index);
+            }
+        }
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('productDetailModal');
+        if (modal.classList.contains('open')) {
+            cerrarDetalleProducto();
+        }
+        const editModal = document.getElementById('editModal');
+        if (editModal.classList.contains('open')) {
+            cerrarModalEdicion();
+        }
+    }
+});
+
+// ==========================================
+// SISTEMA DE EDICIÓN DE PRODUCTOS
+// ==========================================
+
+function abrirModalEdicion(index) {
+    productoEditandoIndex = index;
+    const prod = productos[index];
+    
+    document.getElementById('editCodigo').value = prod.codigo || '';
+    document.getElementById('editNombre').value = prod.nombre || '';
+    document.getElementById('editPrecio').value = prod.precio || '';
+    document.getElementById('editUrl').value = prod.img || '';
+    document.getElementById('editStock').value = prod.stock || 0;
+    
+    // Llenar select de categorías
+    const selectCategoria = document.getElementById('editCategoria');
+    selectCategoria.innerHTML = '';
+    categorias.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        if (cat === prod.categoria) option.selected = true;
+        selectCategoria.appendChild(option);
+    });
+    
+    const modal = document.getElementById('editModal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('open'), 10);
+}
+
+function cerrarModalEdicion() {
+    const modal = document.getElementById('editModal');
+    modal.classList.remove('open');
+    setTimeout(() => {
+        modal.style.display = 'none';
+        productoEditandoIndex = null;
+    }, 300);
+}
+
+async function guardarEdicionProducto() {
+    if (productoEditandoIndex === null) return;
+    
+    const codigo = document.getElementById('editCodigo').value.trim().toUpperCase();
+    const nombre = document.getElementById('editNombre').value.trim();
+    const precio = document.getElementById('editPrecio').value.trim();
+    const url = document.getElementById('editUrl').value.trim();
+    const categoria = document.getElementById('editCategoria').value;
+    const stock = parseInt(document.getElementById('editStock').value) || 0;
+    
+    // Validaciones
+    if (!codigo || codigo.length < 2) {
+        showToast('⚠️ El código es obligatorio (mínimo 2 caracteres)', 'danger');
+        return;
+    }
+    
+    if (!nombre || nombre.length < 3) {
+        showToast('⚠️ El nombre es obligatorio (mínimo 3 caracteres)', 'danger');
+        return;
+    }
+    
+    if (!validarPrecio(precio)) {
+        showToast('⚠️ Precio inválido', 'danger');
+        return;
+    }
+    
+    // Verificar si el código ya existe en otro producto
+    const codigoExistente = productos.find((p, idx) => p.codigo === codigo && idx !== productoEditandoIndex);
+    if (codigoExistente) {
+        showToast('⚠️ Ya existe otro producto con ese código', 'danger');
+        return;
+    }
+    
+    // Actualizar producto
+    productos[productoEditandoIndex].codigo = codigo;
+    productos[productoEditandoIndex].nombre = nombre;
+    productos[productoEditandoIndex].precio = formatearPrecio(limpiarPrecio(precio));
+    productos[productoEditandoIndex].img = url || 'https://via.placeholder.com/300?text=Producto';
+    productos[productoEditandoIndex].categoria = categoria;
+    productos[productoEditandoIndex].stock = stock;
+    
+    // Guardar
+    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+    
+    // Actualizar interfaz
+    renderInventarioTabla();
+    renderProductos();
+    actualizarEstadisticas();
+    
+    // Cerrar modal
+    cerrarModalEdicion();
+    
+    showToast('✅ Producto actualizado correctamente', 'success');
+    agregarLog(`️ Producto editado: ${nombre} (${codigo})`, 'success');
+    
+    await subirDatosANube(false);
+}
+
+// ==========================================
+// SISTEMA DE CARGA MASIVA DESDE EXCEL
+// ==========================================
+
+function procesarArchivoExcel() {
+    const input = document.getElementById('archivoExcel');
+    const file = input.files[0];
+    
+    if (!file) {
+        mostrarResultado('️ Por favor selecciona un archivo', 'warning');
+        return;
+    }
+    
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const productosLeidos = XLSX.utils.sheet_to_json(firstSheet);
+            
+            if (productosLeidos.length === 0) {
+                mostrarResultado('⚠️ El archivo está vacío', 'warning');
+                return;
+            }
+            
+            procesarProductos(productosLeidos);
+            
+        } catch (error) {
+            mostrarResultado('❌ Error al leer el archivo: ' + error.message, 'error');
+            agregarLog('❌ Error al procesar archivo: ' + error.message, 'error');
+        }
+    };
+    
+    reader.readAsArrayBuffer(file);
+}
+
+function procesarProductos(productosLeidos) {
+    let productosCreados = 0;
+    let productosActualizados = 0;
+    let errores = 0;
+    const erroresDetalle = [];
+    
+    productosLeidos.forEach((prod, index) => {
+        const fila = index + 2;
+        
+        if (!prod.nombre || !prod.codigo) {
+            errores++;
+            erroresDetalle.push(`Fila ${fila}: Falta nombre o código`);
+            return;
+        }
+        
+        if (!prod.precio || !validarPrecio(prod.precio)) {
+            errores++;
+            erroresDetalle.push(`Fila ${fila}: Precio inválido (${prod.precio})`);
+            return;
+        }
+        
+        const productoLimpio = {
+            id: generarIDProducto(),
+            codigo: prod.codigo.toString().trim().toUpperCase(),
+            nombre: prod.nombre.toString().trim(),
+            categoria: (prod.categoria || 'Sin categoría').toString().trim(),
+            precio: formatearPrecio(limpiarPrecio(prod.precio)),
+            img: (prod.url || prod.img || 'https://via.placeholder.com/300?text=Producto').toString().trim(),
+            stock: parseInt(prod.stock) || 0
+        };
+        
+        const existente = productos.find(p => p.codigo === productoLimpio.codigo);
+        
+        if (existente) {
+            existente.nombre = productoLimpio.nombre;
+            existente.categoria = productoLimpio.categoria;
+            existente.precio = productoLimpio.precio;
+            existente.img = productoLimpio.img;
+            existente.stock = productoLimpio.stock;
+            productosActualizados++;
+        } else {
+            productos.unshift(productoLimpio);
+            productosCreados++;
+        }
+    });
+    
+    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+    
+    renderProductos();
+    actualizarEstadisticas();
+    
+    let mensaje = `✅ <strong>Procesamiento completado:</strong><br>`;
+    mensaje += `• Productos creados: ${productosCreados}<br>`;
+    mensaje += `• Productos actualizados: ${productosActualizados}<br>`;
+    
+    if (errores > 0) {
+        mensaje += `<br>⚠️ <strong>Errores (${errores}):</strong><br>`;
+        mensaje += erroresDetalle.slice(0, 5).join('<br>');
+        if (erroresDetalle.length > 5) {
+            mensaje += `<br>... y ${erroresDetalle.length - 5} más`;
+        }
+        mostrarResultado(mensaje, 'warning');
+    } else {
+        mostrarResultado(mensaje, 'success');
+    }
+    
+    agregarLog(`📦 Carga masiva: ${productosCreados} creados, ${productosActualizados} actualizados`, 'success');
+    showToast(`✅ ${productosCreados + productosActualizados} productos procesados`, 'success');
+    
+    subirDatosANube(false);
+}
+
+function mostrarResultado(mensaje, tipo) {
+    const div = document.getElementById('resultadoCarga');
+    div.style.display = 'block';
+    div.innerHTML = mensaje;
+    
+    if (tipo === 'success') {
+        div.style.background = '#d1fae5';
+        div.style.color = '#065f46';
+        div.style.border = '1px solid #6ee7b7';
+    } else if (tipo === 'error') {
+        div.style.background = '#fee2e2';
+        div.style.color = '#991b1b';
+        div.style.border = '1px solid #fca5a5';
+    } else {
+        div.style.background = '#fef3c7';
+        div.style.color = '#92400e';
+        div.style.border = '1px solid #fcd34d';
+    }
+}
+
+function descargarPlantillaCSV() {
+    const csv = `nombre,codigo,categoria,precio,url,stock
+Labial Matte Premium,LAB-001,Maquillaje,$50.000,https://ejemplo.com/labial.jpg,15
+Sérum Vitamina C,SKIN-002,Skincare,45000,https://ejemplo.com/serum.jpg,20
+Kit Brochas Pro,ACC-003,Accesorios,"$60,000",https://ejemplo.com/brochas.jpg,8`;
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'plantilla_productos.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showToast('📄 Plantilla descargada', 'success');
 }
 </script>
 </body>
