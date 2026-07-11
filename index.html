@@ -6,13 +6,12 @@
 <meta name="theme-color" content="#e4578f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>XIOLOVER - Catálogo de Belleza y Consola Admin</title>
+<title>XIOLOVER - Catálogo de Belleza</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-<!-- 🔧 FIX 1: SheetJS con defer para no bloquear el render -->
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js" defer></script>
 
 <style>
@@ -36,7 +35,6 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-
 html { -webkit-text-size-adjust: 100%; }
 
 body {
@@ -51,15 +49,11 @@ body {
     padding-bottom: calc(80px + var(--safe-bottom));
     transition: background 0.4s ease;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     overscroll-behavior-y: none;
 }
 
-/* 🔧 FIX iOS: Prevenir zoom en inputs */
 input, select, textarea { font-size: 16px !important; }
-@media (min-width: 768px) {
-    input, select, textarea { font-size: 14px !important; }
-}
+@media (min-width: 768px) { input, select, textarea { font-size: 14px !important; } }
 
 #watermark-bg {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -68,7 +62,6 @@ input, select, textarea { font-size: 16px !important; }
     background-size: 25%; opacity: 0.06;
 }
 
-/* 🔧 HEADER RESPONSIVE */
 header {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
@@ -79,8 +72,7 @@ header {
     position: sticky; top: 0; z-index: 100;
     display: flex; justify-content: space-between; align-items: center;
     box-shadow: 0 4px 30px rgba(74, 40, 52, 0.03);
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 10px; flex-wrap: wrap;
 }
 
 header .brand {
@@ -100,10 +92,7 @@ header nav {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    flex: 1;
-    max-width: 100%;
-    order: 3;
-    width: 100%;
+    flex: 1; max-width: 100%; order: 3; width: 100%;
 }
 header nav::-webkit-scrollbar { display: none; }
 
@@ -112,8 +101,7 @@ header nav a {
     font-size: 13px; font-weight: 600;
     padding: 8px 16px; border-radius: 20px;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
-    flex-shrink: 0;
+    white-space: nowrap; flex-shrink: 0;
 }
 
 header nav a:hover, header nav a.active {
@@ -128,9 +116,7 @@ header nav a:hover, header nav a.active {
     border-radius: 20px; font-weight: 600; cursor: pointer;
     display: flex; align-items: center; gap: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    transition: all 0.2s ease;
-    font-size: 13px;
-    min-height: 44px;
+    transition: all 0.2s ease; font-size: 13px; min-height: 44px;
 }
 .top-bar-buttons button:hover {
     border-color: var(--primary-pink);
@@ -149,7 +135,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     box-shadow: var(--shadow-base);
     position: relative; overflow: hidden;
 }
-
 .promo-banner h1 { margin: 0 0 10px 0; font-size: 26px; font-weight: 800; color: var(--primary-pink); line-height: 1.2; }
 .promo-banner p { margin: 0; font-size: 14px; font-weight: 500; opacity: 0.8; }
 
@@ -162,7 +147,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     box-shadow: 0 4px 15px rgba(228, 87, 143, 0.3);
 }
 
-/* 🔧 GRID RESPONSIVE */
 .container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -180,6 +164,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    will-change: transform;
 }
 .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(74, 40, 52, 0.12); }
 .card:active { transform: scale(0.98); }
@@ -190,7 +175,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     display: flex; align-items: center; justify-content: center;
     height: 160px; border-bottom: 1px solid rgba(0,0,0,0.02);
 }
-.card img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: transform 0.3s; }
+.card img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: transform 0.3s; background: white; }
 .card:hover .card-top img { transform: scale(1.05); }
 
 .add-btn-floating {
@@ -201,7 +186,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 6px 16px rgba(228, 87, 143, 0.4);
     z-index: 2; transition: all 0.2s ease;
-    min-width: 40px;
 }
 .add-btn-floating:hover { transform: scale(1.1) rotate(90deg); background: var(--text-dark); }
 
@@ -216,7 +200,177 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .card.no-stock .add-btn-floating { background: #94a3b8; cursor: not-allowed; box-shadow: none; }
 .card.no-stock .add-btn-floating:hover { transform: none; }
 
-/* 🔧 BOTÓN FLOTANTE CARRITO - OPTIMIZADO MÓVIL */
+/* 🔍 ESTILOS PARA BÚSQUEDA INTELIGENTE */
+.search-wrapper {
+    max-width: 600px;
+    margin: 0 auto 25px auto;
+    position: relative;
+}
+
+.search-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 18px;
+    font-size: 18px;
+    color: #94a3b8;
+    pointer-events: none;
+    z-index: 2;
+}
+
+#buscadorCodigo {
+    width: 100%;
+    padding: 14px 50px 14px 48px !important;
+    border: 2px solid var(--gray-border) !important;
+    border-radius: 30px !important;
+    font-weight: 600 !important;
+    color: var(--text-dark) !important;
+    background: white !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+    transition: all 0.3s ease !important;
+}
+
+#buscadorCodigo:focus {
+    border-color: var(--primary-pink) !important;
+    box-shadow: 0 4px 20px rgba(228, 87, 143, 0.2) !important;
+    outline: none !important;
+}
+
+.search-clear {
+    position: absolute;
+    right: 18px;
+    background: var(--gray-light);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    transition: all 0.2s;
+}
+
+.search-clear.visible { display: flex; }
+.search-clear:hover { background: var(--primary-pink); color: white; }
+
+#resultadoBusqueda {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 16px;
+    margin-top: 8px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 50;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--gray-border);
+}
+
+.search-result-item {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--gray-light);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.15s;
+    gap: 12px;
+}
+
+.search-result-item:hover, .search-result-item:active {
+    background: var(--light-pink);
+}
+
+.search-result-item:last-child { border-bottom: none; }
+
+.search-result-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-result-code {
+    font-weight: 700;
+    color: var(--primary-pink);
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.search-result-name {
+    font-size: 13px;
+    color: var(--text-dark);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-name mark {
+    background: #fef3c7;
+    color: var(--text-dark);
+    padding: 0 2px;
+    border-radius: 3px;
+    font-weight: 700;
+}
+
+.search-result-price {
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.search-no-results {
+    padding: 20px;
+    text-align: center;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.search-suggestion {
+    padding: 12px 18px;
+    background: #fef3c7;
+    border-bottom: 1px solid #fcd34d;
+    font-size: 13px;
+    color: #92400e;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.search-suggestion:hover { background: #fde68a; }
+
+.search-suggestion strong {
+    color: var(--text-dark);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.search-match-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 6px;
+    white-space: nowrap;
+}
+
+.match-exact { background: #d1fae5; color: #065f46; }
+.match-partial { background: #dbeafe; color: #1e40af; }
+.match-fuzzy { background: #fef3c7; color: #92400e; }
+
 .cart-toggle-btn {
     position: fixed; bottom: calc(20px + var(--safe-bottom)); right: 20px;
     background: var(--primary-pink); color: white; border: none;
@@ -224,7 +378,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     box-shadow: 0 8px 30px rgba(228, 87, 143, 0.4); z-index: 99;
     font-size: 22px; display: flex; align-items: center; justify-content: center;
     transition: transform 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
 }
 .cart-toggle-btn:hover { transform: scale(1.05); }
 .cart-count {
@@ -236,7 +389,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     border: 2px solid white;
 }
 
-/* 🔧 CARRITO LATERAL - FULLSCREEN EN MÓVIL */
 .cart {
     position: fixed; right: -100%; top: 0; width: 100%; max-width: 380px; height: 100%;
     height: -webkit-fill-available;
@@ -257,9 +409,8 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     border-radius: 14px; width: 100%; font-weight: 700; font-size: 15px;
     box-shadow: 0 4px 15px rgba(228, 87, 143, 0.3); transition: all 0.2s;
     min-height: 48px;
-    -webkit-tap-highlight-color: transparent;
 }
-.btn-buy:hover { background: var(--text-dark); box-shadow: 0 4px 15px rgba(74, 40, 52, 0.3); }
+.btn-buy:hover { background: var(--text-dark); }
 
 .login-modal, .admin-panel {
     display: none; position: fixed; top: 0; left: 0;
@@ -277,7 +428,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     border: 1px solid var(--gray-border);
 }
 
-/* 🔧 ADMIN PANEL - RESPONSIVE */
 .admin-content {
     background: #f1f5f9; width: 100%; max-width: 1300px; height: 100vh; 
     height: -webkit-fill-available;
@@ -303,9 +453,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     padding: 12px 14px; background: transparent; border: none;
     border-radius: 12px; color: #475569; font-weight: 600;
     font-size: 13px; cursor: pointer; text-align: left;
-    transition: all 0.2s ease;
-    min-height: 44px;
-    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s ease; min-height: 44px;
 }
 .admin-nav-item:hover { background: var(--gray-light); color: var(--text-dark); }
 .admin-nav-item.active { background: var(--light-pink); color: var(--primary-pink); }
@@ -316,8 +464,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     padding-top: calc(15px + var(--safe-top));
     display: flex; justify-content: space-between; align-items: center;
     border-bottom: 1px solid var(--gray-border);
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 10px; flex-wrap: wrap;
 }
 .admin-top-navbar h2 { margin: 0; font-size: 16px; font-weight: 700; color: #1e293b; }
 
@@ -346,11 +493,9 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .form-group select,
 .form-group input[type="file"] { 
     width: 100%; padding: 12px 14px; border: 1px solid var(--gray-border); 
-    border-radius: 10px; box-sizing: border-box; font-family: inherit; font-size: 16px;
+    border-radius: 10px; box-sizing: border-box; font-family: inherit;
     transition: all 0.2s ease; background: #f8fafc; color: var(--text-dark);
     min-height: 44px;
-    -webkit-appearance: none;
-    appearance: none;
 }
 .form-group input:focus, .form-group select:focus {
     outline: none; border-color: var(--primary-pink); background: white;
@@ -375,8 +520,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .toast-container { 
     position: fixed; 
     top: calc(15px + var(--safe-top)); 
-    right: 15px; 
-    left: 15px;
+    right: 15px; left: 15px;
     z-index: 9999; 
     display: flex; 
     flex-direction: column; 
@@ -390,7 +534,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     display: flex; align-items: center; gap: 10px;
     animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     pointer-events: auto;
-    max-width: 100%;
 }
 .toast.success { border-left-color: var(--success); }
 .toast.danger { border-left-color: var(--danger); }
@@ -439,7 +582,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     opacity: 0; transition: opacity 0.2s;
 }
 .categoria-card:hover .cat-delete { opacity: 1; }
-.categoria-card .cat-delete:hover { background: #c1121f; }
 
 .btn-add-categoria {
     background: var(--primary-pink); color: white; border: none;
@@ -447,9 +589,8 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     font-weight: 700; font-size: 14px; cursor: pointer;
     transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
     min-height: 44px;
-    -webkit-tap-highlight-color: transparent;
 }
-.btn-add-categoria:hover { background: var(--text-dark); transform: translateY(-1px); }
+.btn-add-categoria:hover { background: var(--text-dark); }
 
 .sync-status-card {
     background: white;
@@ -473,84 +614,47 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 .sync-status-indicator.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 .sync-status-indicator.warning { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
 
-.sync-buttons-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 15px;
-}
+.sync-buttons-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
 
 .sync-btn {
-    padding: 12px 16px;
-    border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: inherit;
-    min-height: 44px;
-    -webkit-tap-highlight-color: transparent;
+    padding: 12px 16px; border: none; border-radius: 12px;
+    font-weight: 700; font-size: 13px; cursor: pointer;
+    transition: all 0.2s; display: flex; align-items: center;
+    justify-content: center; gap: 8px; font-family: inherit; min-height: 44px;
 }
 
 .sync-btn:hover { transform: translateY(-2px); }
 .sync-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
 .sync-btn.primary { background: var(--primary-pink); color: white; box-shadow: 0 4px 12px rgba(228, 87, 143, 0.3); }
 .sync-btn.primary:hover { background: var(--text-dark); }
-
-.sync-btn.secondary { background: var(--text-dark); color: white; box-shadow: 0 4px 12px rgba(74, 40, 52, 0.2); }
+.sync-btn.secondary { background: var(--text-dark); color: white; }
 .sync-btn.secondary:hover { background: #2d1a22; }
-
-.sync-btn.success { background: var(--success); color: white; box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3); }
+.sync-btn.success { background: var(--success); color: white; }
 .sync-btn.success:hover { background: #25a093; }
-
-.sync-btn.warning { background: var(--warning); color: white; box-shadow: 0 4px 12px rgba(255, 183, 3, 0.3); }
+.sync-btn.warning { background: var(--warning); color: white; }
 .sync-btn.warning:hover { background: #e0a000; }
 
 .sync-info {
-    font-size: 12px;
-    color: #64748b;
-    margin-top: 12px;
-    padding: 10px;
-    background: var(--gray-light);
-    border-radius: 8px;
-    border-left: 3px solid var(--primary-pink);
+    font-size: 12px; color: #64748b; margin-top: 12px;
+    padding: 10px; background: var(--gray-light);
+    border-radius: 8px; border-left: 3px solid var(--primary-pink);
 }
 
-/* 🔧 MODAL DETALLE PRODUCTO - FULLSCREEN EN MÓVIL */
 .product-detail-modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
+    display: none; position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(74, 40, 52, 0.5);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    z-index: 115;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    padding: 0;
+    z-index: 115; justify-content: center; align-items: center;
+    opacity: 0; transition: opacity 0.3s ease; padding: 0;
 }
-.product-detail-modal.open {
-    display: flex;
-    opacity: 1;
-}
+.product-detail-modal.open { display: flex; opacity: 1; }
 .product-detail-content {
-    background: white;
-    border-radius: 0;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    display: flex;
-    flex-direction: column;
+    background: white; border-radius: 0;
+    width: 100%; height: 100%;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    display: flex; flex-direction: column;
     box-shadow: 0 30px 80px rgba(0,0,0,0.25);
     position: relative;
     animation: modalZoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -562,252 +666,93 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 .product-detail-close {
     position: absolute;
     top: calc(12px + var(--safe-top)); right: 12px;
-    background: white;
-    border: 1px solid var(--gray-border);
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
-    transition: all 0.2s ease;
+    background: white; border: 1px solid var(--gray-border);
+    width: 40px; height: 40px; border-radius: 50%;
+    cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 5; transition: all 0.2s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    min-width: 44px;
-    min-height: 44px;
 }
-.product-detail-close:hover {
-    background: var(--primary-pink);
-    color: white;
-    transform: rotate(90deg);
-}
+.product-detail-close:hover { background: var(--primary-pink); color: white; transform: rotate(90deg); }
 .product-detail-image {
     background: var(--gray-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    min-height: 250px;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; min-height: 250px; flex-shrink: 0;
 }
-.product-detail-image img {
-    max-width: 100%;
-    max-height: 300px;
-    object-fit: contain;
-    border-radius: 12px;
-}
-.product-detail-info {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-.product-detail-info .category-tag {
-    font-size: 11px;
-    text-transform: uppercase;
-    color: var(--primary-pink);
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-}
-.product-detail-info .product-code {
-    font-size: 11px;
-    color: #64748b;
-    font-weight: 700;
-    margin-bottom: 10px;
-    letter-spacing: 0.5px;
-}
-.product-detail-info h2 {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--text-dark);
-    margin: 0 0 15px 0;
-    line-height: 1.2;
-}
-.product-detail-info .price-large {
-    font-size: 28px;
-    font-weight: 900;
-    color: var(--primary-pink);
-    margin-bottom: 15px;
-}
-.product-detail-info .stock-info {
-    display: inline-block;
-    padding: 8px 14px;
-    background: var(--gray-light);
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    color: #475569;
-    border: 1px solid var(--gray-border);
-    margin-bottom: 20px;
-}
+.product-detail-image img { max-width: 100%; max-height: 300px; object-fit: contain; border-radius: 12px; }
+.product-detail-info { padding: 20px; display: flex; flex-direction: column; flex: 1; }
+.product-detail-info .category-tag { font-size: 11px; text-transform: uppercase; color: var(--primary-pink); font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+.product-detail-info .product-code { font-size: 11px; color: #64748b; font-weight: 700; margin-bottom: 10px; }
+.product-detail-info h2 { font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0 0 15px 0; line-height: 1.2; }
+.product-detail-info .price-large { font-size: 28px; font-weight: 900; color: var(--primary-pink); margin-bottom: 15px; }
+.product-detail-info .stock-info { display: inline-block; padding: 8px 14px; background: var(--gray-light); border-radius: 20px; font-size: 12px; font-weight: 700; color: #475569; border: 1px solid var(--gray-border); margin-bottom: 20px; }
 .product-detail-info .btn-add-detail {
-    background: var(--primary-pink);
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(228, 87, 143, 0.3);
-    transition: all 0.2s;
-    font-family: inherit;
-    min-height: 48px;
-    margin-top: auto;
-    -webkit-tap-highlight-color: transparent;
+    background: var(--primary-pink); color: white; border: none;
+    padding: 14px; border-radius: 14px; font-weight: 700; font-size: 15px;
+    cursor: pointer; box-shadow: 0 4px 15px rgba(228, 87, 143, 0.3);
+    transition: all 0.2s; font-family: inherit; min-height: 48px; margin-top: auto;
 }
-.product-detail-info .btn-add-detail:hover {
-    background: var(--text-dark);
-    transform: translateY(-2px);
-}
-.product-detail-info .btn-add-detail:disabled {
-    background: #94a3b8;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-}
+.product-detail-info .btn-add-detail:hover { background: var(--text-dark); }
+.product-detail-info .btn-add-detail:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; }
 
-/* 🔧 MODAL EDICIÓN */
 .edit-modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
+    display: none; position: fixed; top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(74, 40, 52, 0.5);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    z-index: 120;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    padding: 15px;
+    z-index: 120; justify-content: center; align-items: center;
+    opacity: 0; transition: opacity 0.3s ease; padding: 15px;
 }
-.edit-modal.open {
-    display: flex;
-    opacity: 1;
-}
+.edit-modal.open { display: flex; opacity: 1; }
 .edit-modal-content {
-    background: white;
-    border-radius: 20px;
-    width: 100%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    background: white; border-radius: 20px;
+    width: 100%; max-width: 600px; max-height: 90vh;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
     box-shadow: 0 30px 80px rgba(0,0,0,0.25);
     animation: modalZoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .edit-modal-header {
-    padding: 20px;
-    border-bottom: 1px solid var(--gray-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 2;
+    padding: 20px; border-bottom: 1px solid var(--gray-border);
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; background: white; z-index: 2;
 }
-.edit-modal-header h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-dark);
-}
-.edit-modal-body {
-    padding: 20px;
-}
+.edit-modal-header h3 { margin: 0; font-size: 18px; font-weight: 700; color: var(--text-dark); }
+.edit-modal-body { padding: 20px; }
 .edit-modal-footer {
-    padding: 15px 20px;
-    border-top: 1px solid var(--gray-border);
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    position: sticky;
-    bottom: 0;
-    background: white;
+    padding: 15px 20px; border-top: 1px solid var(--gray-border);
+    display: flex; gap: 10px; justify-content: flex-end;
+    position: sticky; bottom: 0; background: white;
 }
 .btn-edit-modal {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
-    min-height: 44px;
-    -webkit-tap-highlight-color: transparent;
+    padding: 12px 20px; border: none; border-radius: 10px;
+    font-weight: 700; font-size: 14px; cursor: pointer;
+    transition: all 0.2s; font-family: inherit; min-height: 44px;
 }
-.btn-edit-modal.primary {
-    background: var(--primary-pink);
-    color: white;
-}
-.btn-edit-modal.primary:hover {
-    background: var(--text-dark);
-}
-.btn-edit-modal.secondary {
-    background: var(--gray-light);
-    color: var(--text-dark);
-    border: 1px solid var(--gray-border);
-}
-.btn-edit-modal.secondary:hover {
-    background: white;
-}
+.btn-edit-modal.primary { background: var(--primary-pink); color: white; }
+.btn-edit-modal.primary:hover { background: var(--text-dark); }
+.btn-edit-modal.secondary { background: var(--gray-light); color: var(--text-dark); border: 1px solid var(--gray-border); }
 .close-edit-modal {
-    background: var(--gray-light);
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: var(--gray-light); border: none;
+    width: 40px; height: 40px; border-radius: 50%;
+    cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
     transition: all 0.2s;
-    min-width: 44px;
-    min-height: 44px;
 }
-.close-edit-modal:hover {
-    background: var(--danger);
-    color: white;
-}
+.close-edit-modal:hover { background: var(--danger); color: white; }
 
 .btn-action {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-family: inherit;
-    margin: 2px;
-    min-height: 36px;
-    -webkit-tap-highlight-color: transparent;
+    padding: 8px 12px; border: none; border-radius: 6px;
+    font-size: 11px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; display: inline-flex; align-items: center;
+    gap: 4px; font-family: inherit; margin: 2px; min-height: 36px;
 }
-.btn-action:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
+.btn-action:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
 .btn-action.edit { background: var(--warning); color: white; }
 .btn-action.delete { background: var(--danger); color: white; }
 
-/* 🔧 MEDIA QUERIES RESPONSIVE */
-
-/* Tablet */
 @media (min-width: 600px) {
-    .container {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px;
-    }
+    .container { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
     .card-top { height: 180px; }
     .card h3 { font-size: 14px; min-height: 40px; }
     .card .price { font-size: 18px; }
@@ -818,7 +763,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     .categorias-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
 }
 
-/* Desktop */
 @media (min-width: 900px) {
     main { padding: 40px 20px; }
     header { padding: 15px 40px; flex-wrap: nowrap; }
@@ -826,10 +770,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     .promo-banner { padding: 50px 40px; }
     .promo-banner h1 { font-size: 38px; }
     .promo-banner p { font-size: 16px; }
-    .container {
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 30px;
-    }
+    .container { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
     .card-top { height: 220px; }
     .card h3 { font-size: 16px; min-height: 44px; }
     .card .price { font-size: 20px; }
@@ -838,23 +779,12 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     .preview-sticky-box { position: sticky; top: 0; }
     .product-detail-modal { padding: 20px; }
     .product-detail-content {
-        border-radius: 24px;
-        max-width: 900px;
-        max-height: 90vh;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        flex-direction: row;
+        border-radius: 24px; max-width: 900px; max-height: 90vh;
+        display: grid; grid-template-columns: 1fr 1fr; flex-direction: row;
     }
-    .product-detail-image {
-        border-radius: 24px 0 0 24px;
-        min-height: 400px;
-        padding: 40px;
-    }
+    .product-detail-image { border-radius: 24px 0 0 24px; min-height: 400px; padding: 40px; }
     .product-detail-image img { max-height: 450px; }
-    .product-detail-info {
-        padding: 40px;
-        justify-content: center;
-    }
+    .product-detail-info { padding: 40px; justify-content: center; }
     .product-detail-info h2 { font-size: 28px; }
     .product-detail-info .price-large { font-size: 36px; }
     .dashboard-card { padding: 30px; }
@@ -863,7 +793,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     .admin-top-navbar h2 { font-size: 20px; }
 }
 
-/* 🔧 MÓVIL PEQUEÑO - AJUSTES FINALES */
 @media (max-width: 400px) {
     header .brand { font-size: 18px; letter-spacing: 1px; }
     .promo-banner h1 { font-size: 22px; }
@@ -876,7 +805,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
     .add-btn-floating { width: 36px; height: 36px; font-size: 16px; bottom: -16px; right: 8px; }
 }
 
-/* 🔧 LANDSCAPE EN MÓVIL */
 @media (max-height: 500px) and (orientation: landscape) {
     .product-detail-image { min-height: 180px; padding: 15px; }
     .product-detail-image img { max-height: 180px; }
@@ -910,15 +838,14 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
         <div class="category-title" id="seccionTitulo">Todos los Productos</div>
     </div>
     
-    <div style="max-width: 500px; margin: 0 auto 25px auto; position: relative;">
-        <input type="text" id="buscadorCodigo" placeholder="🔍 Buscar por código..." 
-               oninput="buscarPorCodigo(this.value)" 
-               style="width: 100%; padding: 14px 20px; border: 2px solid var(--gray-border); border-radius: 30px; 
-                      font-family: inherit; font-weight: 600; color: var(--text-dark);
-                      background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease;">
-        <div id="resultadoBusqueda" style="position: absolute; top: 100%; left: 0; right: 0; background: white; 
-             border-radius: 12px; margin-top: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); display: none; z-index: 50;
-             max-height: 300px; overflow-y: auto;"></div>
+    <!-- 🔍 BÚSQUEDA INTELIGENTE MEJORADA -->
+    <div class="search-wrapper">
+        <div class="search-input-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="buscadorCodigo" placeholder="Buscar por código o nombre (ej: bass, labial, ceja...)" autocomplete="off">
+            <button class="search-clear" id="searchClear" onclick="limpiarBusqueda()">✕</button>
+        </div>
+        <div id="resultadoBusqueda"></div>
     </div>
     
     <div class="container" id="productos"></div>
@@ -940,23 +867,22 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 <div class="login-modal" id="loginModal">
     <div class="login-content">
         <h3 style="margin:0 0 10px 0; font-size:20px;">Acceso Administrativo</h3>
-        <p style="color:#64748b; font-size:13px; margin-bottom:20px;">Introduce el PIN maestro de 5 dígitos</p>
+        <p style="color:#64748b; font-size:13px; margin-bottom:20px;">Introduce el PIN maestro</p>
         <div class="form-group" id="loginFormGroup">
             <input type="password" id="adminPassInput" maxlength="5" placeholder="•••••" style="text-align: center; letter-spacing: 6px; background:#f8fafc;">
-            <div class="invalid-feedback">PIN Incorrecto. Inténtalo de nuevo.</div>
+            <div class="invalid-feedback">PIN Incorrecto.</div>
         </div>
-        <button class="btn-buy" style="margin-top:10px;" onclick="verificarPassword()">Ingresar al Panel</button>
+        <button class="btn-buy" style="margin-top:10px;" onclick="verificarPassword()">Ingresar</button>
         <button style="background:none; border:none; margin-top:15px; color:#94a3b8; font-weight:600; cursor:pointer; min-height:44px;" onclick="cerrarLogin()">Cancelar</button>
     </div>
 </div>
 
 <div class="admin-panel" id="adminPanel">
     <div class="admin-content">
-        
         <div class="admin-sidebar">
             <div class="admin-brand-area">
                 <h3 id="sidebarBrandName">XIOLOVER ADMIN</h3>
-                <p>v3.1 • Consola Optimizada</p>
+                <p>v3.2 • Búsqueda Inteligente</p>
                 <div class="admin-nav-menu">
                     <button class="admin-nav-item active" onclick="switchTab('tab-sincronizacion', this)">☁️ Sincronización</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-tienda', this)">🎨 Apariencia</button>
@@ -972,13 +898,10 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
         <div class="admin-main-container">
             <div class="admin-top-navbar">
                 <h2 id="adminSectionTitle">Centro de Sincronización</h2>
-                <div id="estadoConexionHeader" style="font-size:12px; font-weight:600; background:var(--warning); padding:6px 12px; border-radius:20px; color:white; white-space:nowrap;">
-                    ⚠️ Verificando...
-                </div>
+                <div id="estadoConexionHeader" style="font-size:12px; font-weight:600; background:var(--warning); padding:6px 12px; border-radius:20px; color:white; white-space:nowrap;">⚠️ Verificando...</div>
             </div>
 
             <div class="admin-body">
-                
                 <div id="tab-sincronizacion" class="admin-view active">
                     <div class="sync-status-card">
                         <h4>Estado de la Conexión</h4>
@@ -986,28 +909,26 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                             <span style="font-size:20px;">⏳</span>
                             <div>
                                 <div style="font-size:14px;">Verificando conexión...</div>
-                                <div style="font-size:12px; opacity:0.8;">Esperando respuesta del servidor</div>
+                                <div style="font-size:12px; opacity:0.8;">Esperando respuesta</div>
                             </div>
                         </div>
-                        
                         <div class="sync-info">
-                            <strong>💡 Información:</strong><br>
-                            • JSONBin gratuito: límite <strong>100KB</strong> por archivo<br>
-                            • Usa <strong>URLs de imágenes</strong> en lugar de base64<br>
+                            <strong>💡 Info:</strong><br>
+                            • JSONBin: límite <strong>100KB</strong><br>
+                            • Usa <strong>URLs</strong> de imágenes<br>
                             • Respaldo local automático
                         </div>
                     </div>
 
                     <div class="sync-status-card">
-                        <h4>Acciones de Sincronización</h4>
+                        <h4>Acciones</h4>
                         <div class="sync-buttons-grid">
-                            <button class="sync-btn primary" onclick="subirDatosANube(true)" id="btnSubirNube">⬆️ Subir a la Nube</button>
-                            <button class="sync-btn secondary" onclick="descargarDatosDeNube()">⬇️ Descargar de la Nube</button>
-                            <button class="sync-btn success" onclick="exportarDatosJSON()">💾 Exportar JSON</button>
-                            <button class="sync-btn warning" onclick="document.getElementById('importarFileInput').click()">📂 Importar JSON</button>
+                            <button class="sync-btn primary" onclick="subirDatosANube(true)">⬆️ Subir a Nube</button>
+                            <button class="sync-btn secondary" onclick="descargarDatosDeNube()">⬇️ Descargar</button>
+                            <button class="sync-btn success" onclick="exportarDatosJSON()">💾 Exportar</button>
+                            <button class="sync-btn warning" onclick="document.getElementById('importarFileInput').click()">📂 Importar</button>
                         </div>
                         <input type="file" id="importarFileInput" accept=".json" style="display:none;" onchange="importarDatosJSON(this)">
-                        
                         <div class="sync-info" style="margin-top:15px;">
                             <strong>📊 Estadísticas:</strong><br>
                             <span id="statsInfo">Cargando...</span>
@@ -1015,9 +936,9 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                     </div>
 
                     <div class="sync-status-card">
-                        <h4>Registro de Actividad</h4>
+                        <h4>Registro</h4>
                         <div id="logActividad" style="max-height:250px; overflow-y:auto; font-family:monospace; font-size:11px; background:#f8fafc; padding:12px; border-radius:8px; border:1px solid var(--gray-border);">
-                            <div style="color:#64748b;">Sistema iniciado. Esperando acciones...</div>
+                            <div style="color:#64748b;">Sistema iniciado...</div>
                         </div>
                         <button class="sync-btn secondary" style="margin-top:12px; width:auto; padding:10px 18px;" onclick="limpiarLog()">🗑️ Limpiar</button>
                     </div>
@@ -1025,38 +946,38 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
 
                 <div id="tab-tienda" class="admin-view">
                     <div class="dashboard-card">
-                        <h4>Identidad de Marca</h4>
+                        <h4>Identidad</h4>
                         <div class="grid-form-2">
                             <div class="form-group">
-                                <label>Nombre de la Tienda</label>
+                                <label>Nombre Tienda</label>
                                 <input type="text" id="cfgStoreName" oninput="liveUpdateStoreName(this.value)">
                             </div>
                             <div class="form-group">
-                                <label>Título del Banner</label>
+                                <label>Título Banner</label>
                                 <input type="text" id="cfgBannerTitle" oninput="document.getElementById('bannerTitleView').textContent = this.value">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Descripción del Banner</label>
+                            <label>Descripción Banner</label>
                             <input type="text" id="cfgBannerDesc" oninput="document.getElementById('bannerDescView').textContent = this.value">
                         </div>
                     </div>
 
                     <div class="dashboard-card">
-                        <h4>Personalización Visual</h4>
+                        <h4>Personalización</h4>
                         <div class="appearance-grid">
                             <div class="form-group">
-                                <label>Color de Acento</label>
+                                <label>Color Acento</label>
                                 <div class="color-picker-wrapper">
                                     <input type="color" id="cfgColorAcento" onchange="cambiarEstiloDinamico('--primary-pink', this.value)">
                                     <span style="font-size:12px; font-weight:600; color:#475569;">Principal</span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Fondo Degradado</label>
+                                <label>Fondo</label>
                                 <div class="color-picker-wrapper">
                                     <input type="color" id="cfgColorBg" onchange="cambiarEstiloDinamico('--xiolover-bg', this.value)">
-                                    <span style="font-size:12px; font-weight:600; color:#475569;">Fondo</span>
+                                    <span style="font-size:12px; font-weight:600; color:#475569;">Base</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -1075,65 +996,58 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                         <div class="form-group">
                             <label class="custom-file-upload">
                                 <input type="file" id="cfgMarcaAgua" accept="image/*" style="display:none;">
-                                <span>📷 Seleccionar imagen de fondo</span>
+                                <span>📷 Seleccionar imagen</span>
                             </label>
                             <span id="watermarkStatus" style="font-size:12px; color:var(--success); display:block; margin-top:5px; font-weight:600;"></span>
                         </div>
                     </div>
 
-                    <button class="btn-buy" style="width:auto; padding:14px 30px;" onclick="guardarConfigTienda()">💾 Guardar Cambios</button>
+                    <button class="btn-buy" style="width:auto; padding:14px 30px;" onclick="guardarConfigTienda()">💾 Guardar</button>
                 </div>
 
                 <div id="tab-nuevo" class="admin-view">
                     <div class="product-split-layout">
                         <div class="dashboard-card" style="margin:0;">
                             <h4>Nuevo Producto</h4>
-                            
                             <div class="form-group" id="valCodigo">
-                                <label>Código del Producto *</label>
-                                <input type="text" id="prodCodigo" placeholder="Ej: LAB-001" oninput="updateLivePreview()" style="text-transform: uppercase;">
-                                <div class="invalid-feedback">Código obligatorio (mínimo 2 caracteres) y único.</div>
+                                <label>Código *</label>
+                                <input type="text" id="prodCodigo" placeholder="LAB-001" oninput="updateLivePreview()" style="text-transform: uppercase;">
+                                <div class="invalid-feedback">Código obligatorio y único.</div>
                             </div>
-
                             <div class="form-group" id="valNombre">
-                                <label>Nombre del Producto *</label>
-                                <input type="text" id="prodNombre" placeholder="Ej: Labial Matte Gloss" oninput="updateLivePreview()">
-                                <div class="invalid-feedback">Nombre obligatorio (mínimo 3 caracteres).</div>
+                                <label>Nombre *</label>
+                                <input type="text" id="prodNombre" placeholder="Labial Matte" oninput="updateLivePreview()">
+                                <div class="invalid-feedback">Nombre obligatorio.</div>
                             </div>
-
                             <div class="grid-form-2">
                                 <div class="form-group" id="valPrecio">
-                                    <label>Precio ($) *</label>
-                                    <input type="text" id="prodPrecio" placeholder="35.000" oninput="updateLivePreview()">
-                                    <div class="invalid-feedback">Formato: 25000 o $25.000</div>
+                                    <label>Precio *</label>
+                                    <input type="text" id="prodPrecio" placeholder="35000" oninput="updateLivePreview()">
+                                    <div class="invalid-feedback">Precio inválido.</div>
                                 </div>
                                 <div class="form-group" id="valStock">
                                     <label>Stock *</label>
                                     <input type="number" id="prodStock" value="10" min="0" oninput="updateLivePreview()">
-                                    <div class="invalid-feedback">Inventario válido.</div>
+                                    <div class="invalid-feedback">Stock inválido.</div>
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label>Categoría</label>
                                 <select id="prodCategoria" onchange="updateLivePreview()"></select>
                             </div>
-
                             <div class="form-group">
-                                <label>Imagen del Producto</label>
+                                <label>Imagen</label>
                                 <label class="custom-file-upload" style="padding:15px; margin-bottom:10px;">
                                     <input type="file" id="prodFileImg" accept="image/*" style="display:none;" onchange="procesarImagenProducto(this)">
-                                    <span>📷 Cargar desde dispositivo</span>
+                                    <span>📷 Cargar imagen</span>
                                 </label>
-                                <div style="text-align:center; font-size:11px; color:#64748b; margin-bottom:8px;">o enlace URL:</div>
+                                <div style="text-align:center; font-size:11px; color:#64748b; margin-bottom:8px;">o URL:</div>
                                 <input type="text" id="prodUrlImg" placeholder="https://..." oninput="updateLivePreview()">
                             </div>
-
-                            <button class="btn-buy" style="width:100%;" onclick="guardarNuevoProducto()">✨ Publicar Producto</button>
+                            <button class="btn-buy" style="width:100%;" onclick="guardarNuevoProducto()">✨ Publicar</button>
                         </div>
-
                         <div class="preview-sticky-box">
-                            <div style="font-size:12px; font-weight:700; color:#64748b; margin-bottom:12px; text-transform:uppercase; letter-spacing:1px;">Vista Previa</div>
+                            <div style="font-size:12px; font-weight:700; color:#64748b; margin-bottom:12px; text-transform:uppercase;">Vista Previa</div>
                             <div id="liveProductPreviewCard" style="width:100%; max-width:280px;"></div>
                         </div>
                     </div>
@@ -1142,36 +1056,18 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                 <div id="tab-carga-masiva" class="admin-view">
                     <div class="dashboard-card">
                         <h4>📦 Carga Masiva</h4>
-                        <p style="font-size: 13px; color: #64748b; margin: 0 0 15px 0;">
-                            Sube un archivo Excel o CSV para cargar múltiples productos.
-                        </p>
-                        
+                        <p style="font-size: 13px; color: #64748b; margin: 0 0 15px 0;">Sube Excel o CSV.</p>
                         <div class="form-group">
-                            <label>Seleccionar archivo</label>
-                            <input type="file" id="archivoExcel" accept=".xlsx,.xls,.csv" 
-                                   style="padding: 10px; border: 1px solid var(--gray-border); border-radius: 8px; width: 100%;">
-                            <small style="color: #64748b; margin-top: 5px; display: block;">
-                                Columnas: nombre, codigo, categoria, precio, url, stock
-                            </small>
+                            <label>Archivo</label>
+                            <input type="file" id="archivoExcel" accept=".xlsx,.xls,.csv" style="padding: 10px; border: 1px solid var(--gray-border); border-radius: 8px; width: 100%;">
+                            <small style="color: #64748b; margin-top: 5px; display: block;">Columnas: nombre, codigo, categoria, precio, url, stock</small>
                         </div>
-
-                        <button class="btn-buy" onclick="procesarArchivoExcel()" style="margin-top: 10px;">📥 Procesar Archivo</button>
-
+                        <button class="btn-buy" onclick="procesarArchivoExcel()" style="margin-top: 10px;">📥 Procesar</button>
                         <div id="resultadoCarga" style="margin-top: 15px; padding: 15px; border-radius: 8px; display: none;"></div>
                     </div>
-
                     <div class="dashboard-card">
-                        <h4>📄 Plantilla de Ejemplo</h4>
+                        <h4>📄 Plantilla</h4>
                         <button class="btn-buy" onclick="descargarPlantillaCSV()" style="background: var(--success);">⬇️ Descargar CSV</button>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <h4>ℹ️ Información</h4>
-                        <ul style="font-size: 13px; color: #475569; line-height: 1.8; margin: 0; padding-left: 20px;">
-                            <li><strong>Precios:</strong> $50.000, 50000, 50,000</li>
-                            <li><strong>Código existente:</strong> Se actualiza</li>
-                            <li><strong>Código nuevo:</strong> Se crea</li>
-                        </ul>
                     </div>
                 </div>
 
@@ -1182,17 +1078,13 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                             <div class="form-group" id="valNuevaCategoria" style="flex: 1; margin-bottom: 0; min-width: 200px;">
                                 <label>Nombre *</label>
                                 <input type="text" id="nuevaCategoriaInput" placeholder="Ej: Labiales" style="text-transform: capitalize;">
-                                <div class="invalid-feedback">Obligatorio (mínimo 2 caracteres) y único.</div>
+                                <div class="invalid-feedback">Obligatorio y único.</div>
                             </div>
                             <button class="btn-add-categoria" onclick="agregarCategoria()">➕ Agregar</button>
                         </div>
                     </div>
-
                     <div class="dashboard-card">
-                        <h4>Categorías Existentes</h4>
-                        <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">
-                            Hover para eliminar. ⚠️ No se puede eliminar si tiene productos.
-                        </p>
+                        <h4>Categorías</h4>
                         <div class="categorias-grid" id="categoriasGrid"></div>
                     </div>
                 </div>
@@ -1200,7 +1092,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                 <div id="tab-inventario" class="admin-view">
                     <div class="dashboard-card">
                         <div style="margin-bottom:15px;">
-                            <input type="text" id="inventarioBuscador" placeholder="🔍 Buscar producto..." oninput="filtrarTablaInventario(this.value)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--gray-border); font-family:inherit;">
+                            <input type="text" id="inventarioBuscador" placeholder="🔍 Buscar..." oninput="filtrarTablaInventario(this.value)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--gray-border); font-family:inherit;">
                         </div>
                         <div class="table-wrapper">
                             <table class="modern-table">
@@ -1208,7 +1100,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                                     <tr>
                                         <th>Img</th>
                                         <th>Producto</th>
-                                        <th>Categoría</th>
+                                        <th>Cat.</th>
                                         <th>Precio</th>
                                         <th>Stock</th>
                                         <th>Estado</th>
@@ -1220,45 +1112,24 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 </div>
 
-<!-- Modal Edición -->
 <div class="edit-modal" id="editModal">
     <div class="edit-modal-content">
         <div class="edit-modal-header">
-            <h3>✏️ Editar Producto</h3>
+            <h3>✏️ Editar</h3>
             <button class="close-edit-modal" onclick="cerrarModalEdicion()">✕</button>
         </div>
         <div class="edit-modal-body">
-            <div class="form-group">
-                <label>Código *</label>
-                <input type="text" id="editCodigo" style="text-transform: uppercase;">
-            </div>
-            <div class="form-group">
-                <label>Nombre *</label>
-                <input type="text" id="editNombre">
-            </div>
-            <div class="form-group">
-                <label>Precio *</label>
-                <input type="text" id="editPrecio" placeholder="$50.000">
-            </div>
-            <div class="form-group">
-                <label>URL Imagen</label>
-                <input type="text" id="editUrl" placeholder="https://...">
-            </div>
-            <div class="form-group">
-                <label>Categoría</label>
-                <select id="editCategoria"></select>
-            </div>
-            <div class="form-group">
-                <label>Stock</label>
-                <input type="number" id="editStock" min="0">
-            </div>
+            <div class="form-group"><label>Código *</label><input type="text" id="editCodigo" style="text-transform: uppercase;"></div>
+            <div class="form-group"><label>Nombre *</label><input type="text" id="editNombre"></div>
+            <div class="form-group"><label>Precio *</label><input type="text" id="editPrecio" placeholder="$50.000"></div>
+            <div class="form-group"><label>URL Imagen</label><input type="text" id="editUrl" placeholder="https://..."></div>
+            <div class="form-group"><label>Categoría</label><select id="editCategoria"></select></div>
+            <div class="form-group"><label>Stock</label><input type="number" id="editStock" min="0"></div>
         </div>
         <div class="edit-modal-footer">
             <button class="btn-edit-modal secondary" onclick="cerrarModalEdicion()">Cancelar</button>
@@ -1279,9 +1150,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
             <h2 id="detailNombre"></h2>
             <div class="price-large" id="detailPrecio"></div>
             <div class="stock-info" id="detailStock"></div>
-            <button class="btn-add-detail" id="detailAddBtn" onclick="agregarDetalleAlCarrito()">
-                🛒 Agregar al Carrito
-            </button>
+            <button class="btn-add-detail" id="detailAddBtn" onclick="agregarDetalleAlCarrito()">🛒 Agregar</button>
         </div>
     </div>
 </div>
@@ -1295,7 +1164,357 @@ const JSONBIN_CONFIG = {
 
 let productoEditandoIndex = null;
 
-// 🔧 FIX 5: Fetch con timeout
+// ==========================================
+// 🔍 SISTEMA DE BÚSQUEDA INTELIGENTE
+// ==========================================
+
+/**
+ * Normaliza texto: quita acentos, convierte a minúsculas, elimina caracteres especiales
+ */
+function normalizarTexto(texto) {
+    if (!texto) return '';
+    return texto
+        .toString()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Quita acentos
+        .replace(/[^a-z0-9\s]/g, ' ')    // Reemplaza caracteres especiales con espacios
+        .replace(/\s+/g, ' ')            // Colapsa espacios múltiples
+        .trim();
+}
+
+/**
+ * Calcula la distancia de Levenshtein entre dos strings
+ * (cuántas operaciones se necesitan para convertir uno en otro)
+ */
+function distanciaLevenshtein(a, b) {
+    if (a.length === 0) return b.length;
+    if (b.length === 0) return a.length;
+    
+    const matrix = [];
+    for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+    for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+    
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1,
+                    matrix[i][j - 1] + 1,
+                    matrix[i - 1][j] + 1
+                );
+            }
+        }
+    }
+    return matrix[b.length][a.length];
+}
+
+/**
+ * Calcula similitud entre 0 y 1 (1 = idéntico)
+ */
+function similitudStrings(a, b) {
+    const maxLen = Math.max(a.length, b.length);
+    if (maxLen === 0) return 1;
+    const dist = distanciaLevenshtein(a, b);
+    return 1 - (dist / maxLen);
+}
+
+/**
+ * Diccionario de errores comunes de escritura (mapeo de confusión)
+ */
+const ERRORES_COMUNES = {
+    'bass': 'base', 'bases': 'base', 'vase': 'base',
+    'labial': 'labiales', 'labiale': 'labiales',
+    'ceja': 'cejas', 'seja': 'ceja', 'cejaa': 'cejas',
+    'polbo': 'polvo', 'polbos': 'polvos',
+    'mascarpone': 'mascara', 'mascara': 'mascara',
+    'delineador': 'delineador', 'delineadre': 'delineador',
+    'sombra': 'sombras', 'sombrra': 'sombra',
+    'brocha': 'brochas', 'brohcha': 'brocha',
+    'serum': 'serum', 'serun': 'serum',
+    'crema': 'cremas', 'krema': 'crema',
+    'xolover': 'xiolover', 'xiolober': 'xiolover',
+    'matte': 'matte', 'mate': 'matte',
+    'brillo': 'brillos', 'brilyo': 'brillo',
+    'rubor': 'rubores', 'ruborr': 'rubor'
+};
+
+/**
+ * Búsqueda inteligente con múltiples estrategias
+ * Retorna: { resultados: [], sugerencia: string|null }
+ */
+function busquedaInteligente(query) {
+    if (!query || query.trim().length === 0) {
+        return { resultados: [], sugerencia: null };
+    }
+    
+    const queryNorm = normalizarTexto(query);
+    const queryWords = queryNorm.split(' ').filter(w => w.length > 0);
+    
+    // Si la query es muy corta, solo búsqueda parcial
+    if (queryNorm.length < 2) {
+        return { resultados: [], sugerencia: null };
+    }
+    
+    const resultados = [];
+    let mejorSugerencia = null;
+    let mejorSimilitud = 0;
+    
+    productos.forEach((prod, index) => {
+        const codigoNorm = normalizarTexto(prod.codigo || '');
+        const nombreNorm = normalizarTexto(prod.nombre || '');
+        const categoriaNorm = normalizarTexto(prod.categoria || '');
+        
+        let tipoMatch = null;
+        let score = 0;
+        let matchedText = '';
+        
+        // 1. COINCIDENCIA EXACTA EN CÓDIGO (máxima prioridad)
+        if (codigoNorm === queryNorm) {
+            tipoMatch = 'exact';
+            score = 1000;
+            matchedText = prod.codigo;
+        }
+        // 2. CÓDIGO CONTIENE LA QUERY
+        else if (codigoNorm.includes(queryNorm)) {
+            tipoMatch = 'exact';
+            score = 900;
+            matchedText = prod.codigo;
+        }
+        // 3. NOMBRE COMPLETO CONTIENE LA QUERY
+        else if (nombreNorm.includes(queryNorm)) {
+            tipoMatch = 'exact';
+            score = 800;
+            matchedText = prod.nombre;
+        }
+        // 4. TODAS LAS PALABRAS DE LA QUERY ESTÁN EN EL NOMBRE
+        else if (queryWords.length > 1 && queryWords.every(w => nombreNorm.includes(w))) {
+            tipoMatch = 'exact';
+            score = 750;
+            matchedText = prod.nombre;
+        }
+        // 5. ALGUNA PALABRA DE LA QUERY ESTÁ EN NOMBRE/CÓDIGO/CATEGORÍA
+        else if (queryWords.some(w => w.length >= 3 && (nombreNorm.includes(w) || codigoNorm.includes(w) || categoriaNorm.includes(w)))) {
+            tipoMatch = 'partial';
+            score = 600;
+            matchedText = prod.nombre;
+        }
+        // 6. BÚSQUEDA DIFUSA (FUZZY) - tolerancia a errores
+        else {
+            // Buscar en cada palabra del nombre
+            const nombreWords = nombreNorm.split(' ').filter(w => w.length > 0);
+            let bestWordSim = 0;
+            let bestWord = '';
+            
+            for (const nombreWord of nombreWords) {
+                if (nombreWord.length < 2) continue;
+                
+                // Comparar con cada palabra de la query
+                for (const qw of queryWords) {
+                    if (qw.length < 2) continue;
+                    
+                    // Solo comparar palabras de longitud similar
+                    if (Math.abs(nombreWord.length - qw.length) > 2) continue;
+                    
+                    const sim = similitudStrings(nombreWord, qw);
+                    if (sim > bestWordSim) {
+                        bestWordSim = sim;
+                        bestWord = nombreWord;
+                    }
+                }
+            }
+            
+            // También comparar con el diccionario de errores comunes
+            let errorCorrection = null;
+            if (ERRORES_COMUNES[queryNorm]) {
+                errorCorrection = ERRORES_COMUNES[queryNorm];
+                if (nombreNorm.includes(normalizarTexto(errorCorrection))) {
+                    bestWordSim = Math.max(bestWordSim, 0.85);
+                    bestWord = errorCorrection;
+                }
+            }
+            
+            // Umbral: 70% de similitud o más se considera coincidencia
+            if (bestWordSim >= 0.7) {
+                tipoMatch = 'fuzzy';
+                score = Math.floor(bestWordSim * 500);
+                matchedText = prod.nombre;
+                
+                // Generar sugerencia si es la mejor hasta ahora
+                if (bestWordSim > mejorSimilitud && errorCorrection) {
+                    mejorSimilitud = bestWordSim;
+                    mejorSugerencia = errorCorrection;
+                }
+            }
+        }
+        
+        if (tipoMatch) {
+            resultados.push({
+                index,
+                prod,
+                tipoMatch,
+                score,
+                matchedText
+            });
+        }
+    });
+    
+    // Ordenar por score descendente
+    resultados.sort((a, b) => b.score - a.score);
+    
+    // Si no hay resultados exactos pero hay una sugerencia, usarla
+    if (resultados.length === 0 && mejorSugerencia) {
+        // Re-buscar con la sugerencia
+        return busquedaInteligente(mejorSugerencia);
+    }
+    
+    return {
+        resultados: resultados.slice(0, 10), // Máximo 10 resultados
+        sugerencia: mejorSugerencia
+    };
+}
+
+/**
+ * Resalta las coincidencias en el texto
+ */
+function resaltarCoincidencia(texto, query) {
+    if (!query || !texto) return texto;
+    const queryNorm = normalizarTexto(query);
+    const textoNorm = normalizarTexto(texto);
+    const idx = textoNorm.indexOf(queryNorm);
+    
+    if (idx === -1) return texto;
+    
+    const antes = texto.substring(0, idx);
+    const match = texto.substring(idx, idx + queryNorm.length);
+    const despues = texto.substring(idx + queryNorm.length);
+    
+    return `${antes}<mark>${match}</mark>${despues}`;
+}
+
+// ==========================================
+// ⚡ OPTIMIZACIONES DE VELOCIDAD
+// ==========================================
+
+/**
+ * Debounce: retrasa la ejecución hasta que el usuario deje de escribir
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+/**
+ * Renderiza productos usando DocumentFragment (mucho más rápido que innerHTML)
+ */
+function renderProductosOptimizado(listaProductos = null) {
+    const contenedor = document.getElementById("productos");
+    if (!contenedor) return;
+    
+    // Limpiar contenedor
+    contenedor.textContent = '';
+    
+    // Usar DocumentFragment para evitar múltiples repaints
+    const fragment = document.createDocumentFragment();
+    
+    const productosARenderizar = listaProductos || productos;
+    
+    productosARenderizar.forEach((p, idx) => {
+        // Si es una lista filtrada, necesitamos el índice real
+        const realIndex = listaProductos ? productos.indexOf(p) : idx;
+        if (realIndex === -1) return;
+        
+        // Filtrar por categoría si es necesario
+        if (!listaProductos && categoriaActual !== "Todos" && p.categoria !== categoriaActual) return;
+        
+        const sinStock = p.stock <= 0;
+        const precioFormateado = formatearPrecio(p.precio);
+        
+        const card = document.createElement('div');
+        card.className = `card ${sinStock ? 'no-stock' : ''}`;
+        card.setAttribute('data-index', realIndex);
+        
+        card.innerHTML = `
+            <div class="card-top">
+                <img data-src="${p.img || 'https://via.placeholder.com/300?text=Beauty'}" alt="${p.nombre}" class="lazy-img">
+                <button class="add-btn-floating" onclick="event.stopPropagation(); ${sinStock ? '' : `agregarAlCarro(${realIndex})`}">
+                    ${sinStock ? '✕' : '＋'}
+                </button>
+            </div>
+            <div class="card-info">
+                <span class="category-tag">${p.categoria}</span>
+                <div class="product-code">${p.codigo || 'N/A'}</div>
+                <h3>${p.nombre}</h3>
+                <p class="price">${precioFormateado}</p>
+                <span class="stock-tag">${sinStock ? 'AGOTADO' : `${p.stock} u.`}</span>
+            </div>
+        `;
+        
+        fragment.appendChild(card);
+    });
+    
+    contenedor.appendChild(fragment);
+    
+    // Inicializar lazy loading con IntersectionObserver
+    inicializarLazyLoading();
+    
+    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+}
+
+/**
+ * Lazy loading de imágenes con IntersectionObserver
+ */
+let imageObserver = null;
+
+function inicializarLazyLoading() {
+    if (!('IntersectionObserver' in window)) {
+        // Fallback: cargar todas las imágenes inmediatamente
+        document.querySelectorAll('.lazy-img').forEach(img => {
+            if (img.dataset.src) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+            }
+        });
+        return;
+    }
+    
+    if (imageObserver) imageObserver.disconnect();
+    
+    imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    img.classList.add('loaded');
+                }
+                observer.unobserve(img);
+            }
+        });
+    }, {
+        rootMargin: '50px 0px', // Cargar 50px antes de que sea visible
+        threshold: 0.01
+    });
+    
+    document.querySelectorAll('.lazy-img').forEach(img => {
+        imageObserver.observe(img);
+    });
+}
+
+// ==========================================
+// 🔧 FUNCIONES AUXILIARES
+// ==========================================
+
 async function fetchConTimeout(url, options, timeoutMs = 8000) {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeoutMs);
@@ -1327,9 +1546,7 @@ function formatearPrecio(numero) {
     return '$' + num.toLocaleString('es-CO');
 }
 
-function validarPrecio(precio) {
-    return limpiarPrecio(precio) > 0;
-}
+function validarPrecio(precio) { return limpiarPrecio(precio) > 0; }
 
 function agregarLog(mensaje, tipo = 'info') {
     const logDiv = document.getElementById('logActividad');
@@ -1437,11 +1654,11 @@ async function descargarDatosDeNube(mostrarToast = true) {
             renderSelectCategorias();
             renderCategoriasAdmin();
             renderNavCategorias();
-            renderProductos();
+            renderProductosOptimizado();
             updateLivePreview();
             actualizarEstadisticas();
             actualizarEstadoConexion('success', 'Datos descargados');
-            if (mostrarToast) showToast("✅ Sincronizado desde la nube", "success");
+            if (mostrarToast) showToast("✅ Sincronizado", "success");
             return true;
         } else {
             agregarLog(`❌ Error ${response.status}`, 'error');
@@ -1459,7 +1676,7 @@ async function descargarDatosDeNube(mostrarToast = true) {
 
 function exportarDatosJSON() {
     try {
-        const datos = { productos, categorias, tiendaConfig, fechaExportacion: new Date().toISOString(), version: '3.1' };
+        const datos = { productos, categorias, tiendaConfig, fechaExportacion: new Date().toISOString(), version: '3.2' };
         const jsonStr = JSON.stringify(datos, null, 2);
         const blob = new Blob([jsonStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -1486,7 +1703,7 @@ function importarDatosJSON(input) {
         try {
             const datos = JSON.parse(e.target.result);
             if (!datos.productos || !Array.isArray(datos.productos)) throw new Error('Formato incorrecto');
-            if (confirm(`¿Importar ${datos.productos.length} productos? Se reemplazarán los datos actuales.`)) {
+            if (confirm(`¿Importar ${datos.productos.length} productos?`)) {
                 productos = datos.productos;
                 if (datos.categorias) categorias = datos.categorias;
                 if (datos.tiendaConfig) tiendaConfig = datos.tiendaConfig;
@@ -1497,7 +1714,7 @@ function importarDatosJSON(input) {
                 renderSelectCategorias();
                 renderCategoriasAdmin();
                 renderNavCategorias();
-                renderProductos();
+                renderProductosOptimizado();
                 updateLivePreview();
                 renderInventarioTabla();
                 actualizarEstadisticas();
@@ -1534,7 +1751,9 @@ const prodsDefecto = [
     {id: generarIDProducto(), codigo: "LAB-001", nombre: "Caja Lip Combo Xiolover Premium", precio: "$40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12},
     {id: generarIDProducto(), codigo: "CEJ-001", nombre: "Tinte Fijador De Cejas Brow Set", precio: "$38.000", categoria: "Cejas", img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=300", stock: 15},
     {id: generarIDProducto(), codigo: "MAQ-001", nombre: "Kit Base Humide + Corrector", precio: "$50.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300", stock: 5},
-    {id: generarIDProducto(), codigo: "ACC-001", nombre: "Kit Brochas Fluffy x10", precio: "$60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0}
+    {id: generarIDProducto(), codigo: "ACC-001", nombre: "Kit Brochas Fluffy x10", precio: "$60.000", categoria: "Accesorios", img: "https://images.unsplash.com/photo-1607602132700-068258431c6c?w=300", stock: 0},
+    {id: generarIDProducto(), codigo: "POL-001", nombre: "Polvo Translúcido Matte", precio: "$35.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1599733589046-8a35aef0a85f?w=300", stock: 8},
+    {id: generarIDProducto(), codigo: "SKN-001", nombre: "Sérum Vitamina C Facial", precio: "$55.000", categoria: "Skincare", img: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=300", stock: 10}
 ];
 
 let productos = JSON.parse(localStorage.getItem('db_prods_v2')) || prodsDefecto;
@@ -1588,14 +1807,14 @@ function agregarCategoria() {
     const nombre = input.value.trim();
     if (!nombre || nombre.length < 2) {
         document.getElementById('valNuevaCategoria').classList.add('invalid');
-        showToast("⚠️ Nombre obligatorio (mínimo 2 caracteres)", "danger");
+        showToast("⚠️ Nombre obligatorio", "danger");
         return;
     }
     document.getElementById('valNuevaCategoria').classList.remove('invalid');
     const normalizado = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
     if (categorias.some(c => c.toLowerCase() === normalizado.toLowerCase())) {
         document.getElementById('valNuevaCategoria').classList.add('invalid');
-        showToast("⚠️ Ya existe esa categoría", "danger");
+        showToast("⚠️ Ya existe", "danger");
         return;
     }
     categorias.push(normalizado);
@@ -1619,7 +1838,7 @@ function eliminarCategoria(index) {
         localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
         renderSelectCategorias(); renderCategoriasAdmin(); renderNavCategorias(); actualizarEstadisticas();
         showToast(`🗑️ "${cat}" eliminada`, "danger");
-        agregarLog(`🗑️ Categoría eliminada: ${cat}`, 'warning');
+        agregarLog(`🗑️ Eliminada: ${cat}`, 'warning');
         subirDatosANube(false);
     }
 }
@@ -1644,7 +1863,10 @@ function renderNavCategorias() {
     });
 }
 
-// 🔧 FIX 3: Renderizar INMEDIATAMENTE, sincronizar DESPUÉS
+// ==========================================
+// 🚀 INICIALIZACIÓN OPTIMIZADA
+// ==========================================
+
 window.addEventListener('DOMContentLoaded', () => {
     agregarLog('🚀 Sistema iniciado', 'info');
     asignarIDsSiFaltan();
@@ -1652,15 +1874,126 @@ window.addEventListener('DOMContentLoaded', () => {
     renderSelectCategorias();
     renderCategoriasAdmin();
     renderNavCategorias();
-    renderProductos();
+    renderProductosOptimizado();
     updateLivePreview();
     actualizarEstadisticas();
     
-    // 🔧 Sincronizar en segundo plano (no bloquea)
+    // 🔍 Configurar búsqueda inteligente con debounce
+    const buscador = document.getElementById('buscadorCodigo');
+    const clearBtn = document.getElementById('searchClear');
+    
+    const busquedaDebounce = debounce(ejecutarBusquedaInteligente, 250);
+    
+    buscador.addEventListener('input', (e) => {
+        const value = e.target.value;
+        clearBtn.classList.toggle('visible', value.length > 0);
+        busquedaDebounce(e);
+    });
+    
+    // Sincronizar en segundo plano
     setTimeout(() => verificarConexionSilenciosa(), 500);
 });
 
-// 🔧 FIX 4: Sync sin bloquear UI
+function limpiarBusqueda() {
+    const buscador = document.getElementById('buscadorCodigo');
+    const resultado = document.getElementById('resultadoBusqueda');
+    const clearBtn = document.getElementById('searchClear');
+    buscador.value = '';
+    resultado.style.display = 'none';
+    resultado.innerHTML = '';
+    clearBtn.classList.remove('visible');
+    renderProductosOptimizado();
+    document.getElementById('seccionTitulo').textContent = categoriaActual === "Todos" ? "Todos los Productos" : `Categoría: ${categoriaActual}`;
+}
+
+function ejecutarBusquedaInteligente(e) {
+    const query = e.target.value;
+    const resultadoDiv = document.getElementById('resultadoBusqueda');
+    const contenedor = document.getElementById("productos");
+    const titulo = document.getElementById('seccionTitulo');
+    
+    if (!query || query.trim().length === 0) {
+        resultadoDiv.style.display = 'none';
+        resultadoDiv.innerHTML = '';
+        renderProductosOptimizado();
+        titulo.textContent = categoriaActual === "Todos" ? "Todos los Productos" : `Categoría: ${categoriaActual}`;
+        return;
+    }
+    
+    const { resultados, sugerencia } = busquedaInteligente(query);
+    
+    // Construir HTML de resultados
+    let html = '';
+    
+    // Sugerencia si existe
+    if (sugerencia && resultados.length === 0) {
+        html += `<div class="search-suggestion" onclick="aplicarSugerencia('${sugerencia}')">
+            💡 ¿Quisiste decir <strong>"${sugerencia}"</strong>?
+        </div>`;
+    }
+    
+    if (resultados.length === 0) {
+        html += `<div class="search-no-results">
+            🔍 No se encontraron resultados para "<strong>${query}</strong>"
+        </div>`;
+        resultadoDiv.innerHTML = html;
+        resultadoDiv.style.display = 'block';
+        contenedor.textContent = '';
+        titulo.textContent = `Sin resultados para "${query}"`;
+        return;
+    }
+    
+    // Mostrar resultados
+    resultados.forEach(r => {
+        const badgeClass = r.tipoMatch === 'exact' ? 'match-exact' : (r.tipoMatch === 'partial' ? 'match-partial' : 'match-fuzzy');
+        const badgeText = r.tipoMatch === 'exact' ? 'Exacta' : (r.tipoMatch === 'partial' ? 'Parcial' : 'Similar');
+        const nombreResaltado = resaltarCoincidencia(r.prod.nombre, query);
+        
+        html += `
+            <div class="search-result-item" onclick="seleccionarProductoBuscado(${r.index})">
+                <div class="search-result-info">
+                    <div class="search-result-code">
+                        ${r.prod.codigo || 'N/A'}
+                        <span class="search-match-badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                    <div class="search-result-name">${nombreResaltado}</div>
+                </div>
+                <div class="search-result-price">${formatearPrecio(r.prod.precio)}</div>
+            </div>
+        `;
+    });
+    
+    resultadoDiv.innerHTML = html;
+    resultadoDiv.style.display = 'block';
+    
+    // Renderizar solo los productos encontrados en el grid
+    const productosEncontrados = resultados.map(r => r.prod);
+    renderProductosOptimizado(productosEncontrados);
+    
+    titulo.textContent = `${productosEncontrados.length} resultado${productosEncontrados.length !== 1 ? 's' : ''} para "${query}"`;
+}
+
+function aplicarSugerencia(sugerencia) {
+    const buscador = document.getElementById('buscadorCodigo');
+    buscador.value = sugerencia;
+    document.getElementById('searchClear').classList.add('visible');
+    ejecutarBusquedaInteligente({ target: buscador });
+}
+
+function seleccionarProductoBuscado(index) {
+    const prod = productos[index];
+    if (!prod) return;
+    
+    const buscador = document.getElementById('buscadorCodigo');
+    buscador.value = prod.codigo || prod.nombre;
+    document.getElementById('resultadoBusqueda').style.display = 'none';
+    document.getElementById('searchClear').classList.add('visible');
+    
+    // Mostrar solo ese producto
+    renderProductosOptimizado([prod]);
+    document.getElementById('seccionTitulo').textContent = prod.nombre;
+}
+
 async function verificarConexionSilenciosa() {
     try {
         const response = await fetchConTimeout(`${JSONBIN_CONFIG.API_URL}/latest`, {
@@ -1689,14 +2022,12 @@ async function verificarConexionSilenciosa() {
                     renderSelectCategorias();
                     renderCategoriasAdmin();
                     renderNavCategorias();
-                    renderProductos();
+                    renderProductosOptimizado();
                     updateLivePreview();
                     actualizarEstadisticas();
                     
                     agregarLog(`📥 Sincronizado: ${productos.length} productos`, 'success');
                     showToast("🔄 Catálogo actualizado", "success");
-                } else {
-                    agregarLog('✓ Datos locales actualizados', 'info');
                 }
             }
             actualizarEstadoConexion('success', 'Conectado a JSONBin');
@@ -1816,96 +2147,12 @@ async function guardarConfigTienda() {
     await subirDatosANube();
 }
 
-function renderProductos() {
-    const contenedor = document.getElementById("productos");
-    contenedor.innerHTML = "";
-    productos.forEach((p, index) => {
-        if (categoriaActual !== "Todos" && p.categoria !== categoriaActual) return;
-        const sinStock = p.stock <= 0;
-        const precioFormateado = formatearPrecio(p.precio);
-        contenedor.innerHTML += `
-            <div class="card ${sinStock ? 'no-stock' : ''}" data-index="${index}">
-                <div class="card-top">
-                    <img src="${p.img || 'https://via.placeholder.com/300?text=Beauty'}" alt="${p.nombre}" loading="lazy">
-                    <button class="add-btn-floating" onclick="event.stopPropagation(); ${sinStock ? '' : `agregarAlCarro(${index})`}">
-                        ${sinStock ? '✕' : '＋'}
-                    </button>
-                </div>
-                <div class="card-info">
-                    <span class="category-tag">${p.categoria}</span>
-                    <div class="product-code">${p.codigo || 'N/A'}</div>
-                    <h3>${p.nombre}</h3>
-                    <p class="price">${precioFormateado}</p>
-                    <span class="stock-tag">${sinStock ? 'AGOTADO' : `${p.stock} u.`}</span>
-                </div>
-            </div>
-        `;
-    });
-    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-}
-
 function filtrarCategoria(cat, elem) {
     categoriaActual = cat;
     document.getElementById('seccionTitulo').textContent = cat === "Todos" ? "Todos los Productos" : `Categoría: ${cat}`;
     document.querySelectorAll('header nav a').forEach(a => a.classList.remove('active'));
     elem.classList.add('active');
-    document.getElementById('buscadorCodigo').value = '';
-    renderProductos();
-}
-
-function buscarPorCodigo(query) {
-    const resultadoDiv = document.getElementById('resultadoBusqueda');
-    const contenedor = document.getElementById("productos");
-    if (!query || query.trim().length === 0) {
-        resultadoDiv.style.display = 'none';
-        renderProductos();
-        return;
-    }
-    const queryUpper = query.toUpperCase().trim();
-    const encontrados = productos.filter(p => p.codigo && p.codigo.toUpperCase().includes(queryUpper));
-    if (encontrados.length === 0) {
-        resultadoDiv.innerHTML = '<div style="padding: 15px; text-align: center; color: #94a3b8; font-weight: 600;">No encontrado</div>';
-        resultadoDiv.style.display = 'block';
-        contenedor.innerHTML = '';
-        return;
-    }
-    resultadoDiv.innerHTML = encontrados.map(p => `
-        <div style="padding: 12px 20px; border-bottom: 1px solid var(--gray-light); cursor: pointer; display: flex; justify-content: space-between; align-items: center;"
-             onclick="seleccionarProductoPorCodigo('${p.codigo}')">
-            <div>
-                <div style="font-weight: 700; color: var(--primary-pink); font-size: 13px;">${p.codigo}</div>
-                <div style="font-size: 12px; color: var(--text-dark);">${p.nombre}</div>
-            </div>
-            <div style="font-weight: 700; color: var(--text-dark);">${formatearPrecio(p.precio)}</div>
-        </div>
-    `).join('');
-    resultadoDiv.style.display = 'block';
-    contenedor.innerHTML = '';
-    encontrados.forEach((p) => {
-        const sinStock = p.stock <= 0;
-        const indexOriginal = productos.indexOf(p);
-        contenedor.innerHTML += `
-            <div class="card ${sinStock ? 'no-stock' : ''}" data-index="${indexOriginal}">
-                <div class="card-top">
-                    <img src="${p.img || 'https://via.placeholder.com/300?text=Beauty'}" alt="${p.nombre}" loading="lazy">
-                    <button class="add-btn-floating" onclick="event.stopPropagation(); ${sinStock ? '' : `agregarAlCarro(${indexOriginal})`}">${sinStock ? '✕' : '＋'}</button>
-                </div>
-                <div class="card-info">
-                    <span class="category-tag">${p.categoria}</span>
-                    <div class="product-code">${p.codigo}</div>
-                    <h3>${p.nombre}</h3>
-                    <p class="price">${formatearPrecio(p.precio)}</p>
-                    <span class="stock-tag">${sinStock ? 'AGOTADO' : `${p.stock} u.`}</span>
-                </div>
-            </div>
-        `;
-    });
-}
-
-function seleccionarProductoPorCodigo(codigo) {
-    document.getElementById('buscadorCodigo').value = codigo;
-    document.getElementById('resultadoBusqueda').style.display = 'none';
-    buscarPorCodigo(codigo);
+    limpiarBusqueda();
 }
 
 function updateLivePreview() {
@@ -1973,7 +2220,7 @@ async function guardarNuevoProducto() {
     codigoInput.value = ""; nombreInput.value = ""; precioInput.value = "";
     stockInput.value = "10"; urlImgInput.value = "";
     imagenProductoBase64 = ""; document.getElementById('prodFileImg').value = "";
-    renderProductos(); updateLivePreview(); renderCategoriasAdmin(); actualizarEstadisticas();
+    renderProductosOptimizado(); updateLivePreview(); renderCategoriasAdmin(); actualizarEstadisticas();
     showToast(`¡${nuevoP.nombre} publicado!`);
     agregarLog(`✨ Producto: ${nuevoP.nombre}`, 'success');
     await subirDatosANube();
@@ -2028,7 +2275,7 @@ async function eliminarProducto(idx) {
         const nombreProd = productos[idx].nombre;
         productos.splice(idx, 1);
         localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-        renderInventarioTabla(); renderProductos(); renderCategoriasAdmin(); actualizarEstadisticas();
+        renderInventarioTabla(); renderProductosOptimizado(); renderCategoriasAdmin(); actualizarEstadisticas();
         showToast("Producto eliminado", "danger");
         agregarLog(`🗑️ Eliminado: ${nombreProd}`, 'warning');
         await subirDatosANube();
@@ -2071,7 +2318,7 @@ function cerrarAdmin() {
     const panel = document.getElementById('adminPanel');
     panel.style.opacity = '0';
     setTimeout(() => panel.style.display = 'none', 300);
-    renderProductos();
+    renderProductosOptimizado();
 }
 
 function toggleCart() {
@@ -2115,7 +2362,7 @@ function comprar() {
     });
     mensaje += "\n*TOTAL: " + formatearPrecio(total) + "*";
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-    carrito = []; actualizarCarrito(); toggleCart(); renderProductos(); actualizarEstadisticas();
+    carrito = []; actualizarCarrito(); toggleCart(); renderProductosOptimizado(); actualizarEstadisticas();
     window.open("https://wa.me/573133125208?text=" + encodeURIComponent(mensaje), "_blank");
 }
 
@@ -2143,7 +2390,7 @@ function abrirDetalleProducto(index) {
         stockEl.textContent = '✓ Disponibles: ' + stock;
         stockEl.style.color = 'var(--success)';
         addBtn.disabled = false;
-        addBtn.textContent = '🛒 Agregar al Carrito';
+        addBtn.textContent = '🛒 Agregar';
     }
     const modal = document.getElementById('productDetailModal');
     modal.style.display = 'flex';
@@ -2230,7 +2477,7 @@ async function guardarEdicionProducto() {
     productos[productoEditandoIndex].categoria = categoria;
     productos[productoEditandoIndex].stock = stock;
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-    renderInventarioTabla(); renderProductos(); actualizarEstadisticas();
+    renderInventarioTabla(); renderProductosOptimizado(); actualizarEstadisticas();
     cerrarModalEdicion();
     showToast('✅ Actualizado', 'success');
     agregarLog(`✏️ Editado: ${nombre}`, 'success');
@@ -2245,7 +2492,7 @@ function procesarArchivoExcel() {
     reader.onload = function(e) {
         try {
             if (typeof XLSX === 'undefined') {
-                mostrarResultado('⚠️ SheetJS aún cargando, espera un momento', 'warning');
+                mostrarResultado('⚠️ SheetJS aún cargando', 'warning');
                 return;
             }
             const data = new Uint8Array(e.target.result);
@@ -2285,7 +2532,7 @@ function procesarProductos(productosLeidos) {
         }
     });
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-    renderProductos(); actualizarEstadisticas();
+    renderProductosOptimizado(); actualizarEstadisticas();
     let mensaje = `✅ <strong>Completado:</strong><br>• Creados: ${creados}<br>• Actualizados: ${actualizados}`;
     if (errores > 0) {
         mensaje += `<br><br>⚠️ <strong>Errores (${errores}):</strong><br>` + erroresDetalle.slice(0, 5).join('<br>');
