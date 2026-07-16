@@ -838,7 +838,6 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
         <div class="category-title" id="seccionTitulo">Todos los Productos</div>
     </div>
     
-    <!-- 🔍 BÚSQUEDA INTELIGENTE MEJORADA -->
     <div class="search-wrapper">
         <div class="search-input-container">
             <span class="search-icon">🔍</span>
@@ -882,7 +881,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
         <div class="admin-sidebar">
             <div class="admin-brand-area">
                 <h3 id="sidebarBrandName">XIOLOVER ADMIN</h3>
-                <p>v3.2 • Búsqueda Inteligente</p>
+                <p>v3.3 • Ultra Rápido</p>
                 <div class="admin-nav-menu">
                     <button class="admin-nav-item active" onclick="switchTab('tab-sincronizacion', this)">☁️ Sincronización</button>
                     <button class="admin-nav-item" onclick="switchTab('tab-tienda', this)">🎨 Apariencia</button>
@@ -915,9 +914,19 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                         <div class="sync-info">
                             <strong>💡 Info:</strong><br>
                             • JSONBin: límite <strong>100KB</strong><br>
-                            • Usa <strong>URLs</strong> de imágenes<br>
+                            • Usa <strong>URLs</strong> de imágenes (¡Nunca archivos directos!)<br>
                             • Respaldo local automático
                         </div>
+                    </div>
+
+                    <div class="sync-status-card" style="border-color: var(--warning);">
+                        <h4 style="color: var(--warning);">🛠️ Zona de Reparación</h4>
+                        <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">
+                            Si la app va lenta o no deja subir productos, es por exceso de imágenes pesadas en la memoria del navegador.
+                        </p>
+                        <button class="sync-btn warning" onclick="repararAlmacenamiento()" style="width: 100%;">
+                            🧹 Limpiar Imágenes Pesadas y Optimizar
+                        </button>
                     </div>
 
                     <div class="sync-status-card">
@@ -996,7 +1005,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                         <div class="form-group">
                             <label class="custom-file-upload">
                                 <input type="file" id="cfgMarcaAgua" accept="image/*" style="display:none;">
-                                <span>📷 Seleccionar imagen</span>
+                                <span>📷 Seleccionar imagen (Máx 100KB)</span>
                             </label>
                             <span id="watermarkStatus" style="font-size:12px; color:var(--success); display:block; margin-top:5px; font-weight:600;"></span>
                         </div>
@@ -1036,13 +1045,12 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                                 <select id="prodCategoria" onchange="updateLivePreview()"></select>
                             </div>
                             <div class="form-group">
-                                <label>Imagen</label>
-                                <label class="custom-file-upload" style="padding:15px; margin-bottom:10px;">
-                                    <input type="file" id="prodFileImg" accept="image/*" style="display:none;" onchange="procesarImagenProducto(this)">
-                                    <span>📷 Cargar imagen</span>
-                                </label>
-                                <div style="text-align:center; font-size:11px; color:#64748b; margin-bottom:8px;">o URL:</div>
-                                <input type="text" id="prodUrlImg" placeholder="https://..." oninput="updateLivePreview()">
+                                <label>Imagen del Producto</label>
+                                <div style="background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 12px; margin-bottom: 10px; font-size: 12px; color: #92400e; line-height: 1.4;">
+                                    ⚠️ <strong>Importante:</strong> Para evitar que la app se ponga lenta o bloquee nuevos productos, <strong>no subas archivos directos</strong>. 
+                                    <br>📎 <a href="https://postimages.org/" target="_blank" style="color: #92400e; text-decoration: underline; font-weight: 700;">Sube tu foto gratis aquí (Postimages)</a> y pega el "Enlace directo" abajo.
+                                </div>
+                                <input type="text" id="prodUrlImg" placeholder="https://i.postimg.cc/.../tu-imagen.jpg" oninput="updateLivePreview()">
                             </div>
                             <button class="btn-buy" style="width:100%;" onclick="guardarNuevoProducto()">✨ Publicar</button>
                         </div>
@@ -1056,7 +1064,7 @@ table.modern-table tbody tr:hover { background: #f8fafc; }
                 <div id="tab-carga-masiva" class="admin-view">
                     <div class="dashboard-card">
                         <h4>📦 Carga Masiva</h4>
-                        <p style="font-size: 13px; color: #64748b; margin: 0 0 15px 0;">Sube Excel o CSV.</p>
+                        <p style="font-size: 13px; color: #64748b; margin: 0 0 15px 0;">Sube Excel o CSV. <strong>La columna de imagen debe contener URLs, no archivos.</strong></p>
                         <div class="form-group">
                             <label>Archivo</label>
                             <input type="file" id="archivoExcel" accept=".xlsx,.xls,.csv" style="padding: 10px; border: 1px solid var(--gray-border); border-radius: 8px; width: 100%;">
@@ -1165,65 +1173,38 @@ const JSONBIN_CONFIG = {
 let productoEditandoIndex = null;
 
 // ==========================================
-// 🔍 SISTEMA DE BÚSQUEDA INTELIGENTE
+// 🔍 SISTEMA DE BÚSQUEDA INTELIGENTE OPTIMIZADO
 // ==========================================
 
-/**
- * Normaliza texto: quita acentos, convierte a minúsculas, elimina caracteres especiales
- */
 function normalizarTexto(texto) {
     if (!texto) return '';
-    return texto
-        .toString()
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '') // Quita acentos
-        .replace(/[^a-z0-9\s]/g, ' ')    // Reemplaza caracteres especiales con espacios
-        .replace(/\s+/g, ' ')            // Colapsa espacios múltiples
-        .trim();
+    return texto.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-/**
- * Calcula la distancia de Levenshtein entre dos strings
- * (cuántas operaciones se necesitan para convertir uno en otro)
- */
 function distanciaLevenshtein(a, b) {
     if (a.length === 0) return b.length;
     if (b.length === 0) return a.length;
-    
     const matrix = [];
     for (let i = 0; i <= b.length; i++) matrix[i] = [i];
     for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
-    
     for (let i = 1; i <= b.length; i++) {
         for (let j = 1; j <= a.length; j++) {
             if (b.charAt(i - 1) === a.charAt(j - 1)) {
                 matrix[i][j] = matrix[i - 1][j - 1];
             } else {
-                matrix[i][j] = Math.min(
-                    matrix[i - 1][j - 1] + 1,
-                    matrix[i][j - 1] + 1,
-                    matrix[i - 1][j] + 1
-                );
+                matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j] + 1);
             }
         }
     }
     return matrix[b.length][a.length];
 }
 
-/**
- * Calcula similitud entre 0 y 1 (1 = idéntico)
- */
 function similitudStrings(a, b) {
     const maxLen = Math.max(a.length, b.length);
     if (maxLen === 0) return 1;
-    const dist = distanciaLevenshtein(a, b);
-    return 1 - (dist / maxLen);
+    return 1 - (distanciaLevenshtein(a, b) / maxLen);
 }
 
-/**
- * Diccionario de errores comunes de escritura (mapeo de confusión)
- */
 const ERRORES_COMUNES = {
     'bass': 'base', 'bases': 'base', 'vase': 'base',
     'labial': 'labiales', 'labiale': 'labiales',
@@ -1241,208 +1222,119 @@ const ERRORES_COMUNES = {
     'rubor': 'rubores', 'ruborr': 'rubor'
 };
 
-/**
- * Búsqueda inteligente con múltiples estrategias
- * Retorna: { resultados: [], sugerencia: string|null }
- */
+// ⚡ OPTIMIZACIÓN: Pre-calcular el texto normalizado para no hacerlo en cada tecla pulsada
+function prepararCacheBusqueda() {
+    productos.forEach(p => {
+        p._searchCache = {
+            codigo: normalizarTexto(p.codigo || ''),
+            nombre: normalizarTexto(p.nombre || ''),
+            categoria: normalizarTexto(p.categoria || '')
+        };
+    });
+}
+
 function busquedaInteligente(query) {
-    if (!query || query.trim().length === 0) {
-        return { resultados: [], sugerencia: null };
-    }
-    
+    if (!query || query.trim().length === 0) return { resultados: [], sugerencia: null };
     const queryNorm = normalizarTexto(query);
     const queryWords = queryNorm.split(' ').filter(w => w.length > 0);
-    
-    // Si la query es muy corta, solo búsqueda parcial
-    if (queryNorm.length < 2) {
-        return { resultados: [], sugerencia: null };
-    }
+    if (queryNorm.length < 2) return { resultados: [], sugerencia: null };
     
     const resultados = [];
     let mejorSugerencia = null;
     let mejorSimilitud = 0;
     
     productos.forEach((prod, index) => {
-        const codigoNorm = normalizarTexto(prod.codigo || '');
-        const nombreNorm = normalizarTexto(prod.nombre || '');
-        const categoriaNorm = normalizarTexto(prod.categoria || '');
+        // Usar caché para velocidad extrema
+        const cache = prod._searchCache || {
+            codigo: normalizarTexto(prod.codigo || ''),
+            nombre: normalizarTexto(prod.nombre || ''),
+            categoria: normalizarTexto(prod.categoria || '')
+        };
         
         let tipoMatch = null;
         let score = 0;
-        let matchedText = '';
         
-        // 1. COINCIDENCIA EXACTA EN CÓDIGO (máxima prioridad)
-        if (codigoNorm === queryNorm) {
-            tipoMatch = 'exact';
-            score = 1000;
-            matchedText = prod.codigo;
-        }
-        // 2. CÓDIGO CONTIENE LA QUERY
-        else if (codigoNorm.includes(queryNorm)) {
-            tipoMatch = 'exact';
-            score = 900;
-            matchedText = prod.codigo;
-        }
-        // 3. NOMBRE COMPLETO CONTIENE LA QUERY
-        else if (nombreNorm.includes(queryNorm)) {
-            tipoMatch = 'exact';
-            score = 800;
-            matchedText = prod.nombre;
-        }
-        // 4. TODAS LAS PALABRAS DE LA QUERY ESTÁN EN EL NOMBRE
-        else if (queryWords.length > 1 && queryWords.every(w => nombreNorm.includes(w))) {
-            tipoMatch = 'exact';
-            score = 750;
-            matchedText = prod.nombre;
-        }
-        // 5. ALGUNA PALABRA DE LA QUERY ESTÁ EN NOMBRE/CÓDIGO/CATEGORÍA
-        else if (queryWords.some(w => w.length >= 3 && (nombreNorm.includes(w) || codigoNorm.includes(w) || categoriaNorm.includes(w)))) {
-            tipoMatch = 'partial';
-            score = 600;
-            matchedText = prod.nombre;
-        }
-        // 6. BÚSQUEDA DIFUSA (FUZZY) - tolerancia a errores
+        if (cache.codigo === queryNorm) { tipoMatch = 'exact'; score = 1000; }
+        else if (cache.codigo.includes(queryNorm)) { tipoMatch = 'exact'; score = 900; }
+        else if (cache.nombre.includes(queryNorm)) { tipoMatch = 'exact'; score = 800; }
+        else if (queryWords.length > 1 && queryWords.every(w => cache.nombre.includes(w))) { tipoMatch = 'exact'; score = 750; }
+        else if (queryWords.some(w => w.length >= 3 && (cache.nombre.includes(w) || cache.codigo.includes(w) || cache.categoria.includes(w)))) { tipoMatch = 'partial'; score = 600; }
         else {
-            // Buscar en cada palabra del nombre
-            const nombreWords = nombreNorm.split(' ').filter(w => w.length > 0);
+            const nombreWords = cache.nombre.split(' ').filter(w => w.length > 0);
             let bestWordSim = 0;
             let bestWord = '';
-            
             for (const nombreWord of nombreWords) {
                 if (nombreWord.length < 2) continue;
-                
-                // Comparar con cada palabra de la query
                 for (const qw of queryWords) {
-                    if (qw.length < 2) continue;
-                    
-                    // Solo comparar palabras de longitud similar
-                    if (Math.abs(nombreWord.length - qw.length) > 2) continue;
-                    
+                    if (qw.length < 2 || Math.abs(nombreWord.length - qw.length) > 2) continue;
                     const sim = similitudStrings(nombreWord, qw);
-                    if (sim > bestWordSim) {
-                        bestWordSim = sim;
-                        bestWord = nombreWord;
-                    }
+                    if (sim > bestWordSim) { bestWordSim = sim; bestWord = nombreWord; }
                 }
             }
-            
-            // También comparar con el diccionario de errores comunes
             let errorCorrection = null;
             if (ERRORES_COMUNES[queryNorm]) {
                 errorCorrection = ERRORES_COMUNES[queryNorm];
-                if (nombreNorm.includes(normalizarTexto(errorCorrection))) {
+                if (cache.nombre.includes(normalizarTexto(errorCorrection))) {
                     bestWordSim = Math.max(bestWordSim, 0.85);
                     bestWord = errorCorrection;
                 }
             }
-            
-            // Umbral: 70% de similitud o más se considera coincidencia
             if (bestWordSim >= 0.7) {
                 tipoMatch = 'fuzzy';
                 score = Math.floor(bestWordSim * 500);
-                matchedText = prod.nombre;
-                
-                // Generar sugerencia si es la mejor hasta ahora
                 if (bestWordSim > mejorSimilitud && errorCorrection) {
                     mejorSimilitud = bestWordSim;
                     mejorSugerencia = errorCorrection;
                 }
             }
         }
-        
-        if (tipoMatch) {
-            resultados.push({
-                index,
-                prod,
-                tipoMatch,
-                score,
-                matchedText
-            });
-        }
+        if (tipoMatch) resultados.push({ index, prod, tipoMatch, score });
     });
     
-    // Ordenar por score descendente
     resultados.sort((a, b) => b.score - a.score);
-    
-    // Si no hay resultados exactos pero hay una sugerencia, usarla
-    if (resultados.length === 0 && mejorSugerencia) {
-        // Re-buscar con la sugerencia
-        return busquedaInteligente(mejorSugerencia);
-    }
-    
-    return {
-        resultados: resultados.slice(0, 10), // Máximo 10 resultados
-        sugerencia: mejorSugerencia
-    };
+    if (resultados.length === 0 && mejorSugerencia) return busquedaInteligente(mejorSugerencia);
+    return { resultados: resultados.slice(0, 10), sugerencia: mejorSugerencia };
 }
 
-/**
- * Resalta las coincidencias en el texto
- */
 function resaltarCoincidencia(texto, query) {
     if (!query || !texto) return texto;
     const queryNorm = normalizarTexto(query);
     const textoNorm = normalizarTexto(texto);
     const idx = textoNorm.indexOf(queryNorm);
-    
     if (idx === -1) return texto;
-    
-    const antes = texto.substring(0, idx);
-    const match = texto.substring(idx, idx + queryNorm.length);
-    const despues = texto.substring(idx + queryNorm.length);
-    
-    return `${antes}<mark>${match}</mark>${despues}`;
+    return `${texto.substring(0, idx)}<mark>${texto.substring(idx, idx + queryNorm.length)}</mark>${texto.substring(idx + queryNorm.length)}`;
 }
 
 // ==========================================
 // ⚡ OPTIMIZACIONES DE VELOCIDAD
 // ==========================================
 
-/**
- * Debounce: retrasa la ejecución hasta que el usuario deje de escribir
- */
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
+        const later = () => { clearTimeout(timeout); func(...args); };
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
 }
 
-/**
- * Renderiza productos usando DocumentFragment (mucho más rápido que innerHTML)
- */
 function renderProductosOptimizado(listaProductos = null) {
     const contenedor = document.getElementById("productos");
     if (!contenedor) return;
-    
-    // Limpiar contenedor
     contenedor.textContent = '';
-    
-    // Usar DocumentFragment para evitar múltiples repaints
     const fragment = document.createDocumentFragment();
-    
     const productosARenderizar = listaProductos || productos;
     
     productosARenderizar.forEach((p, idx) => {
-        // Si es una lista filtrada, necesitamos el índice real
         const realIndex = listaProductos ? productos.indexOf(p) : idx;
         if (realIndex === -1) return;
-        
-        // Filtrar por categoría si es necesario
         if (!listaProductos && categoriaActual !== "Todos" && p.categoria !== categoriaActual) return;
         
         const sinStock = p.stock <= 0;
         const precioFormateado = formatearPrecio(p.precio);
-        
         const card = document.createElement('div');
         card.className = `card ${sinStock ? 'no-stock' : ''}`;
         card.setAttribute('data-index', realIndex);
-        
         card.innerHTML = `
             <div class="card-top">
                 <img data-src="${p.img || 'https://via.placeholder.com/300?text=Beauty'}" alt="${p.nombre}" class="lazy-img">
@@ -1458,37 +1350,22 @@ function renderProductosOptimizado(listaProductos = null) {
                 <span class="stock-tag">${sinStock ? 'AGOTADO' : `${p.stock} u.`}</span>
             </div>
         `;
-        
         fragment.appendChild(card);
     });
-    
     contenedor.appendChild(fragment);
-    
-    // Inicializar lazy loading con IntersectionObserver
     inicializarLazyLoading();
-    
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
 }
 
-/**
- * Lazy loading de imágenes con IntersectionObserver
- */
 let imageObserver = null;
-
 function inicializarLazyLoading() {
     if (!('IntersectionObserver' in window)) {
-        // Fallback: cargar todas las imágenes inmediatamente
         document.querySelectorAll('.lazy-img').forEach(img => {
-            if (img.dataset.src) {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
-            }
+            if (img.dataset.src) { img.src = img.dataset.src; img.removeAttribute('data-src'); }
         });
         return;
     }
-    
     if (imageObserver) imageObserver.disconnect();
-    
     imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -1501,14 +1378,8 @@ function inicializarLazyLoading() {
                 observer.unobserve(img);
             }
         });
-    }, {
-        rootMargin: '50px 0px', // Cargar 50px antes de que sea visible
-        threshold: 0.01
-    });
-    
-    document.querySelectorAll('.lazy-img').forEach(img => {
-        imageObserver.observe(img);
-    });
+    }, { rootMargin: '50px 0px', threshold: 0.01 });
+    document.querySelectorAll('.lazy-img').forEach(img => imageObserver.observe(img));
 }
 
 // ==========================================
@@ -1531,10 +1402,7 @@ async function fetchConTimeout(url, options, timeoutMs = 8000) {
 function limpiarPrecio(precio) {
     if (precio === null || precio === undefined) return 0;
     if (typeof precio === 'number') return precio;
-    let precioStr = precio.toString().trim();
-    precioStr = precioStr.replace(/\$/g, '').trim();
-    precioStr = precioStr.replace(/\./g, '');
-    precioStr = precioStr.replace(/,/g, '');
+    let precioStr = precio.toString().trim().replace(/\$/g, '').replace(/\./g, '').replace(/,/g, '');
     const numero = parseFloat(precioStr);
     return isNaN(numero) ? 0 : numero;
 }
@@ -1619,8 +1487,7 @@ async function subirDatosANube(mostrarMensaje = true) {
             return false;
         }
     } catch (error) {
-        const msg = `Error: ${error.message}`;
-        agregarLog(`❌ ${msg}`, 'error');
+        agregarLog(`❌ Error: ${error.message}`, 'error');
         actualizarEstadoConexion('error', 'Sin conexión');
         if (mostrarMensaje) showToast("❌ Error de red", "danger");
         return false;
@@ -1631,8 +1498,7 @@ async function descargarDatosDeNube(mostrarToast = true) {
     try {
         agregarLog('Descargando de la nube...', 'info');
         const response = await fetchConTimeout(`${JSONBIN_CONFIG.API_URL}/latest`, {
-            method: 'GET',
-            headers: { 'X-Master-Key': JSONBIN_CONFIG.MASTER_KEY }
+            method: 'GET', headers: { 'X-Master-Key': JSONBIN_CONFIG.MASTER_KEY }
         }, 8000);
         if (response.ok) {
             const json = await response.json();
@@ -1654,6 +1520,7 @@ async function descargarDatosDeNube(mostrarToast = true) {
             renderSelectCategorias();
             renderCategoriasAdmin();
             renderNavCategorias();
+            prepararCacheBusqueda();
             renderProductosOptimizado();
             updateLivePreview();
             actualizarEstadisticas();
@@ -1676,7 +1543,7 @@ async function descargarDatosDeNube(mostrarToast = true) {
 
 function exportarDatosJSON() {
     try {
-        const datos = { productos, categorias, tiendaConfig, fechaExportacion: new Date().toISOString(), version: '3.2' };
+        const datos = { productos, categorias, tiendaConfig, fechaExportacion: new Date().toISOString(), version: '3.3' };
         const jsonStr = JSON.stringify(datos, null, 2);
         const blob = new Blob([jsonStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -1714,6 +1581,7 @@ function importarDatosJSON(input) {
                 renderSelectCategorias();
                 renderCategoriasAdmin();
                 renderNavCategorias();
+                prepararCacheBusqueda();
                 renderProductosOptimizado();
                 updateLivePreview();
                 renderInventarioTabla();
@@ -1731,12 +1599,33 @@ function importarDatosJSON(input) {
     input.value = '';
 }
 
+// 🛠️ FUNCIÓN DE RESCATE PARA LIMPIAR MEMORIA
+function repararAlmacenamiento() {
+    if(confirm("⚠️ Esta acción eliminará las imágenes guardadas en formato pesado (Base64) que están causando la lentitud y los errores de guardado. Se reemplazarán por una imagen por defecto, pero tus productos, precios y textos se mantendrán intactos. ¿Deseas continuar?")) {
+        let limpieza = 0;
+        productos.forEach(p => {
+            if (p.img && p.img.startsWith('data:image')) {
+                p.img = 'https://via.placeholder.com/300?text=Imagen+Optimizada';
+                limpieza++;
+            }
+        });
+        if (tiendaConfig.watermark && tiendaConfig.watermark.startsWith('data:image') && tiendaConfig.watermark.length > 50000) {
+            tiendaConfig.watermark = "";
+        }
+        localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+        localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
+        prepararCacheBusqueda();
+        renderProductosOptimizado();
+        syncTiendaUI();
+        showToast(`✅ Memoria optimizada (${limpieza} imágenes aligeradas)`, "success");
+        agregarLog(`🛠️ Almacenamiento reparado: ${limpieza} imágenes optimizadas`, "success");
+        subirDatosANube(false);
+    }
+}
+
 const PIN_CORRECTO = "55555"; 
 let intentosFallidos = 0;
 let categoriaActual = "Todos";
-let imagenProductoBase64 = ""; 
-
-let categorias = JSON.parse(localStorage.getItem('db_categorias_v1')) || ['Maquillaje', 'Skincare', 'Cejas', 'Accesorios'];
 
 function generarIDProducto() {
     return `XIOLOVER-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
@@ -1870,6 +1759,7 @@ function renderNavCategorias() {
 window.addEventListener('DOMContentLoaded', () => {
     agregarLog('🚀 Sistema iniciado', 'info');
     asignarIDsSiFaltan();
+    prepararCacheBusqueda(); // ⚡ Clave para la velocidad
     syncTiendaUI();
     renderSelectCategorias();
     renderCategoriasAdmin();
@@ -1878,10 +1768,8 @@ window.addEventListener('DOMContentLoaded', () => {
     updateLivePreview();
     actualizarEstadisticas();
     
-    // 🔍 Configurar búsqueda inteligente con debounce
     const buscador = document.getElementById('buscadorCodigo');
     const clearBtn = document.getElementById('searchClear');
-    
     const busquedaDebounce = debounce(ejecutarBusquedaInteligente, 250);
     
     buscador.addEventListener('input', (e) => {
@@ -1890,7 +1778,6 @@ window.addEventListener('DOMContentLoaded', () => {
         busquedaDebounce(e);
     });
     
-    // Sincronizar en segundo plano
     setTimeout(() => verificarConexionSilenciosa(), 500);
 });
 
@@ -1921,21 +1808,13 @@ function ejecutarBusquedaInteligente(e) {
     }
     
     const { resultados, sugerencia } = busquedaInteligente(query);
-    
-    // Construir HTML de resultados
     let html = '';
     
-    // Sugerencia si existe
     if (sugerencia && resultados.length === 0) {
-        html += `<div class="search-suggestion" onclick="aplicarSugerencia('${sugerencia}')">
-            💡 ¿Quisiste decir <strong>"${sugerencia}"</strong>?
-        </div>`;
+        html += `<div class="search-suggestion" onclick="aplicarSugerencia('${sugerencia}')">💡 ¿Quisiste decir <strong>"${sugerencia}"</strong>?</div>`;
     }
-    
     if (resultados.length === 0) {
-        html += `<div class="search-no-results">
-            🔍 No se encontraron resultados para "<strong>${query}</strong>"
-        </div>`;
+        html += `<div class="search-no-results">🔍 No se encontraron resultados para "<strong>${query}</strong>"</div>`;
         resultadoDiv.innerHTML = html;
         resultadoDiv.style.display = 'block';
         contenedor.textContent = '';
@@ -1943,19 +1822,14 @@ function ejecutarBusquedaInteligente(e) {
         return;
     }
     
-    // Mostrar resultados
     resultados.forEach(r => {
         const badgeClass = r.tipoMatch === 'exact' ? 'match-exact' : (r.tipoMatch === 'partial' ? 'match-partial' : 'match-fuzzy');
         const badgeText = r.tipoMatch === 'exact' ? 'Exacta' : (r.tipoMatch === 'partial' ? 'Parcial' : 'Similar');
         const nombreResaltado = resaltarCoincidencia(r.prod.nombre, query);
-        
         html += `
             <div class="search-result-item" onclick="seleccionarProductoBuscado(${r.index})">
                 <div class="search-result-info">
-                    <div class="search-result-code">
-                        ${r.prod.codigo || 'N/A'}
-                        <span class="search-match-badge ${badgeClass}">${badgeText}</span>
-                    </div>
+                    <div class="search-result-code">${r.prod.codigo || 'N/A'} <span class="search-match-badge ${badgeClass}">${badgeText}</span></div>
                     <div class="search-result-name">${nombreResaltado}</div>
                 </div>
                 <div class="search-result-price">${formatearPrecio(r.prod.precio)}</div>
@@ -1965,11 +1839,8 @@ function ejecutarBusquedaInteligente(e) {
     
     resultadoDiv.innerHTML = html;
     resultadoDiv.style.display = 'block';
-    
-    // Renderizar solo los productos encontrados en el grid
     const productosEncontrados = resultados.map(r => r.prod);
     renderProductosOptimizado(productosEncontrados);
-    
     titulo.textContent = `${productosEncontrados.length} resultado${productosEncontrados.length !== 1 ? 's' : ''} para "${query}"`;
 }
 
@@ -1983,13 +1854,10 @@ function aplicarSugerencia(sugerencia) {
 function seleccionarProductoBuscado(index) {
     const prod = productos[index];
     if (!prod) return;
-    
     const buscador = document.getElementById('buscadorCodigo');
     buscador.value = prod.codigo || prod.nombre;
     document.getElementById('resultadoBusqueda').style.display = 'none';
     document.getElementById('searchClear').classList.add('visible');
-    
-    // Mostrar solo ese producto
     renderProductosOptimizado([prod]);
     document.getElementById('seccionTitulo').textContent = prod.nombre;
 }
@@ -1997,35 +1865,29 @@ function seleccionarProductoBuscado(index) {
 async function verificarConexionSilenciosa() {
     try {
         const response = await fetchConTimeout(`${JSONBIN_CONFIG.API_URL}/latest`, {
-            method: 'GET',
-            headers: { 'X-Master-Key': JSONBIN_CONFIG.MASTER_KEY }
+            method: 'GET', headers: { 'X-Master-Key': JSONBIN_CONFIG.MASTER_KEY }
         }, 8000);
-        
         if (response.ok) {
             const json = await response.json();
             const datos = json.record;
-            
             if (datos && datos.productos) {
                 const datosLocales = localStorage.getItem('db_prods_v2');
                 const datosNube = JSON.stringify(datos.productos);
-                
                 if (datosLocales !== datosNube) {
                     productos = datos.productos;
                     if (datos.tiendaConfig) tiendaConfig = datos.tiendaConfig;
                     if (datos.categorias) categorias = datos.categorias;
-                    
                     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
                     localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
                     localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
-                    
                     syncTiendaUI();
                     renderSelectCategorias();
                     renderCategoriasAdmin();
                     renderNavCategorias();
+                    prepararCacheBusqueda();
                     renderProductosOptimizado();
                     updateLivePreview();
                     actualizarEstadisticas();
-                    
                     agregarLog(`📥 Sincronizado: ${productos.length} productos`, 'success');
                     showToast("🔄 Catálogo actualizado", "success");
                 }
@@ -2051,6 +1913,11 @@ document.addEventListener('click', function(e) {
 document.getElementById('cfgMarcaAgua').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
+        if (file.size > 100000) { 
+            showToast("⚠️ Imagen muy pesada (máx 100KB). Usa una imagen más pequeña.", "warning");
+            e.target.value = '';
+            return;
+        }
         const reader = new FileReader();
         reader.onload = function(event) {
             tiendaConfig.watermark = event.target.result;
@@ -2066,26 +1933,6 @@ document.getElementById('cfgMarcaAgua').addEventListener('change', function(e) {
 function aplicarMarcaAgua() {
     if (tiendaConfig.watermark) {
         document.getElementById('watermark-bg').style.backgroundImage = `url(${tiendaConfig.watermark})`;
-    }
-}
-
-function procesarImagenProducto(input) {
-    const file = input.files[0];
-    if (file) {
-        if (file.size > 500000) {
-            showToast("⚠️ Imagen muy grande (máx 500KB). Usa URL.", "warning");
-            input.value = '';
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            imagenProductoBase64 = e.target.result;
-            document.getElementById('prodUrlImg').value = ""; 
-            updateLivePreview();
-            showToast("Imagen procesada");
-            agregarLog(`📷 Imagen: ${(file.size/1024).toFixed(1)}KB`, 'info');
-        };
-        reader.readAsDataURL(file);
     }
 }
 
@@ -2162,7 +2009,7 @@ function updateLivePreview() {
     const categoria = document.getElementById('prodCategoria').value;
     const stock = parseInt(document.getElementById('prodStock').value) || 0;
     const urlImg = document.getElementById('prodUrlImg').value;
-    const srcFinal = imagenProductoBase64 || urlImg || 'https://via.placeholder.com/300?text=Preview';
+    const srcFinal = urlImg || 'https://via.placeholder.com/300?text=Preview';
     const sinStock = stock <= 0;
     document.getElementById('liveProductPreviewCard').innerHTML = `
         <div class="card ${sinStock ? 'no-stock' : ''}" style="width:100%;">
@@ -2211,7 +2058,7 @@ async function guardarNuevoProducto() {
     const nuevoP = {
         id: generarIDProducto(), codigo: codigoNuevo,
         nombre: nombreInput.value.trim(), precio: formatearPrecio(precioInput.value),
-        categoria: catSelect.value, img: imagenProductoBase64 || urlImgInput.value || 'https://via.placeholder.com/300?text=Producto',
+        categoria: catSelect.value, img: urlImgInput.value || 'https://via.placeholder.com/300?text=Producto',
         stock: parseInt(stockInput.value)
     };
 
@@ -2219,7 +2066,7 @@ async function guardarNuevoProducto() {
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
     codigoInput.value = ""; nombreInput.value = ""; precioInput.value = "";
     stockInput.value = "10"; urlImgInput.value = "";
-    imagenProductoBase64 = ""; document.getElementById('prodFileImg').value = "";
+    prepararCacheBusqueda();
     renderProductosOptimizado(); updateLivePreview(); renderCategoriasAdmin(); actualizarEstadisticas();
     showToast(`¡${nuevoP.nombre} publicado!`);
     agregarLog(`✨ Producto: ${nuevoP.nombre}`, 'success');
@@ -2275,6 +2122,7 @@ async function eliminarProducto(idx) {
         const nombreProd = productos[idx].nombre;
         productos.splice(idx, 1);
         localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+        prepararCacheBusqueda();
         renderInventarioTabla(); renderProductosOptimizado(); renderCategoriasAdmin(); actualizarEstadisticas();
         showToast("Producto eliminado", "danger");
         agregarLog(`🗑️ Eliminado: ${nombreProd}`, 'warning');
@@ -2477,6 +2325,7 @@ async function guardarEdicionProducto() {
     productos[productoEditandoIndex].categoria = categoria;
     productos[productoEditandoIndex].stock = stock;
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+    prepararCacheBusqueda();
     renderInventarioTabla(); renderProductosOptimizado(); actualizarEstadisticas();
     cerrarModalEdicion();
     showToast('✅ Actualizado', 'success');
@@ -2532,6 +2381,7 @@ function procesarProductos(productosLeidos) {
         }
     });
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+    prepararCacheBusqueda();
     renderProductosOptimizado(); actualizarEstadisticas();
     let mensaje = `✅ <strong>Completado:</strong><br>• Creados: ${creados}<br>• Actualizados: ${actualizados}`;
     if (errores > 0) {
