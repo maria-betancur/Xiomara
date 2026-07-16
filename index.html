@@ -133,7 +133,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 <header>
     <div class="brand" id="storeNameView">XIOLOVER</div>
     <nav id="navCategorias"><a href="#" class="active" onclick="filtrarCategoria('Todos', this); return false;">Todos</a></nav>
-    <div class="top-bar-buttons"><button onclick="abrirLogin()">🔐 Admin</button></div>
+    <div class="top-bar-buttons"><button onclick="abrirLogin()"> Admin</button></div>
 </header>
 
 <main>
@@ -163,7 +163,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 
 <div class="login-modal" id="loginModal">
     <div class="login-content">
-        <h3>🔐 Acceso Admin</h3>
+        <h3> Acceso Admin</h3>
         <p style="color:#64748b; font-size:13px;">Introduce el PIN</p>
         <input type="password" id="adminPassInput" maxlength="5" placeholder="•••••" style="text-align:center; letter-spacing:6px; margin-bottom:15px;">
         <button class="btn-buy" onclick="verificarPassword()">Ingresar</button>
@@ -236,12 +236,12 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
         <div class="admin-sidebar">
             <h3 style="color:var(--primary-pink); margin:0 0 20px 0;">XIOLOVER ADMIN</h3>
             <div class="admin-nav-menu">
-                <button class="admin-nav-item active" onclick="switchTab('tab-config', this)">⚙️ Configuración API</button>
+                <button class="admin-nav-item active" onclick="switchTab('tab-config', this)">️ Configuración API</button>
                 <button class="admin-nav-item" onclick="switchTab('tab-sincronizacion', this)">☁️ Sincronización</button>
                 <button class="admin-nav-item" onclick="switchTab('tab-nuevo', this)">➕ Nuevo Producto</button>
-                <button class="admin-nav-item" onclick="switchTab('tab-carga-masiva', this)">📦 Carga Masiva</button>
+                <button class="admin-nav-item" onclick="switchTab('tab-carga-masiva', this)"> Carga Masiva</button>
                 <button class="admin-nav-item" onclick="switchTab('tab-categorias', this)">🏷️ Categorías</button>
-                <button class="admin-nav-item" onclick="switchTab('tab-inventario', this)">📊 Inventario</button>
+                <button class="admin-nav-item" onclick="switchTab('tab-inventario', this)"> Inventario</button>
             </div>
             <button class="admin-nav-item" style="color:var(--danger); margin-top:auto;" onclick="cerrarAdmin()">✕ Salir</button>
         </div>
@@ -262,7 +262,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
                             <label>Database URL</label>
                             <input type="text" id="cfgFirebaseUrl" placeholder="https://tu-proyecto-default-rtdb.firebaseio.com">
                         </div>
-                        <button class="sync-btn primary" onclick="guardarConfigFirebase()">💾 Guardar Firebase</button>
+                        <button class="sync-btn primary" onclick="guardarConfigFirebase()"> Guardar Firebase</button>
                         <div id="firebaseStatus" style="margin-top:10px; font-size:12px;"></div>
                     </div>
 
@@ -284,7 +284,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
                     <div class="dashboard-card">
                         <h4>☁️ Acciones de Nube</h4>
                         <button class="sync-btn primary" onclick="subirDatosANube()">⬆️ Subir Todo a Firebase</button>
-                        <button class="sync-btn secondary" onclick="descargarDatosDeNube()">⬇️ Descargar de Firebase</button>
+                        <button class="sync-btn secondary" onclick="descargarDatosDeNube()">️ Descargar de Firebase</button>
                         <button class="sync-btn success" onclick="exportarDatosJSON()">💾 Exportar Respaldo</button>
                         <div style="margin-top:15px; padding:10px; background:#f8fafc; border-radius:8px; font-size:12px;">
                             <span id="statsInfo">Cargando...</span>
@@ -321,7 +321,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
                         </div>
                         
                         <div class="form-group">
-                            <label>📷 Imagen del Producto</label>
+                            <label> Imagen del Producto</label>
                             <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:12px; margin-bottom:10px; font-size:12px; color:#166534;">
                                 💡 <strong>Sube la imagen directamente</strong> y se guardará en ImgBB automáticamente.
                             </div>
@@ -343,7 +343,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 
                 <div id="tab-carga-masiva" class="admin-view">
                     <div class="dashboard-card">
-                        <h4>📦 Carga Masiva</h4>
+                        <h4> Carga Masiva</h4>
                         <input type="file" id="archivoExcel" accept=".xlsx,.xls,.csv" style="padding:10px; border:1px solid var(--gray-border); border-radius:8px; width:100%; margin-bottom:10px;">
                         <small style="color:#64748b;">Columnas: nombre, codigo, categoria, precio, url, stock</small>
                         <button class="btn-buy" onclick="procesarArchivoExcel()" style="margin-top:10px;">📥 Procesar</button>
@@ -354,7 +354,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 
                 <div id="tab-categorias" class="admin-view">
                     <div class="dashboard-card">
-                        <h4>🏷️ Nueva Categoría</h4>
+                        <h4>️ Nueva Categoría</h4>
                         <div style="display:flex; gap:10px;">
                             <input type="text" id="nuevaCategoriaInput" placeholder="Ej: Labiales" style="flex:1;">
                             <button class="sync-btn primary" style="width:auto; padding:12px 20px;" onclick="agregarCategoria()">➕</button>
@@ -370,7 +370,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
                     <div class="dashboard-card">
                         <h4>📊 Inventario Completo</h4>
                         <p style="font-size:12px; color:#64748b; margin-bottom:15px;">
-                            💡 Haz clic en ✏️ para editar cualquier campo del producto (categoría, nombre, precio, imagen, etc.)
+                            💡 Haz clic en ️ para editar cualquier campo del producto (categoría, nombre, precio, imagen, etc.)
                         </p>
                         <input type="text" id="inventarioBuscador" placeholder="🔍 Buscar..." oninput="filtrarTablaInventario(this.value)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--gray-border); margin-bottom:15px;">
                         <div style="overflow-x:auto;">
@@ -425,7 +425,7 @@ async function subirDatosANube() {
             showToast("❌ Error: " + response.status, "danger");
         }
     } catch (error) {
-        showToast("❌ Error de red: " + error.message, "danger");
+        showToast(" Error de red: " + error.message, "danger");
     }
 }
 
@@ -435,7 +435,7 @@ async function descargarDatosDeNube() {
         return;
     }
     try {
-        showToast("📥 Descargando de Firebase...", "success");
+        showToast(" Descargando de Firebase...", "success");
         const response = await fetch(`${FIREBASE_CONFIG.databaseURL}/datos.json`);
         if (response.ok) {
             const datos = await response.json();
@@ -481,7 +481,7 @@ async function subirImagenImgBB(file, progressId = 'uploadProgress', fillId = 'p
     
     try {
         if (file.size > 32 * 1024 * 1024) {
-            showToast("⚠️ Imagen muy grande (máx 32MB)", "warning");
+            showToast("️ Imagen muy grande (máx 32MB)", "warning");
             if (progressDiv) progressDiv.classList.remove('active');
             return null;
         }
@@ -579,7 +579,7 @@ function guardarConfigFirebase() {
 function guardarConfigImgBB() {
     const key = document.getElementById('cfgImgbbKey').value.trim();
     if (!key) {
-        showToast("⚠️ Ingresa tu API Key", "warning");
+        showToast("️ Ingresa tu API Key", "warning");
         return;
     }
     IMGBB_CONFIG.apiKey = key;
@@ -704,7 +704,7 @@ function agregarCategoria() {
 function eliminarCategoria(i) {
     const c = categorias[i];
     if (productos.some(p => p.categoria === c)) {
-        showToast("⚠️ Tiene productos asignados", "danger");
+        showToast("️ Tiene productos asignados", "danger");
         return;
     }
     if (confirm(`¿Eliminar "${c}"?`)) {
@@ -879,7 +879,7 @@ async function eliminarProducto(i) {
         prepararCacheBusqueda();
         renderProductos();
         renderInventario();
-        showToast("🗑️ Eliminado", "danger");
+        showToast("️ Eliminado", "danger");
         if (FIREBASE_CONFIG.databaseURL) await subirDatosANube();
     }
 }
@@ -894,7 +894,7 @@ function filtrarTablaInventario(q) {
 
 function actualizarEstadisticas() {
     const size = new Blob([JSON.stringify(productos)]).size;
-    document.getElementById('statsInfo').innerHTML = `📦 <strong>${productos.length}</strong> productos | 💾 <strong>${(size/1024).toFixed(1)} KB</strong> | 🔥 Firebase: <strong>1 GB disponible</strong>`;
+    document.getElementById('statsInfo').innerHTML = ` <strong>${productos.length}</strong> productos | 💾 <strong>${(size/1024).toFixed(1)} KB</strong> |  Firebase: <strong>1 GB disponible</strong>`;
 }
 
 function exportarDatosJSON() {
@@ -903,7 +903,7 @@ function exportarDatosJSON() {
     a.href = URL.createObjectURL(blob);
     a.download = `xiolover_${new Date().toISOString().split('T')[0]}.json`;
     a.click();
-    showToast("💾 Respaldo descargado", "success");
+    showToast(" Respaldo descargado", "success");
 }
 
 // ==========================================
@@ -1029,7 +1029,7 @@ function syncTiendaUI() {
 }
 
 // ==========================================
-// 📦 CARGA MASIVA
+//  CARGA MASIVA
 // ==========================================
 function procesarArchivoExcel() {
     const file = document.getElementById('archivoExcel').files[0];
