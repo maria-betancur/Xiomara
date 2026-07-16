@@ -10,10 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js" defer></script>
 
-<!-- 🔥 SDK de Firebase para Sincronización en Tiempo Real -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
 <style>
 :root {
     --primary-pink: #e4578f; --xiolover-bg: #fcaecb; --light-pink: #fff0f5;
@@ -258,20 +254,15 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
                 
                 <div id="tab-config" class="admin-view active">
                     <div class="dashboard-card">
-                        <h4>🔥 Firebase (Base de Datos en Tiempo Real)</h4>
+                        <h4>🔥 Firebase (Base de Datos)</h4>
                         <p style="font-size:12px; color:#64748b; margin-bottom:15px;">
-                            Para que los cambios se vean <strong>al instante en todos los dispositivos</strong>, necesitas la API Key y la URL. 
-                            <a href="https://console.firebase.google.com" target="_blank" style="color:var(--primary-pink);">Crear proyecto</a>
+                            Pega aquí la configuración de tu proyecto Firebase. <a href="https://console.firebase.google.com" target="_blank" style="color:var(--primary-pink);">Crear proyecto</a>
                         </p>
-                        <div class="form-group">
-                            <label>API Key</label>
-                            <input type="text" id="cfgFirebaseApiKey" placeholder="AIzaSy...">
-                        </div>
                         <div class="form-group">
                             <label>Database URL</label>
                             <input type="text" id="cfgFirebaseUrl" placeholder="https://tu-proyecto-default-rtdb.firebaseio.com">
                         </div>
-                        <button class="sync-btn primary" onclick="guardarConfigFirebase()">💾 Guardar y Conectar</button>
+                        <button class="sync-btn primary" onclick="guardarConfigFirebase()">💾 Guardar Firebase</button>
                         <div id="firebaseStatus" style="margin-top:10px; font-size:12px;"></div>
                     </div>
 
@@ -292,9 +283,9 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
                 <div id="tab-sincronizacion" class="admin-view">
                     <div class="dashboard-card">
                         <h4>☁️ Acciones de Nube</h4>
-                        <button class="sync-btn primary" onclick="subirDatosANube()">⬆️ Forzar Subida a Firebase</button>
-                        <button class="sync-btn secondary" onclick="descargarDatosDeNube()">⬇️ Forzar Descarga de Firebase</button>
-                        <button class="sync-btn success" onclick="exportarDatosJSON()">💾 Exportar Respaldo Local</button>
+                        <button class="sync-btn primary" onclick="subirDatosANube()">⬆️ Subir Todo a Firebase</button>
+                        <button class="sync-btn secondary" onclick="descargarDatosDeNube()">⬇️ Descargar de Firebase</button>
+                        <button class="sync-btn success" onclick="exportarDatosJSON()">💾 Exportar Respaldo</button>
                         <div style="margin-top:15px; padding:10px; background:#f8fafc; border-radius:8px; font-size:12px;">
                             <span id="statsInfo">Cargando...</span>
                         </div>
@@ -408,127 +399,63 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 // ==========================================
 // 🔥 CONFIGURACIÓN FIREBASE + IMGBB
 // ==========================================
-let savedFirebaseConfig = JSON.parse(localStorage.getItem('firebase_config') || 'null');
-let FIREBASE_CONFIG = { 
-    apiKey: savedFirebaseConfig?.apiKey || '', 
-    databaseURL: savedFirebaseConfig?.databaseURL || '' 
-};
+let FIREBASE_CONFIG = JSON.parse(localStorage.getItem('firebase_config') || 'null') || { databaseURL: '' };
 let IMGBB_CONFIG = JSON.parse(localStorage.getItem('imgbb_config') || 'null') || { apiKey: '' };
 
-let db = null;
-let firebaseUnsubscribe = null;
-
 // ==========================================
-// 🔥 FUNCIONES FIREBASE EN TIEMPO REAL
+// 🔥 FUNCIONES FIREBASE
 // ==========================================
-function inicializarFirebaseRealtime() {
-    if (!FIREBASE_CONFIG.apiKey || !FIREBASE_CONFIG.databaseURL) {
-        if (firebaseUnsubscribe) {
-            firebaseUnsubscribe();
-            firebaseUnsubscribe = null;
-        }
+async function subirDatosANube() {
+    if (!FIREBASE_CONFIG.databaseURL) {
+        showToast("⚠️ Configura Firebase primero en 'Configuración API'", "warning");
         return;
     }
-    
     try {
-        if (!firebase.apps.length) {
-            firebase.initializeApp({
-                apiKey: FIREBASE_CONFIG.apiKey,
-                databaseURL: FIREBASE_CONFIG.databaseURL
-            });
+        showToast("📤 Subiendo a Firebase...", "success");
+        const datos = { productos, categorias, tiendaConfig, ultimaActualizacion: new Date().toISOString() };
+        const response = await fetch(`${FIREBASE_CONFIG.databaseURL}/datos.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+        if (response.ok) {
+            showToast("✅ Datos guardados en Firebase", "success");
+            actualizarEstadisticas();
+        } else {
+            showToast("❌ Error: " + response.status, "danger");
         }
-        db = firebase.database();
-        
-        if (firebaseUnsubscribe) firebaseUnsubscribe();
-        
-        const ref = db.ref('datos');
-        firebaseUnsubscribe = ref.on('value', (snapshot) => {
-            const datos = snapshot.val();
+    } catch (error) {
+        showToast("❌ Error de red: " + error.message, "danger");
+    }
+}
+
+async function descargarDatosDeNube() {
+    if (!FIREBASE_CONFIG.databaseURL) {
+        showToast("⚠️ Configura Firebase primero", "warning");
+        return;
+    }
+    try {
+        showToast("📥 Descargando de Firebase...", "success");
+        const response = await fetch(`${FIREBASE_CONFIG.databaseURL}/datos.json`);
+        if (response.ok) {
+            const datos = await response.json();
             if (datos && datos.productos) {
-                // Evitar bucle infinito si fuimos nosotros quienes subimos los datos
-                const ultimaActualizacionLocal = parseInt(localStorage.getItem('last_local_update') || '0');
-                if (datos.ultimaActualizacion && datos.ultimaActualizacion <= ultimaActualizacionLocal) {
-                    return; 
-                }
-                
                 productos = datos.productos;
                 if (datos.categorias) categorias = datos.categorias;
                 if (datos.tiendaConfig) tiendaConfig = datos.tiendaConfig;
-                
                 localStorage.setItem('db_prods_v2', JSON.stringify(productos));
                 localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
                 localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
-                
                 prepararCacheBusqueda();
                 renderProductos();
                 renderSelectCategorias();
                 renderCategoriasAdmin();
                 renderNavCategorias();
                 syncTiendaUI();
-                if (document.getElementById('adminPanel').style.display === 'flex') {
-                    renderInventario();
-                }
-                
-                showToast("🔄 Sincronizado desde la nube", "success");
+                showToast(`✅ ${productos.length} productos descargados`, "success");
+            } else {
+                showToast("ℹ️ No hay datos en Firebase aún", "warning");
             }
-        }, (error) => {
-            console.error("Error de Firebase:", error);
-            showToast("❌ Error de conexión Firebase", "danger");
-        });
-    } catch (error) {
-        console.error("Error inicializando Firebase:", error);
-        showToast("❌ Error inicializando Firebase", "danger");
-    }
-}
-
-async function subirDatosANube() {
-    if (!db) {
-        showToast("⚠️ Configura Firebase (API Key y URL) primero", "warning");
-        return;
-    }
-    try {
-        showToast("📤 Subiendo a Firebase...", "success");
-        const datos = { 
-            productos, 
-            categorias, 
-            tiendaConfig, 
-            ultimaActualizacion: Date.now() 
-        };
-        localStorage.setItem('last_local_update', Date.now().toString());
-        await db.ref('datos').set(datos);
-        showToast("✅ Datos guardados en Firebase", "success");
-        actualizarEstadisticas();
-    } catch (error) {
-        showToast("❌ Error: " + error.message, "danger");
-    }
-}
-
-async function descargarDatosDeNube() {
-    if (!db) {
-        showToast("⚠️ Configura Firebase primero", "warning");
-        return;
-    }
-    try {
-        showToast("📥 Descargando de Firebase...", "success");
-        const snapshot = await db.ref('datos').once('value');
-        const datos = snapshot.val();
-        if (datos && datos.productos) {
-            productos = datos.productos;
-            if (datos.categorias) categorias = datos.categorias;
-            if (datos.tiendaConfig) tiendaConfig = datos.tiendaConfig;
-            localStorage.setItem('db_prods_v2', JSON.stringify(productos));
-            localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
-            localStorage.setItem('db_store_cfg_v2', JSON.stringify(tiendaConfig));
-            prepararCacheBusqueda();
-            renderProductos();
-            renderSelectCategorias();
-            renderCategoriasAdmin();
-            renderNavCategorias();
-            syncTiendaUI();
-            renderInventario();
-            showToast(`✅ ${productos.length} productos descargados`, "success");
-        } else {
-            showToast("ℹ️ No hay datos en Firebase aún", "warning");
         }
     } catch (error) {
         showToast("❌ Error: " + error.message, "danger");
@@ -638,18 +565,15 @@ function mostrarPreviewEdicion(url) {
 // ⚙️ CONFIGURACIÓN UI
 // ==========================================
 function guardarConfigFirebase() {
-    const apiKey = document.getElementById('cfgFirebaseApiKey').value.trim();
     const url = document.getElementById('cfgFirebaseUrl').value.trim();
-    if (!apiKey || !url) {
-        showToast("⚠️ Ingresa tanto la API Key como la Database URL", "warning");
+    if (!url) {
+        showToast("⚠️ Ingresa la Database URL", "warning");
         return;
     }
-    FIREBASE_CONFIG.apiKey = apiKey;
     FIREBASE_CONFIG.databaseURL = url.replace(/\/$/, '');
     localStorage.setItem('firebase_config', JSON.stringify(FIREBASE_CONFIG));
-    document.getElementById('firebaseStatus').innerHTML = '<span style="color:var(--success);">✅ Conectando a Firebase...</span>';
-    showToast("✅ Configuración guardada", "success");
-    inicializarFirebaseRealtime();
+    document.getElementById('firebaseStatus').innerHTML = '<span style="color:var(--success);">✅ Firebase configurado</span>';
+    showToast("✅ Firebase guardado", "success");
 }
 
 function guardarConfigImgBB() {
@@ -775,7 +699,6 @@ function agregarCategoria() {
     input.value = '';
     renderSelectCategorias(); renderCategoriasAdmin(); renderNavCategorias();
     showToast("✅ Categoría creada", "success");
-    if (db) subirDatosANube();
 }
 
 function eliminarCategoria(i) {
@@ -788,7 +711,6 @@ function eliminarCategoria(i) {
         categorias.splice(i, 1);
         localStorage.setItem('db_categorias_v1', JSON.stringify(categorias));
         renderSelectCategorias(); renderCategoriasAdmin(); renderNavCategorias();
-        if (db) subirDatosANube();
     }
 }
 
@@ -837,11 +759,11 @@ async function guardarNuevoProducto() {
     
     showToast(`✅ ${nombre} publicado`, "success");
     
-    if (db) await subirDatosANube();
+    if (FIREBASE_CONFIG.databaseURL) await subirDatosANube();
 }
 
 // ==========================================
-// ✏️ EDICIÓN DE PRODUCTOS
+// ✏️ EDICIÓN DE PRODUCTOS (NUEVA FUNCIONALIDAD)
 // ==========================================
 function abrirModalEdicion(index) {
     productoEditandoIndex = index;
@@ -853,6 +775,7 @@ function abrirModalEdicion(index) {
     document.getElementById('editStock').value = prod.stock || 0;
     document.getElementById('editUrl').value = prod.img || '';
     
+    // Llenar select de categorías
     const select = document.getElementById('editCategoria');
     select.innerHTML = '';
     categorias.forEach(cat => {
@@ -864,6 +787,7 @@ function abrirModalEdicion(index) {
     });
     
     mostrarPreviewEdicion(prod.img);
+    
     document.getElementById('editModal').style.display = 'flex';
 }
 
@@ -889,11 +813,13 @@ async function guardarEdicionProducto() {
         return;
     }
     
+    // Verificar que el código no esté duplicado (excepto el producto actual)
     if (productos.find((p, idx) => p.codigo === codigo && idx !== productoEditandoIndex)) {
         showToast("⚠️ Código ya existe en otro producto", "danger");
         return;
     }
     
+    // Actualizar producto
     productos[productoEditandoIndex].codigo = codigo;
     productos[productoEditandoIndex].nombre = nombre;
     productos[productoEditandoIndex].precio = formatearPrecio(precio);
@@ -909,7 +835,7 @@ async function guardarEdicionProducto() {
     cerrarModalEdicion();
     showToast("✅ Producto actualizado", "success");
     
-    if (db) await subirDatosANube();
+    if (FIREBASE_CONFIG.databaseURL) await subirDatosANube();
 }
 
 function renderInventario() {
@@ -943,7 +869,7 @@ async function actualizarStockRapido(i, val) {
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
     renderProductos();
     showToast("✅ Stock actualizado", "success");
-    if (db) await subirDatosANube();
+    if (FIREBASE_CONFIG.databaseURL) await subirDatosANube();
 }
 
 async function eliminarProducto(i) {
@@ -954,7 +880,7 @@ async function eliminarProducto(i) {
         renderProductos();
         renderInventario();
         showToast("🗑️ Eliminado", "danger");
-        if (db) await subirDatosANube();
+        if (FIREBASE_CONFIG.databaseURL) await subirDatosANube();
     }
 }
 
@@ -987,7 +913,7 @@ function toggleCart() { document.getElementById('cartSidebar').classList.toggle(
 
 function agregarAlCarro(i) {
     const p = productos[i];
-    if (carrito.filter(x => x.codigo === p.codigo).length >= p.stock) {
+    if (carrito.filter(x => x.nombre === p.nombre).length >= p.stock) {
         showToast("⚠️ Sin stock", "danger");
         return;
     }
@@ -1015,7 +941,7 @@ function comprar() {
     carrito.forEach(item => {
         msg += `- ${item.nombre} (${formatearPrecio(item.precio)})\n`;
         total += limpiarPrecio(item.precio);
-        const ori = productos.find(p => p.codigo === item.codigo);
+        const ori = productos.find(p => p.nombre === item.nombre);
         if (ori) ori.stock--;
     });
     msg += `\n*TOTAL: ${formatearPrecio(total)}*`;
@@ -1024,7 +950,6 @@ function comprar() {
     actualizarCarrito();
     toggleCart();
     renderProductos();
-    if (db) subirDatosANube();
     window.open(`https://wa.me/573133125208?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -1134,7 +1059,7 @@ function procesarArchivoExcel() {
             prepararCacheBusqueda();
             renderProductos();
             showToast(`✅ ${creados} creados, ${actualizados} actualizados`, "success");
-            if (db) await subirDatosANube();
+            if (FIREBASE_CONFIG.databaseURL) await subirDatosANube();
         } catch (err) {
             showToast("❌ Error: " + err.message, "danger");
         }
@@ -1157,16 +1082,8 @@ function descargarPlantillaCSV() {
 window.addEventListener('DOMContentLoaded', () => {
     if (FIREBASE_CONFIG.databaseURL) {
         document.getElementById('cfgFirebaseUrl').value = FIREBASE_CONFIG.databaseURL;
+        document.getElementById('firebaseStatus').innerHTML = '<span style="color:var(--success);">✅ Configurado</span>';
     }
-    if (FIREBASE_CONFIG.apiKey) {
-        document.getElementById('cfgFirebaseApiKey').value = FIREBASE_CONFIG.apiKey;
-    }
-    
-    if (FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.databaseURL) {
-        document.getElementById('firebaseStatus').innerHTML = '<span style="color:var(--success);">✅ Conectado</span>';
-        inicializarFirebaseRealtime();
-    }
-    
     if (IMGBB_CONFIG.apiKey) {
         document.getElementById('cfgImgbbKey').value = IMGBB_CONFIG.apiKey;
         document.getElementById('imgbbStatus').innerHTML = '<span style="color:var(--success);">✅ Configurado</span>';
@@ -1179,6 +1096,10 @@ window.addEventListener('DOMContentLoaded', () => {
     renderNavCategorias();
     renderProductos();
     actualizarEstadisticas();
+    
+    if (FIREBASE_CONFIG.databaseURL) {
+        setTimeout(descargarDatosDeNube, 1000);
+    }
 });
 </script>
 </body>
