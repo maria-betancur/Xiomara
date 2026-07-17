@@ -83,7 +83,19 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .close-cart { background: var(--gray-light); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
 .btn-buy { background: var(--primary-pink); color: white; border: none; padding: 14px; margin-top: 20px; cursor: pointer; border-radius: 14px; width: 100%; font-weight: 700; }
 
-.login-modal, .admin-panel, .edit-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(74, 40, 52, 0.5); backdrop-filter: blur(10px); z-index: 110; justify-content: center; align-items: center; padding: 15px; }
+/* 🔥 CORRECCIÓN 1: Separamos los modales para que el de edición quede POR ENCIMA del panel admin */
+.login-modal, .admin-panel { 
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(74, 40, 52, 0.5); backdrop-filter: blur(10px); 
+    z-index: 110; justify-content: center; align-items: center; padding: 15px; 
+}
+.edit-modal { 
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(74, 40, 52, 0.5); backdrop-filter: blur(10px); 
+    z-index: 150; /* Z-index más alto para que sea visible */
+    justify-content: center; align-items: center; padding: 15px; 
+}
+
 .login-content { background: white; padding: 30px 20px; border-radius: 24px; width: 100%; max-width: 380px; text-align: center; }
 .edit-modal-content { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; }
 .edit-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--gray-border); }
@@ -409,7 +421,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 // ==========================================
 let savedFirebaseConfig = JSON.parse(localStorage.getItem('firebase_config') || 'null');
 
-// ¡TUS CLAVES YA ESTÁN PRE-CARGADAS AQUÍ!
 let FIREBASE_CONFIG = { 
     apiKey: savedFirebaseConfig?.apiKey || 'AIzaSyBCdbhrexfLXzL3BWJxm_LtFAEf8-vv7Mo', 
     databaseURL: savedFirebaseConfig?.databaseURL || 'https://xiolover-default-rtdb.firebaseio.com' 
@@ -837,16 +848,21 @@ async function guardarNuevoProducto() {
 }
 
 // ==========================================
-// ✏️ EDICIÓN DE PRODUCTOS
+// ✏️ EDICIÓN DE PRODUCTOS (🔥 CORRECCIÓN 2: Versión robusta y rápida)
 // ==========================================
 function abrirModalEdicion(index) {
+    if (index === undefined || index === null || !productos[index]) {
+        console.error("Error: Índice de producto no válido", index);
+        showToast("⚠️ Error al abrir el producto", "danger");
+        return;
+    }
     productoEditandoIndex = index;
     const prod = productos[index];
     
     document.getElementById('editCodigo').value = prod.codigo || '';
     document.getElementById('editNombre').value = prod.nombre || '';
     document.getElementById('editPrecio').value = limpiarPrecio(prod.precio) || '';
-    document.getElementById('editStock').value = prod.stock || 0;
+    document.getElementById('editStock').value = prod.stock !== undefined ? prod.stock : 0;
     document.getElementById('editUrl').value = prod.img || '';
     
     const select = document.getElementById('editCategoria');
@@ -908,30 +924,38 @@ async function guardarEdicionProducto() {
     if (db) await subirDatosANube();
 }
 
+// 🔥 CORRECCIÓN 3: Renderizado de inventario optimizado (evita que se congele o demore)
 function renderInventario() {
     const tbody = document.getElementById('tablaInventario');
-    tbody.innerHTML = '';
-    productos.forEach((p, i) => {
-        const tr = document.createElement('tr');
-        tr.id = `row-${i}`;
-        tr.innerHTML = `
+    if (!tbody) return;
+    
+    if (!productos || productos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="padding:20px; text-align:center; color:#64748b;">No hay productos en el inventario.</td></tr>';
+        return;
+    }
+
+    let html = '';
+    for (let i = 0; i < productos.length; i++) {
+        const p = productos[i];
+        html += `<tr id="row-${i}">
             <td style="padding:10px;">
-                <div style="font-weight:600;">${p.nombre}</div>
-                <div style="font-size:10px; color:var(--primary-pink);">${p.codigo}</div>
+                <div style="font-weight:600;">${p.nombre || 'Sin nombre'}</div>
+                <div style="font-size:10px; color:var(--primary-pink);">${p.codigo || 'S/C'}</div>
             </td>
             <td style="padding:10px; text-align:center;">
-                <span style="background:var(--light-pink); padding:3px 8px; border-radius:8px; font-size:11px; font-weight:600; color:var(--primary-pink);">${p.categoria}</span>
+                <span style="background:var(--light-pink); padding:3px 8px; border-radius:8px; font-size:11px; font-weight:600; color:var(--primary-pink);">${p.categoria || 'General'}</span>
             </td>
             <td style="padding:10px; text-align:center; font-weight:700;">${formatearPrecio(p.precio)}</td>
             <td style="padding:10px; text-align:center;">
-                <input type="number" value="${p.stock}" min="0" onchange="actualizarStockRapido(${i}, this.value)" style="width:60px; padding:5px; border-radius:5px; border:1px solid var(--gray-border); text-align:center;">
+                <input type="number" value="${p.stock !== undefined ? p.stock : 0}" min="0" onchange="actualizarStockRapido(${i}, this.value)" style="width:60px; padding:5px; border-radius:5px; border:1px solid var(--gray-border); text-align:center;">
             </td>
             <td style="padding:10px; text-align:center;">
                 <button class="btn-action edit" onclick="abrirModalEdicion(${i})">✏️ Editar</button>
                 <button class="btn-action delete" onclick="eliminarProducto(${i})">🗑️</button>
-            </td>`;
-        tbody.appendChild(tr);
-    });
+            </td>
+        </tr>`;
+    }
+    tbody.innerHTML = html;
 }
 
 async function actualizarStockRapido(i, val) {
@@ -956,10 +980,13 @@ async function eliminarProducto(i) {
 
 function filtrarTablaInventario(q) {
     q = q.toLowerCase().trim();
-    productos.forEach((p, i) => {
+    for (let i = 0; i < productos.length; i++) {
+        const p = productos[i];
         const row = document.getElementById(`row-${i}`);
-        if (row) row.style.display = (p.nombre.toLowerCase().includes(q) || p.codigo.toLowerCase().includes(q) || p.categoria.toLowerCase().includes(q)) ? '' : 'none';
-    });
+        if (row) {
+            row.style.display = (p.nombre.toLowerCase().includes(q) || p.codigo.toLowerCase().includes(q) || p.categoria.toLowerCase().includes(q)) ? '' : 'none';
+        }
+    }
 }
 
 function actualizarEstadisticas() {
@@ -1151,7 +1178,6 @@ function descargarPlantillaCSV() {
 // 🚀 INICIALIZACIÓN
 // ==========================================
 window.addEventListener('DOMContentLoaded', () => {
-    // Pre-llenar los campos si ya existen en localStorage, si no, usar los por defecto
     document.getElementById('cfgFirebaseUrl').value = FIREBASE_CONFIG.databaseURL;
     document.getElementById('cfgFirebaseApiKey').value = FIREBASE_CONFIG.apiKey;
     
