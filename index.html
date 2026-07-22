@@ -57,7 +57,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
 .card { background: var(--card-bg); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-base); position: relative; transition: transform 0.3s; cursor: pointer; }
 .card:hover { transform: translateY(-4px); }
-.card-top { background: var(--gray-light); padding: 15px; text-align: center; height: 160px; display: flex; align-items: center; justify-content: center; position: relative; }
+.card-top { background: var(--gray-light); padding: 15px; text-align: center; height: 160px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 .card img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
 .add-btn-floating { position: absolute; bottom: -18px; right: 12px; background: var(--primary-pink); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(228, 87, 143, 0.4); z-index: 2; }
 .card-info { padding: 24px 14px 14px 14px; }
@@ -67,6 +67,19 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .card .price { font-size: 17px; font-weight: 800; color: var(--primary-pink); margin: 0; }
 .card .stock-tag { font-size: 10px; color: #64748b; background: var(--gray-light); padding: 3px 8px; border-radius: 20px; display: inline-block; margin-top: 8px; font-weight: 600; }
 .card.no-stock { opacity: 0.65; }
+
+/* 🖼️ GALERÍA EN CARDS */
+.card-gallery { position: relative; width: 100%; height: 100%; }
+.card-gallery img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.3s; }
+.card-gallery img.active { opacity: 1; }
+.gallery-dots { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 3; }
+.gallery-dots .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.15); cursor: pointer; transition: all 0.2s; }
+.gallery-dots .dot.active { background: var(--primary-pink); transform: scale(1.3); }
+.gallery-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.85); border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-size: 12px; color: var(--text-dark); z-index: 3; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.gallery-nav-btn.prev { left: 4px; }
+.gallery-nav-btn.next { right: 4px; }
+.gallery-nav-btn:hover { background: var(--primary-pink); color: white; }
+.variant-badge { position: absolute; top: 6px; left: 6px; background: var(--primary-pink); color: white; font-size: 9px; font-weight: 700; padding: 3px 7px; border-radius: 10px; z-index: 3; }
 
 .search-wrapper { max-width: 600px; margin: 0 auto 25px auto; position: relative; }
 #buscadorCodigo { width: 100%; padding: 14px 50px 14px 48px; border: 2px solid var(--gray-border); border-radius: 30px; font-weight: 600; background: white; }
@@ -83,23 +96,17 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .close-cart { background: var(--gray-light); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
 .btn-buy { background: var(--primary-pink); color: white; border: none; padding: 14px; margin-top: 20px; cursor: pointer; border-radius: 14px; width: 100%; font-weight: 700; }
 
-/* 🔥 CORRECCIÓN 1: Separamos los modales para que el de edición quede POR ENCIMA del panel admin */
-.login-modal, .admin-panel { 
+.login-modal, .admin-panel, .edit-modal, .detail-modal { 
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
     background: rgba(74, 40, 52, 0.5); backdrop-filter: blur(10px); 
     z-index: 110; justify-content: center; align-items: center; padding: 15px; 
 }
-.edit-modal { 
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-    background: rgba(74, 40, 52, 0.5); backdrop-filter: blur(10px); 
-    z-index: 150; /* Z-index más alto para que sea visible */
-    justify-content: center; align-items: center; padding: 15px; 
-}
+.edit-modal, .detail-modal { z-index: 150; }
 
 .login-content { background: white; padding: 30px 20px; border-radius: 24px; width: 100%; max-width: 380px; text-align: center; }
-.edit-modal-content { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; }
-.edit-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--gray-border); }
-.edit-modal-header h3 { margin: 0; font-size: 18px; font-weight: 700; }
+.edit-modal-content, .detail-modal-content { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+.edit-modal-header, .detail-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--gray-border); }
+.edit-modal-header h3, .detail-modal-header h3 { margin: 0; font-size: 18px; font-weight: 700; }
 .close-edit-modal { background: var(--gray-light); border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 18px; }
 .close-edit-modal:hover { background: var(--danger); color: white; }
 
@@ -138,6 +145,29 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .btn-action { padding: 6px 10px; border: none; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; margin: 0 2px; }
 .btn-action.edit { background: var(--warning); color: white; }
 .btn-action.delete { background: var(--danger); color: white; }
+
+/* 🖼️ LISTA DE IMÁGENES EN MODAL DE EDICIÓN */
+.images-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: 10px; }
+.image-item { position: relative; background: var(--gray-light); border-radius: 10px; padding: 6px; border: 2px solid var(--gray-border); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.image-item img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; }
+.image-item .remove-img-btn { position: absolute; top: 3px; right: 3px; background: var(--danger); color: white; border: none; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+.image-item .remove-img-btn:hover { background: #c1121f; }
+.image-item .img-index { position: absolute; bottom: 3px; left: 3px; background: rgba(0,0,0,0.6); color: white; font-size: 9px; padding: 2px 6px; border-radius: 8px; font-weight: 700; }
+.image-item.main-img { border-color: var(--primary-pink); }
+
+/* 🖼️ MODAL DETALLE CON GALERÍA */
+.detail-gallery { position: relative; background: var(--gray-light); border-radius: 16px; padding: 20px; min-height: 280px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; overflow: hidden; }
+.detail-gallery img { max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 8px; }
+.detail-thumbs { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; margin-bottom: 15px; }
+.detail-thumbs::-webkit-scrollbar { height: 4px; }
+.detail-thumbs::-webkit-scrollbar-thumb { background: var(--primary-pink); border-radius: 2px; }
+.detail-thumb { flex-shrink: 0; width: 60px; height: 60px; border-radius: 8px; border: 2px solid var(--gray-border); cursor: pointer; overflow: hidden; background: var(--gray-light); padding: 3px; }
+.detail-thumb img { width: 100%; height: 100%; object-fit: contain; }
+.detail-thumb.active { border-color: var(--primary-pink); }
+.detail-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+.detail-info-box { background: var(--gray-light); padding: 10px; border-radius: 10px; }
+.detail-info-box .label { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700; }
+.detail-info-box .value { font-size: 14px; font-weight: 700; color: var(--text-dark); margin-top: 3px; }
 
 @media (min-width: 768px) { .container { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); } }
 </style>
@@ -187,7 +217,26 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     </div>
 </div>
 
-<!-- MODAL DE EDICIÓN DE PRODUCTO -->
+<!-- 🖼️ MODAL DE DETALLE CON GALERÍA COMPLETA -->
+<div class="detail-modal" id="detailModal">
+    <div class="detail-modal-content">
+        <div class="detail-modal-header">
+            <h3 id="detailTitle">Detalle del Producto</h3>
+            <button class="close-edit-modal" onclick="cerrarDetalle()">✕</button>
+        </div>
+        <div class="detail-gallery" id="detailGallery"></div>
+        <div class="detail-thumbs" id="detailThumbs"></div>
+        <div class="detail-info-grid">
+            <div class="detail-info-box"><div class="label">Código</div><div class="value" id="detailCodigo">-</div></div>
+            <div class="detail-info-box"><div class="label">Categoría</div><div class="value" id="detailCategoria">-</div></div>
+            <div class="detail-info-box"><div class="label">Precio</div><div class="value" id="detailPrecio" style="color:var(--primary-pink);">-</div></div>
+            <div class="detail-info-box"><div class="label">Stock</div><div class="value" id="detailStock">-</div></div>
+        </div>
+        <button class="btn-buy" id="detailAddBtn" onclick="agregarDesdeDetalle()">🛒 Agregar al Carrito</button>
+    </div>
+</div>
+
+<!-- ✏️ MODAL DE EDICIÓN DE PRODUCTO -->
 <div class="edit-modal" id="editModal">
     <div class="edit-modal-content">
         <div class="edit-modal-header">
@@ -222,22 +271,23 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
         </div>
         
         <div class="form-group">
-            <label>📷 Imagen del Producto</label>
+            <label>🖼️ Imágenes del Producto (varios tonos/colores)</label>
             <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:10px; margin-bottom:10px; font-size:12px; color:#166534;">
-                💡 Sube una nueva imagen a ImgBB o deja la URL actual
+                💡 Sube varias imágenes del mismo producto con distintos tonos o colores. La primera imagen será la principal.
             </div>
-            <input type="file" id="editFileImg" accept="image/*" onchange="subirImagenEdicion(this)" style="padding:8px; border:1px solid var(--gray-border); border-radius:8px; width:100%; margin-bottom:8px;">
+            <input type="file" id="editFileImg" accept="image/*" multiple onchange="subirImagenesEdicion(this)" style="padding:8px; border:1px solid var(--gray-border); border-radius:8px; width:100%; margin-bottom:8px;">
             
             <div class="upload-progress" id="editUploadProgress">
-                <div style="font-size:12px; font-weight:600;">📤 Subiendo imagen...</div>
+                <div style="font-size:12px; font-weight:600;">📤 Subiendo imágenes...</div>
                 <div class="progress-bar"><div class="progress-fill" id="editProgressFill"></div></div>
                 <div style="font-size:11px; color:#64748b; margin-top:5px;" id="editUploadStatus">Preparando...</div>
             </div>
             
-            <div style="margin-top:8px; font-size:12px; color:#64748b;">URL actual o nueva:</div>
-            <input type="text" id="editUrl" placeholder="https://..." style="margin-top:5px;">
+            <div style="margin-top:8px; font-size:12px; color:#64748b;">O pega URLs separadas por coma:</div>
+            <input type="text" id="editUrl" placeholder="https://img1.jpg, https://img2.jpg" style="margin-top:5px;">
+            <button type="button" class="sync-btn secondary" style="margin-top:8px; padding:8px; font-size:12px;" onclick="agregarUrlsEdicion()">➕ Agregar URLs</button>
             
-            <div id="editImgPreview" style="margin-top:10px; text-align:center;"></div>
+            <div class="images-list" id="editImagesList"></div>
         </div>
         
         <div style="display:flex; gap:10px; margin-top:20px;">
@@ -341,20 +391,22 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
                         </div>
                         
                         <div class="form-group">
-                            <label>📷 Imagen del Producto</label>
+                            <label>🖼️ Imágenes del Producto (varios tonos/colores)</label>
                             <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:12px; margin-bottom:10px; font-size:12px; color:#166534;">
-                                💡 <strong>Sube la imagen directamente</strong> y se guardará en ImgBB automáticamente.
+                                💡 <strong>Sube varias imágenes</strong> del mismo producto con distintos tonos o colores. Se guardarán en ImgBB automáticamente.
                             </div>
-                            <input type="file" id="prodFileImg" accept="image/*" onchange="subirImagenProducto(this)" style="padding:10px; border:1px solid var(--gray-border); border-radius:8px; width:100%;">
+                            <input type="file" id="prodFileImg" accept="image/*" multiple onchange="subirImagenesProducto(this)" style="padding:10px; border:1px solid var(--gray-border); border-radius:8px; width:100%;">
                             
                             <div class="upload-progress" id="uploadProgress">
-                                <div style="font-size:12px; font-weight:600;">📤 Subiendo imagen a ImgBB...</div>
+                                <div style="font-size:12px; font-weight:600;">📤 Subiendo imágenes a ImgBB...</div>
                                 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
                                 <div style="font-size:11px; color:#64748b; margin-top:5px;" id="uploadStatus">Preparando...</div>
                             </div>
                             
-                            <div style="margin-top:10px; font-size:12px; color:#64748b;">O pega una URL directa:</div>
-                            <input type="text" id="prodUrlImg" placeholder="https://..." style="margin-top:5px;">
+                            <div style="margin-top:10px; font-size:12px; color:#64748b;">O pega URLs directas separadas por coma:</div>
+                            <input type="text" id="prodUrlImg" placeholder="https://img1.jpg, https://img2.jpg" style="margin-top:5px;">
+                            
+                            <div class="images-list" id="prodImagesList"></div>
                         </div>
                         
                         <button class="btn-buy" onclick="guardarNuevoProducto()">✨ Publicar Producto</button>
@@ -365,7 +417,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
                     <div class="dashboard-card">
                         <h4>📦 Carga Masiva</h4>
                         <input type="file" id="archivoExcel" accept=".xlsx,.xls,.csv" style="padding:10px; border:1px solid var(--gray-border); border-radius:8px; width:100%; margin-bottom:10px;">
-                        <small style="color:#64748b;">Columnas: nombre, codigo, categoria, precio, url, stock</small>
+                        <small style="color:#64748b;">Columnas: nombre, codigo, categoria, precio, url (separar varias con coma o |), stock</small>
                         <button class="btn-buy" onclick="procesarArchivoExcel()" style="margin-top:10px;">📥 Procesar</button>
                         <button class="btn-buy" onclick="descargarPlantillaCSV()" style="background:var(--success); margin-top:10px;">⬇️ Descargar Plantilla</button>
                         <div id="resultadoCarga" style="margin-top:15px; padding:15px; border-radius:8px; display:none;"></div>
@@ -390,7 +442,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
                     <div class="dashboard-card">
                         <h4>📊 Inventario Completo</h4>
                         <p style="font-size:12px; color:#64748b; margin-bottom:15px;">
-                            💡 Haz clic en ✏️ para editar cualquier campo del producto (categoría, nombre, precio, imagen, etc.)
+                            💡 Haz clic en ✏️ para editar cualquier campo del producto (categoría, nombre, precio, imágenes, etc.)
                         </p>
                         <input type="text" id="inventarioBuscador" placeholder="🔍 Buscar..." oninput="filtrarTablaInventario(this.value)" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--gray-border); margin-bottom:15px;">
                         <div style="overflow-x:auto;">
@@ -401,6 +453,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
                                         <th style="padding:10px;">Categoría</th>
                                         <th style="padding:10px;">Precio</th>
                                         <th style="padding:10px;">Stock</th>
+                                        <th style="padding:10px;">Imgs</th>
                                         <th style="padding:10px;">Acciones</th>
                                     </tr>
                                 </thead>
@@ -429,6 +482,28 @@ let IMGBB_CONFIG = JSON.parse(localStorage.getItem('imgbb_config') || 'null') ||
 
 let db = null;
 let firebaseUnsubscribe = null;
+
+// ==========================================
+// 🖼️ MIGRACIÓN: img (string) → imagenes (array)
+// ==========================================
+function migrarProductosImagenes(arr) {
+    let cambiados = false;
+    arr.forEach(p => {
+        if (!p.imagenes) {
+            if (p.img && typeof p.img === 'string' && p.img.trim() !== '') {
+                p.imagenes = [p.img.trim()];
+            } else {
+                p.imagenes = [];
+            }
+            cambiados = true;
+        } else if (!Array.isArray(p.imagenes)) {
+            p.imagenes = [p.imagenes];
+            cambiados = true;
+        }
+        p.imagenes = p.imagenes.filter(url => url && typeof url === 'string' && url.trim() !== '');
+    });
+    return cambiados;
+}
 
 // ==========================================
 // 🔥 FUNCIONES FIREBASE EN TIEMPO REAL
@@ -463,6 +538,9 @@ function inicializarFirebaseRealtime() {
                 }
                 
                 productos = datos.productos;
+                if (migrarProductosImagenes(productos)) {
+                    localStorage.setItem('db_prods_v2', JSON.stringify(productos));
+                }
                 if (datos.categorias) categorias = datos.categorias;
                 if (datos.tiendaConfig) tiendaConfig = datos.tiendaConfig;
                 
@@ -521,6 +599,7 @@ async function descargarDatosDeNube() {
         const datos = snapshot.val();
         if (datos && datos.productos) {
             productos = datos.productos;
+            migrarProductosImagenes(productos);
             if (datos.categorias) categorias = datos.categorias;
             if (datos.tiendaConfig) tiendaConfig = datos.tiendaConfig;
             localStorage.setItem('db_prods_v2', JSON.stringify(productos));
@@ -545,100 +624,166 @@ async function descargarDatosDeNube() {
 // ==========================================
 // 🖼️ FUNCIONES IMGBB
 // ==========================================
-async function subirImagenImgBB(file, progressId = 'uploadProgress', fillId = 'progressFill', statusId = 'uploadStatus') {
+async function subirUnaImagenImgBB(file, progressId, fillId, statusId, current, total) {
+    const progressDiv = document.getElementById(progressId);
+    const progressFill = document.getElementById(fillId);
+    const uploadStatus = document.getElementById(statusId);
+    
+    if (progressDiv) progressDiv.classList.add('active');
+    if (progressFill) progressFill.style.width = Math.round((current / total) * 100) + '%';
+    if (uploadStatus) uploadStatus.textContent = `Subiendo imagen ${current} de ${total}: ${file.name}`;
+    
+    const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+    
+    const formData = new FormData();
+    formData.append('key', IMGBB_CONFIG.apiKey);
+    formData.append('image', base64);
+    
+    const response = await fetch('https://api.imgbb.com/1/upload', {
+        method: 'POST',
+        body: formData
+    });
+    
+    if (!response.ok) throw new Error('Error al subir a ImgBB');
+    
+    const data = await response.json();
+    return data.data.display_url;
+}
+
+async function subirImagenesImgBB(files, progressId = 'uploadProgress', fillId = 'progressFill', statusId = 'uploadStatus') {
     if (!IMGBB_CONFIG.apiKey) {
         showToast("⚠️ Configura tu API Key de ImgBB", "warning");
-        return null;
+        return [];
     }
     
     const progressDiv = document.getElementById(progressId);
     const progressFill = document.getElementById(fillId);
     const uploadStatus = document.getElementById(statusId);
     
-    if (progressDiv) progressDiv.classList.add('active');
-    if (progressFill) progressFill.style.width = '30%';
-    if (uploadStatus) uploadStatus.textContent = 'Preparando imagen...';
+    const validFiles = Array.from(files).filter(f => f.size <= 32 * 1024 * 1024);
+    if (validFiles.length === 0) {
+        showToast("⚠️ No hay imágenes válidas (máx 32MB cada una)", "warning");
+        return [];
+    }
     
+    if (progressDiv) progressDiv.classList.add('active');
+    
+    const urls = [];
     try {
-        if (file.size > 32 * 1024 * 1024) {
-            showToast("⚠️ Imagen muy grande (máx 32MB)", "warning");
-            if (progressDiv) progressDiv.classList.remove('active');
-            return null;
+        for (let i = 0; i < validFiles.length; i++) {
+            const url = await subirUnaImagenImgBB(validFiles[i], progressId, fillId, statusId, i + 1, validFiles.length);
+            urls.push(url);
         }
         
-        if (progressFill) progressFill.style.width = '50%';
-        if (uploadStatus) uploadStatus.textContent = 'Convirtiendo a Base64...';
-        
-        const base64 = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result.split(',')[1]);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-        
-        if (progressFill) progressFill.style.width = '70%';
-        if (uploadStatus) uploadStatus.textContent = 'Subiendo a ImgBB...';
-        
-        const formData = new FormData();
-        formData.append('key', IMGBB_CONFIG.apiKey);
-        formData.append('image', base64);
-        
-        const response = await fetch('https://api.imgbb.com/1/upload', {
-            method: 'POST',
-            body: formData
-        });
-        
-        if (!response.ok) throw new Error('Error al subir a ImgBB');
-        
-        const data = await response.json();
-        
         if (progressFill) progressFill.style.width = '100%';
-        if (uploadStatus) uploadStatus.textContent = '✅ ¡Imagen subida!';
+        if (uploadStatus) uploadStatus.textContent = `✅ ${urls.length} imagen(es) subida(s)`;
         
         setTimeout(() => {
             if (progressDiv) progressDiv.classList.remove('active');
             if (progressFill) progressFill.style.width = '0%';
         }, 2000);
         
-        return data.data.display_url;
-        
+        return urls;
     } catch (error) {
         if (progressDiv) progressDiv.classList.remove('active');
         showToast("❌ Error: " + error.message, "danger");
-        return null;
+        return urls;
     }
 }
 
-async function subirImagenProducto(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const url = await subirImagenImgBB(file, 'uploadProgress', 'progressFill', 'uploadStatus');
-    if (url) {
-        document.getElementById('prodUrlImg').value = url;
-        showToast("✅ Imagen lista para usar", "success");
+async function subirImagenesProducto(input) {
+    const files = input.files;
+    if (!files || files.length === 0) return;
+    const urls = await subirImagenesImgBB(files, 'uploadProgress', 'progressFill', 'uploadStatus');
+    if (urls.length > 0) {
+        urls.forEach(u => imagenesProductoTemp.push(u));
+        renderListaImagenesProducto();
+        showToast(`✅ ${urls.length} imagen(es) lista(s)`, "success");
     }
     input.value = '';
 }
 
-async function subirImagenEdicion(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const url = await subirImagenImgBB(file, 'editUploadProgress', 'editProgressFill', 'editUploadStatus');
-    if (url) {
-        document.getElementById('editUrl').value = url;
-        mostrarPreviewEdicion(url);
-        showToast("✅ Imagen lista para usar", "success");
+async function subirImagenesEdicion(input) {
+    const files = input.files;
+    if (!files || files.length === 0) return;
+    const urls = await subirImagenesImgBB(files, 'editUploadProgress', 'editProgressFill', 'editUploadStatus');
+    if (urls.length > 0) {
+        urls.forEach(u => imagenesEdicionTemp.push(u));
+        renderListaImagenesEdicion();
+        showToast(`✅ ${urls.length} imagen(es) lista(s)`, "success");
     }
     input.value = '';
 }
 
-function mostrarPreviewEdicion(url) {
-    const preview = document.getElementById('editImgPreview');
-    if (url) {
-        preview.innerHTML = `<img src="${url}" style="max-width:150px; max-height:150px; border-radius:8px; border:2px solid var(--gray-border);">`;
-    } else {
-        preview.innerHTML = '';
+// ==========================================
+// 🖼️ LISTAS TEMPORALES DE IMÁGENES
+// ==========================================
+let imagenesProductoTemp = [];
+let imagenesEdicionTemp = [];
+
+function renderListaImagenesProducto() {
+    const cont = document.getElementById('prodImagesList');
+    if (!cont) return;
+    cont.innerHTML = '';
+    imagenesProductoTemp.forEach((url, idx) => {
+        const div = document.createElement('div');
+        div.className = 'image-item' + (idx === 0 ? ' main-img' : '');
+        div.innerHTML = `
+            <img src="${url}" alt="img-${idx}">
+            <button class="remove-img-btn" onclick="quitarImagenProducto(${idx})">✕</button>
+            <span class="img-index">${idx === 0 ? '👑 Principal' : '#' + (idx + 1)}</span>
+        `;
+        cont.appendChild(div);
+    });
+}
+
+function quitarImagenProducto(idx) {
+    imagenesProductoTemp.splice(idx, 1);
+    renderListaImagenesProducto();
+}
+
+function renderListaImagenesEdicion() {
+    const cont = document.getElementById('editImagesList');
+    if (!cont) return;
+    cont.innerHTML = '';
+    imagenesEdicionTemp.forEach((url, idx) => {
+        const div = document.createElement('div');
+        div.className = 'image-item' + (idx === 0 ? ' main-img' : '');
+        div.innerHTML = `
+            <img src="${url}" alt="img-${idx}">
+            <button class="remove-img-btn" onclick="quitarImagenEdicion(${idx})">✕</button>
+            <span class="img-index">${idx === 0 ? '👑 Principal' : '#' + (idx + 1)}</span>
+        `;
+        cont.appendChild(div);
+    });
+}
+
+function quitarImagenEdicion(idx) {
+    imagenesEdicionTemp.splice(idx, 1);
+    renderListaImagenesEdicion();
+}
+
+function agregarUrlsEdicion() {
+    const input = document.getElementById('editUrl');
+    const texto = input.value.trim();
+    if (!texto) {
+        showToast("⚠️ Pega una o más URLs", "warning");
+        return;
     }
+    const nuevas = texto.split(/[,\n|]/).map(u => u.trim()).filter(u => u && u.startsWith('http'));
+    if (nuevas.length === 0) {
+        showToast("⚠️ URLs no válidas", "warning");
+        return;
+    }
+    nuevas.forEach(u => imagenesEdicionTemp.push(u));
+    renderListaImagenesEdicion();
+    input.value = '';
+    showToast(`✅ ${nuevas.length} URL(s) agregada(s)`, "success");
 }
 
 // ==========================================
@@ -675,13 +820,18 @@ function guardarConfigImgBB() {
 // 📦 DATOS Y FUNCIONES BASE
 // ==========================================
 let productos = JSON.parse(localStorage.getItem('db_prods_v2')) || [
-    {id: '1', codigo: "LAB-001", nombre: "Caja Lip Combo Xiolover", precio: "$40.000", categoria: "Maquillaje", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300", stock: 12}
+    {id: '1', codigo: "LAB-001", nombre: "Caja Lip Combo Xiolover", precio: "$40.000", categoria: "Maquillaje", imagenes: ["https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300"], stock: 12}
 ];
 let categorias = JSON.parse(localStorage.getItem('db_categorias_v1')) || ['Maquillaje', 'Skincare', 'Cejas', 'Accesorios'];
 let tiendaConfig = JSON.parse(localStorage.getItem('db_store_cfg_v2')) || { name: "XIOLOVER", title: "Welcome to Xiolover World!", desc: "Explora lo último en tendencias.", primaryColor: "#e4578f", bgColor: "#fcaecb" };
 let carrito = [];
 let categoriaActual = "Todos";
 let productoEditandoIndex = null;
+let productoDetalleIndex = null;
+let detalleImagenActual = 0;
+
+// Migración inicial
+migrarProductosImagenes(productos);
 
 function showToast(message, type = "success") {
     const toast = document.createElement('div');
@@ -707,6 +857,12 @@ function prepararCacheBusqueda() {
     });
 }
 
+function obtenerImagenPrincipal(p) {
+    if (p.imagenes && p.imagenes.length > 0) return p.imagenes[0];
+    if (p.img) return p.img;
+    return 'https://via.placeholder.com/300?text=Producto';
+}
+
 function renderProductos(lista = null) {
     const cont = document.getElementById('productos');
     cont.innerHTML = '';
@@ -716,12 +872,35 @@ function renderProductos(lista = null) {
         if (realIdx === -1) return;
         if (!lista && categoriaActual !== 'Todos' && p.categoria !== categoriaActual) return;
         const sinStock = p.stock <= 0;
+        const imagenes = p.imagenes && p.imagenes.length > 0 ? p.imagenes : [obtenerImagenPrincipal(p)];
+        const multi = imagenes.length > 1;
+        const cardId = 'card-' + realIdx;
+        
         const card = document.createElement('div');
         card.className = `card ${sinStock ? 'no-stock' : ''}`;
         card.onclick = () => abrirDetalle(realIdx);
+        
+        let galleryHtml = '';
+        if (multi) {
+            galleryHtml = `<div class="card-gallery" id="${cardId}">`;
+            imagenes.forEach((url, i) => {
+                galleryHtml += `<img src="${url}" alt="${p.nombre}" class="${i === 0 ? 'active' : ''}" data-idx="${i}">`;
+            });
+            galleryHtml += `
+                <button class="gallery-nav-btn prev" onclick="event.stopPropagation(); cambiarImagenCard('${cardId}', -1)">‹</button>
+                <button class="gallery-nav-btn next" onclick="event.stopPropagation(); cambiarImagenCard('${cardId}', 1)">›</button>
+                <div class="gallery-dots">
+                    ${imagenes.map((_, i) => `<span class="dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation(); irImagenCard('${cardId}', ${i})"></span>`).join('')}
+                </div>
+                <div class="variant-badge">${imagenes.length} tonos</div>
+            </div>`;
+        } else {
+            galleryHtml = `<img src="${imagenes[0]}" alt="${p.nombre}">`;
+        }
+        
         card.innerHTML = `
             <div class="card-top">
-                <img src="${p.img || 'https://via.placeholder.com/300?text=Producto'}" alt="${p.nombre}">
+                ${galleryHtml}
                 <button class="add-btn-floating" onclick="event.stopPropagation(); ${sinStock ? '' : `agregarAlCarro(${realIdx})`}">${sinStock ? '✕' : '＋'}</button>
             </div>
             <div class="card-info">
@@ -733,6 +912,33 @@ function renderProductos(lista = null) {
             </div>`;
         cont.appendChild(card);
     });
+}
+
+function cambiarImagenCard(cardId, dir) {
+    const cont = document.getElementById(cardId);
+    if (!cont) return;
+    const imgs = cont.querySelectorAll('img');
+    const dots = cont.querySelectorAll('.dot');
+    let activeIdx = 0;
+    imgs.forEach((img, i) => { if (img.classList.contains('active')) activeIdx = i; });
+    let newIdx = activeIdx + dir;
+    if (newIdx < 0) newIdx = imgs.length - 1;
+    if (newIdx >= imgs.length) newIdx = 0;
+    imgs.forEach(img => img.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    imgs[newIdx].classList.add('active');
+    if (dots[newIdx]) dots[newIdx].classList.add('active');
+}
+
+function irImagenCard(cardId, idx) {
+    const cont = document.getElementById(cardId);
+    if (!cont) return;
+    const imgs = cont.querySelectorAll('img');
+    const dots = cont.querySelectorAll('.dot');
+    imgs.forEach(img => img.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    if (imgs[idx]) imgs[idx].classList.add('active');
+    if (dots[idx]) dots[idx].classList.add('active');
 }
 
 function renderSelectCategorias() {
@@ -812,7 +1018,13 @@ async function guardarNuevoProducto() {
     const nombre = document.getElementById('prodNombre').value.trim();
     const precio = document.getElementById('prodPrecio').value;
     const stock = parseInt(document.getElementById('prodStock').value) || 0;
-    const url = document.getElementById('prodUrlImg').value.trim();
+    
+    const urlsInput = document.getElementById('prodUrlImg').value.trim();
+    let imagenes = [...imagenesProductoTemp];
+    if (urlsInput) {
+        const extras = urlsInput.split(/[,\n|]/).map(u => u.trim()).filter(u => u && u.startsWith('http'));
+        imagenes = [...imagenes, ...extras];
+    }
     
     if (!codigo || !nombre || !precio) {
         showToast("⚠️ Completa los campos obligatorios", "danger");
@@ -823,12 +1035,14 @@ async function guardarNuevoProducto() {
         return;
     }
     
+    imagenes = [...new Set(imagenes.filter(u => u && u.trim() !== ''))];
+    
     productos.unshift({
         id: Date.now().toString(),
         codigo, nombre,
         precio: formatearPrecio(precio),
         categoria: document.getElementById('prodCategoria').value,
-        img: url || 'https://via.placeholder.com/300?text=Producto',
+        imagenes: imagenes.length > 0 ? imagenes : ['https://via.placeholder.com/300?text=Producto'],
         stock
     });
     
@@ -841,6 +1055,8 @@ async function guardarNuevoProducto() {
     document.getElementById('prodPrecio').value = '';
     document.getElementById('prodStock').value = '10';
     document.getElementById('prodUrlImg').value = '';
+    imagenesProductoTemp = [];
+    renderListaImagenesProducto();
     
     showToast(`✅ ${nombre} publicado`, "success");
     
@@ -848,7 +1064,7 @@ async function guardarNuevoProducto() {
 }
 
 // ==========================================
-// ✏️ EDICIÓN DE PRODUCTOS (🔥 CORRECCIÓN 2: Versión robusta y rápida)
+// ✏️ EDICIÓN DE PRODUCTOS
 // ==========================================
 function abrirModalEdicion(index) {
     if (index === undefined || index === null || !productos[index]) {
@@ -863,7 +1079,6 @@ function abrirModalEdicion(index) {
     document.getElementById('editNombre').value = prod.nombre || '';
     document.getElementById('editPrecio').value = limpiarPrecio(prod.precio) || '';
     document.getElementById('editStock').value = prod.stock !== undefined ? prod.stock : 0;
-    document.getElementById('editUrl').value = prod.img || '';
     
     const select = document.getElementById('editCategoria');
     select.innerHTML = '';
@@ -875,15 +1090,23 @@ function abrirModalEdicion(index) {
         select.appendChild(option);
     });
     
-    mostrarPreviewEdicion(prod.img);
+    imagenesEdicionTemp = [...(prod.imagenes || [])];
+    if (imagenesEdicionTemp.length === 0 && prod.img) {
+        imagenesEdicionTemp = [prod.img];
+    }
+    renderListaImagenesEdicion();
+    document.getElementById('editUrl').value = '';
+    
     document.getElementById('editModal').style.display = 'flex';
 }
 
 function cerrarModalEdicion() {
     document.getElementById('editModal').style.display = 'none';
     productoEditandoIndex = null;
+    imagenesEdicionTemp = [];
     document.getElementById('editFileImg').value = '';
-    document.getElementById('editImgPreview').innerHTML = '';
+    document.getElementById('editUrl').value = '';
+    renderListaImagenesEdicion();
 }
 
 async function guardarEdicionProducto() {
@@ -893,8 +1116,14 @@ async function guardarEdicionProducto() {
     const nombre = document.getElementById('editNombre').value.trim();
     const precio = document.getElementById('editPrecio').value;
     const stock = parseInt(document.getElementById('editStock').value) || 0;
-    const url = document.getElementById('editUrl').value.trim();
     const categoria = document.getElementById('editCategoria').value;
+    
+    const urlsInput = document.getElementById('editUrl').value.trim();
+    let imagenes = [...imagenesEdicionTemp];
+    if (urlsInput) {
+        const extras = urlsInput.split(/[,\n|]/).map(u => u.trim()).filter(u => u && u.startsWith('http'));
+        imagenes = [...imagenes, ...extras];
+    }
     
     if (!codigo || !nombre || !precio) {
         showToast("⚠️ Completa los campos obligatorios", "danger");
@@ -906,12 +1135,15 @@ async function guardarEdicionProducto() {
         return;
     }
     
+    imagenes = [...new Set(imagenes.filter(u => u && u.trim() !== ''))];
+    
     productos[productoEditandoIndex].codigo = codigo;
     productos[productoEditandoIndex].nombre = nombre;
     productos[productoEditandoIndex].precio = formatearPrecio(precio);
     productos[productoEditandoIndex].stock = stock;
     productos[productoEditandoIndex].categoria = categoria;
-    productos[productoEditandoIndex].img = url || 'https://via.placeholder.com/300?text=Producto';
+    productos[productoEditandoIndex].imagenes = imagenes.length > 0 ? imagenes : ['https://via.placeholder.com/300?text=Producto'];
+    productos[productoEditandoIndex].img = productos[productoEditandoIndex].imagenes[0];
     
     localStorage.setItem('db_prods_v2', JSON.stringify(productos));
     prepararCacheBusqueda();
@@ -924,19 +1156,124 @@ async function guardarEdicionProducto() {
     if (db) await subirDatosANube();
 }
 
-// 🔥 CORRECCIÓN 3: Renderizado de inventario optimizado (evita que se congele o demore)
+// ==========================================
+// 🔍 DETALLE DE PRODUCTO CON GALERÍA
+// ==========================================
+function abrirDetalle(index) {
+    if (index === undefined || index === null || !productos[index]) return;
+    productoDetalleIndex = index;
+    const prod = productos[index];
+    const imagenes = prod.imagenes && prod.imagenes.length > 0 ? prod.imagenes : [obtenerImagenPrincipal(prod)];
+    
+    document.getElementById('detailTitle').textContent = prod.nombre;
+    document.getElementById('detailCodigo').textContent = prod.codigo;
+    document.getElementById('detailCategoria').textContent = prod.categoria;
+    document.getElementById('detailPrecio').textContent = formatearPrecio(prod.precio);
+    document.getElementById('detailStock').textContent = prod.stock <= 0 ? 'AGOTADO' : prod.stock + ' unidades';
+    
+    const addBtn = document.getElementById('detailAddBtn');
+    if (prod.stock <= 0) {
+        addBtn.disabled = true;
+        addBtn.style.opacity = '0.5';
+        addBtn.textContent = 'Sin stock';
+    } else {
+        addBtn.disabled = false;
+        addBtn.style.opacity = '1';
+        addBtn.textContent = '🛒 Agregar al Carrito';
+    }
+    
+    detalleImagenActual = 0;
+    renderGaleriaDetalle(imagenes);
+    
+    document.getElementById('detailModal').style.display = 'flex';
+}
+
+function renderGaleriaDetalle(imagenes) {
+    const gallery = document.getElementById('detailGallery');
+    const thumbs = document.getElementById('detailThumbs');
+    
+    gallery.innerHTML = '';
+    thumbs.innerHTML = '';
+    
+    if (imagenes.length > 1) {
+        gallery.innerHTML += `<button class="gallery-nav-btn prev" onclick="cambiarImagenDetalle(-1)">‹</button>`;
+        gallery.innerHTML += `<button class="gallery-nav-btn next" onclick="cambiarImagenDetalle(1)">›</button>`;
+    }
+    
+    imagenes.forEach((url, i) => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = 'Producto';
+        img.style.display = i === detalleImagenActual ? 'block' : 'none';
+        img.dataset.idx = i;
+        gallery.appendChild(img);
+    });
+    
+    imagenes.forEach((url, i) => {
+        const thumb = document.createElement('div');
+        thumb.className = 'detail-thumb' + (i === detalleImagenActual ? ' active' : '');
+        thumb.innerHTML = `<img src="${url}" alt="thumb-${i}">`;
+        thumb.onclick = () => irImagenDetalle(i);
+        thumbs.appendChild(thumb);
+    });
+}
+
+function cambiarImagenDetalle(dir) {
+    if (productoDetalleIndex === null) return;
+    const prod = productos[productoDetalleIndex];
+    const imagenes = prod.imagenes && prod.imagenes.length > 0 ? prod.imagenes : [obtenerImagenPrincipal(prod)];
+    if (imagenes.length <= 1) return;
+    detalleImagenActual = (detalleImagenActual + dir + imagenes.length) % imagenes.length;
+    actualizarVistaDetalle(imagenes);
+}
+
+function irImagenDetalle(idx) {
+    if (productoDetalleIndex === null) return;
+    const prod = productos[productoDetalleIndex];
+    const imagenes = prod.imagenes && prod.imagenes.length > 0 ? prod.imagenes : [obtenerImagenPrincipal(prod)];
+    detalleImagenActual = idx;
+    actualizarVistaDetalle(imagenes);
+}
+
+function actualizarVistaDetalle(imagenes) {
+    const gallery = document.getElementById('detailGallery');
+    const thumbs = document.getElementById('detailThumbs');
+    const imgs = gallery.querySelectorAll('img');
+    imgs.forEach((img, i) => {
+        img.style.display = i === detalleImagenActual ? 'block' : 'none';
+    });
+    const thumbDivs = thumbs.querySelectorAll('.detail-thumb');
+    thumbDivs.forEach((t, i) => {
+        t.classList.toggle('active', i === detalleImagenActual);
+    });
+}
+
+function cerrarDetalle() {
+    document.getElementById('detailModal').style.display = 'none';
+    productoDetalleIndex = null;
+}
+
+function agregarDesdeDetalle() {
+    if (productoDetalleIndex === null) return;
+    agregarAlCarro(productoDetalleIndex);
+}
+
+// ==========================================
+// 📊 INVENTARIO
+// ==========================================
 function renderInventario() {
     const tbody = document.getElementById('tablaInventario');
     if (!tbody) return;
     
     if (!productos || productos.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="padding:20px; text-align:center; color:#64748b;">No hay productos en el inventario.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="padding:20px; text-align:center; color:#64748b;">No hay productos en el inventario.</td></tr>';
         return;
     }
 
     let html = '';
     for (let i = 0; i < productos.length; i++) {
         const p = productos[i];
+        const numImgs = (p.imagenes && p.imagenes.length) || 0;
         html += `<tr id="row-${i}">
             <td style="padding:10px;">
                 <div style="font-weight:600;">${p.nombre || 'Sin nombre'}</div>
@@ -948,6 +1285,9 @@ function renderInventario() {
             <td style="padding:10px; text-align:center; font-weight:700;">${formatearPrecio(p.precio)}</td>
             <td style="padding:10px; text-align:center;">
                 <input type="number" value="${p.stock !== undefined ? p.stock : 0}" min="0" onchange="actualizarStockRapido(${i}, this.value)" style="width:60px; padding:5px; border-radius:5px; border:1px solid var(--gray-border); text-align:center;">
+            </td>
+            <td style="padding:10px; text-align:center;">
+                <span style="background:#e0e7ff; color:#4338ca; padding:3px 8px; border-radius:8px; font-size:11px; font-weight:700;">🖼️ ${numImgs}</span>
             </td>
             <td style="padding:10px; text-align:center;">
                 <button class="btn-action edit" onclick="abrirModalEdicion(${i})">✏️ Editar</button>
@@ -991,7 +1331,8 @@ function filtrarTablaInventario(q) {
 
 function actualizarEstadisticas() {
     const size = new Blob([JSON.stringify(productos)]).size;
-    document.getElementById('statsInfo').innerHTML = `📦 <strong>${productos.length}</strong> productos | 💾 <strong>${(size/1024).toFixed(1)} KB</strong>`;
+    const totalImgs = productos.reduce((acc, p) => acc + ((p.imagenes && p.imagenes.length) || 0), 0);
+    document.getElementById('statsInfo').innerHTML = `📦 <strong>${productos.length}</strong> productos | 🖼️ <strong>${totalImgs}</strong> imágenes | 💾 <strong>${(size/1024).toFixed(1)} KB</strong>`;
 }
 
 function exportarDatosJSON() {
@@ -1140,13 +1481,17 @@ function procesarArchivoExcel() {
             let creados = 0, actualizados = 0;
             data.forEach(row => {
                 if (!row.nombre || !row.codigo) return;
+                let urlsRaw = (row.url || row.img || row.imagenes || '').toString().trim();
+                let imagenes = urlsRaw.split(/[,\n|;]/).map(u => u.trim()).filter(u => u && u.startsWith('http'));
+                if (imagenes.length === 0) imagenes = ['https://via.placeholder.com/300'];
+                
                 const limpio = {
                     id: Date.now().toString() + Math.random(),
                     codigo: row.codigo.toString().trim().toUpperCase(),
                     nombre: row.nombre.toString().trim(),
                     categoria: (row.categoria || 'General').toString().trim(),
                     precio: formatearPrecio(limpiarPrecio(row.precio)),
-                    img: (row.url || row.img || 'https://via.placeholder.com/300').toString().trim(),
+                    imagenes: imagenes,
                     stock: parseInt(row.stock) || 0
                 };
                 const existe = productos.find(p => p.codigo === limpio.codigo);
@@ -1166,7 +1511,7 @@ function procesarArchivoExcel() {
 }
 
 function descargarPlantillaCSV() {
-    const csv = `nombre,codigo,categoria,precio,url,stock\nLabial Matte,LAB-001,Maquillaje,50000,https://ejemplo.com/img.jpg,15`;
+    const csv = `nombre,codigo,categoria,precio,url,stock\nLabial Matte Rojo,LAB-001,Maquillaje,50000,https://ejemplo.com/rojo.jpg|https://ejemplo.com/rojo2.jpg,15\nLabial Matte Nude,LAB-002,Maquillaje,50000,https://ejemplo.com/nude.jpg,10`;
     const blob = new Blob([csv], {type: 'text/csv'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
