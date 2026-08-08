@@ -57,9 +57,50 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
 .card { background: var(--card-bg); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-base); position: relative; transition: transform 0.3s; cursor: pointer; }
 .card:hover { transform: translateY(-4px); }
-.card-top { background: var(--gray-light); padding: 15px; text-align: center; height: 160px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+
+/* 🔧 CORREGIDO: overflow: hidden ELIMINADO de .card-top */
+.card-top { 
+    background: var(--gray-light); 
+    padding: 15px; 
+    text-align: center; 
+    height: 160px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    position: relative; 
+    /* overflow: hidden; <-- ELIMINADO para que el botón no se recorte */
+}
 .card img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
-.add-btn-floating { position: absolute; bottom: -18px; right: 12px; background: var(--primary-pink); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(228, 87, 143, 0.4); z-index: 2; line-height: 1; }
+
+/* 🔧 CORREGIDO: botón posicionado con top en lugar de bottom negativo */
+.add-btn-floating { 
+    position: absolute; 
+    top: 140px; /* Flota sobre la línea divisoria (160px card-top - 20px mitad del botón) */
+    right: 12px; 
+    background: var(--primary-pink); 
+    color: white; 
+    border: none; 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    cursor: pointer; 
+    font-size: 20px; 
+    font-weight: 700; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    box-shadow: 0 6px 16px rgba(228, 87, 143, 0.4); 
+    z-index: 10; 
+    line-height: 1; 
+    transition: transform 0.2s;
+}
+.add-btn-floating:hover {
+    transform: scale(1.1);
+}
+.add-btn-floating:active {
+    transform: scale(0.95);
+}
+
 .card-info { padding: 24px 14px 14px 14px; }
 .card .category-tag { font-size: 10px; text-transform: uppercase; color: var(--primary-pink); font-weight: 700; margin-bottom: 4px; display: block; }
 .card .product-code { font-size: 10px; color: var(--primary-pink); font-weight: 700; margin-bottom: 4px; }
@@ -146,7 +187,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .btn-action.edit { background: var(--warning); color: white; }
 .btn-action.delete { background: var(--danger); color: white; }
 
-/* 🖼️ LISTA DE IMÁGENES EN MODAL DE EDICIÓN */
 .images-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: 10px; }
 .image-item { position: relative; background: var(--gray-light); border-radius: 10px; padding: 6px; border: 2px solid var(--gray-border); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .image-item img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; }
@@ -155,7 +195,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .image-item .img-index { position: absolute; bottom: 3px; left: 3px; background: rgba(0,0,0,0.6); color: white; font-size: 9px; padding: 2px 6px; border-radius: 8px; font-weight: 700; }
 .image-item.main-img { border-color: var(--primary-pink); }
 
-/* 🖼️ MODAL DETALLE CON GALERÍA */
 .detail-gallery { position: relative; background: var(--gray-light); border-radius: 16px; padding: 20px; min-height: 280px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; overflow: hidden; }
 .detail-gallery img { max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 8px; }
 .detail-thumbs { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; margin-bottom: 15px; }
@@ -217,7 +256,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     </div>
 </div>
 
-<!-- 🖼️ MODAL DE DETALLE CON GALERÍA COMPLETA -->
 <div class="detail-modal" id="detailModal">
     <div class="detail-modal-content">
         <div class="detail-modal-header">
@@ -236,7 +274,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     </div>
 </div>
 
-<!-- ✏️ MODAL DE EDICIÓN DE PRODUCTO -->
 <div class="edit-modal" id="editModal">
     <div class="edit-modal-content">
         <div class="edit-modal-header">
@@ -469,9 +506,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 </div>
 
 <script>
-// ==========================================
-// 🔥 CONFIGURACIÓN FIREBASE + IMGBB
-// ==========================================
 let savedFirebaseConfig = JSON.parse(localStorage.getItem('firebase_config') || 'null');
 
 let FIREBASE_CONFIG = { 
@@ -483,9 +517,6 @@ let IMGBB_CONFIG = JSON.parse(localStorage.getItem('imgbb_config') || 'null') ||
 let db = null;
 let firebaseUnsubscribe = null;
 
-// ==========================================
-// 🖼️ MIGRACIÓN: img (string) → imagenes (array)
-// ==========================================
 function migrarProductosImagenes(arr) {
     let cambiados = false;
     arr.forEach(p => {
@@ -505,9 +536,6 @@ function migrarProductosImagenes(arr) {
     return cambiados;
 }
 
-// ==========================================
-// 🔥 FUNCIONES FIREBASE EN TIEMPO REAL
-// ==========================================
 function inicializarFirebaseRealtime() {
     if (!FIREBASE_CONFIG.apiKey || !FIREBASE_CONFIG.databaseURL) {
         if (firebaseUnsubscribe) {
@@ -621,9 +649,6 @@ async function descargarDatosDeNube() {
     }
 }
 
-// ==========================================
-// 🖼️ FUNCIONES IMGBB
-// ==========================================
 async function subirUnaImagenImgBB(file, progressId, fillId, statusId, current, total) {
     const progressDiv = document.getElementById(progressId);
     const progressFill = document.getElementById(fillId);
@@ -720,9 +745,6 @@ async function subirImagenesEdicion(input) {
     input.value = '';
 }
 
-// ==========================================
-// 🖼️ LISTAS TEMPORALES DE IMÁGENES
-// ==========================================
 let imagenesProductoTemp = [];
 let imagenesEdicionTemp = [];
 
@@ -786,9 +808,6 @@ function agregarUrlsEdicion() {
     showToast(`✅ ${nuevas.length} URL(s) agregada(s)`, "success");
 }
 
-// ==========================================
-// ⚙️ CONFIGURACIÓN UI
-// ==========================================
 function guardarConfigFirebase() {
     const apiKey = document.getElementById('cfgFirebaseApiKey').value.trim();
     const url = document.getElementById('cfgFirebaseUrl').value.trim();
@@ -816,9 +835,6 @@ function guardarConfigImgBB() {
     showToast("✅ ImgBB guardado", "success");
 }
 
-// ==========================================
-// 📦 DATOS Y FUNCIONES BASE
-// ==========================================
 let productos = JSON.parse(localStorage.getItem('db_prods_v2')) || [
     {id: '1', codigo: "LAB-001", nombre: "Caja Lip Combo Xiolover", precio: "$40.000", categoria: "Maquillaje", imagenes: ["https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300"], stock: 12}
 ];
@@ -830,7 +846,6 @@ let productoEditandoIndex = null;
 let productoDetalleIndex = null;
 let detalleImagenActual = 0;
 
-// Migración inicial
 migrarProductosImagenes(productos);
 
 function showToast(message, type = "success") {
@@ -898,11 +913,11 @@ function renderProductos(lista = null) {
             galleryHtml = `<img src="${imagenes[0]}" alt="${p.nombre}">`;
         }
         
-        // ✅ CORREGIDO: símbolo + estándar (U+002B) en lugar de ＋ fullwidth (U+FF0B)
+        // 🔧 CORREGIDO: El botón ahora es hijo directo de .card (NO de .card-top)
+        // y se posiciona con top:140px para flotar sobre la línea divisoria
         card.innerHTML = `
             <div class="card-top">
                 ${galleryHtml}
-                <button class="add-btn-floating" onclick="event.stopPropagation(); event.preventDefault(); ${sinStock ? '' : `agregarAlCarro(${realIdx})`}">${sinStock ? '✕' : '+'}</button>
             </div>
             <div class="card-info">
                 <span class="category-tag">${p.categoria}</span>
@@ -910,7 +925,8 @@ function renderProductos(lista = null) {
                 <h3>${p.nombre}</h3>
                 <p class="price">${formatearPrecio(p.precio)}</p>
                 <span class="stock-tag">${sinStock ? 'AGOTADO' : p.stock + ' u.'}</span>
-            </div>`;
+            </div>
+            <button class="add-btn-floating" onclick="event.stopPropagation(); event.preventDefault(); ${sinStock ? '' : `agregarAlCarro(${realIdx})`}">${sinStock ? '✕' : '+'}</button>`;
         cont.appendChild(card);
     });
 }
@@ -1064,9 +1080,6 @@ async function guardarNuevoProducto() {
     if (db) await subirDatosANube();
 }
 
-// ==========================================
-// ✏️ EDICIÓN DE PRODUCTOS
-// ==========================================
 function abrirModalEdicion(index) {
     if (index === undefined || index === null || !productos[index]) {
         console.error("Error: Índice de producto no válido", index);
@@ -1157,9 +1170,6 @@ async function guardarEdicionProducto() {
     if (db) await subirDatosANube();
 }
 
-// ==========================================
-// 🔍 DETALLE DE PRODUCTO CON GALERÍA
-// ==========================================
 function abrirDetalle(index) {
     if (index === undefined || index === null || !productos[index]) return;
     productoDetalleIndex = index;
@@ -1259,9 +1269,6 @@ function agregarDesdeDetalle() {
     agregarAlCarro(productoDetalleIndex);
 }
 
-// ==========================================
-// 📊 INVENTARIO
-// ==========================================
 function renderInventario() {
     const tbody = document.getElementById('tablaInventario');
     if (!tbody) return;
@@ -1345,9 +1352,6 @@ function exportarDatosJSON() {
     showToast("💾 Respaldo descargado", "success");
 }
 
-// ==========================================
-// 🛒 CARRITO
-// ==========================================
 function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
 
 function agregarAlCarro(i) {
@@ -1393,9 +1397,6 @@ function comprar() {
     window.open(`https://wa.me/573118108837?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// ==========================================
-// 🔍 BÚSQUEDA
-// ==========================================
 document.getElementById('buscadorCodigo').addEventListener('input', (e) => {
     const q = e.target.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     const resDiv = document.getElementById('resultadoBusqueda');
@@ -1427,9 +1428,6 @@ function seleccionarBusqueda(codigo) {
     }
 }
 
-// ==========================================
-// 🔐 LOGIN ADMIN
-// ==========================================
 const PIN = "55555";
 function abrirLogin() {
     document.getElementById('loginModal').style.display = 'flex';
@@ -1468,9 +1466,6 @@ function syncTiendaUI() {
     document.getElementById('bannerDescView').textContent = tiendaConfig.desc;
 }
 
-// ==========================================
-// 📦 CARGA MASIVA
-// ==========================================
 function procesarArchivoExcel() {
     const file = document.getElementById('archivoExcel').files[0];
     if (!file) { showToast("⚠️ Selecciona archivo", "warning"); return; }
@@ -1520,9 +1515,6 @@ function descargarPlantillaCSV() {
     a.click();
 }
 
-// ==========================================
-// 🚀 INICIALIZACIÓN
-// ==========================================
 window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cfgFirebaseUrl').value = FIREBASE_CONFIG.databaseURL;
     document.getElementById('cfgFirebaseApiKey').value = FIREBASE_CONFIG.apiKey;
