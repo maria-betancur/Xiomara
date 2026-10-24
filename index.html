@@ -68,14 +68,13 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     align-items: center; 
     justify-content: center; 
     position: relative; 
-    /* overflow: hidden; <-- ELIMINADO para que el botón no se recorte */
 }
 .card img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
 
 /* 🔧 CORREGIDO: botón posicionado con top en lugar de bottom negativo */
 .add-btn-floating { 
     position: absolute; 
-    top: 140px; /* Flota sobre la línea divisoria (160px card-top - 20px mitad del botón) */
+    top: 140px; 
     right: 12px; 
     background: var(--primary-pink); 
     color: white; 
@@ -913,8 +912,6 @@ function renderProductos(lista = null) {
             galleryHtml = `<img src="${imagenes[0]}" alt="${p.nombre}">`;
         }
         
-        // 🔧 CORREGIDO: El botón ahora es hijo directo de .card (NO de .card-top)
-        // y se posiciona con top:140px para flotar sobre la línea divisoria
         card.innerHTML = `
             <div class="card-top">
                 ${galleryHtml}
@@ -1397,14 +1394,17 @@ function comprar() {
     window.open(`https://wa.me/573118108837?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
+// 🔧 CORREGIDO: Lógica del buscador independiente del catálogo principal
 document.getElementById('buscadorCodigo').addEventListener('input', (e) => {
     const q = e.target.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     const resDiv = document.getElementById('resultadoBusqueda');
+    
     if (!q || q.length < 2) {
         resDiv.style.display = 'none';
-        renderProductos();
+        renderProductos(); // Restablece la vista completa del catálogo
         return;
     }
+    
     const resultados = productos.filter(p => p._cache && p._cache.includes(q)).slice(0, 10);
     if (resultados.length === 0) {
         resDiv.innerHTML = '<div style="padding:20px; text-align:center; color:#94a3b8;">Sin resultados</div>';
@@ -1416,7 +1416,19 @@ document.getElementById('buscadorCodigo').addEventListener('input', (e) => {
             </div>`).join('');
     }
     resDiv.style.display = 'block';
-    renderProductos(resultados);
+    // Se eliminó renderProductos(resultados) para que el catálogo no se oculte ni dependa de la búsqueda
+});
+
+// 🔧 CORREGIDO: Cerrar sugerencias al hacer clic o tocar fuera del buscador
+document.addEventListener('click', (e) => {
+    const searchWrapper = document.querySelector('.search-wrapper');
+    const resDiv = document.getElementById('resultadoBusqueda');
+    
+    if (searchWrapper && resDiv && resDiv.style.display === 'block') {
+        if (!searchWrapper.contains(e.target)) {
+            resDiv.style.display = 'none';
+        }
+    }
 });
 
 function seleccionarBusqueda(codigo) {
@@ -1424,7 +1436,7 @@ function seleccionarBusqueda(codigo) {
     if (p) {
         document.getElementById('buscadorCodigo').value = p.nombre;
         document.getElementById('resultadoBusqueda').style.display = 'none';
-        renderProductos([p]);
+        renderProductos([p]); // Solo aquí filtramos el catálogo si el usuario ELIGE activamente un producto
     }
 }
 
