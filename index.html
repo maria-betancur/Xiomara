@@ -58,7 +58,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .card { background: var(--card-bg); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-base); position: relative; transition: transform 0.3s; cursor: pointer; }
 .card:hover { transform: translateY(-4px); }
 
-/* 🔧 CORREGIDO: overflow: hidden ELIMINADO de .card-top */
 .card-top { 
     background: var(--gray-light); 
     padding: 15px; 
@@ -71,7 +70,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 }
 .card img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
 
-/* 🔧 CORREGIDO: botón posicionado con top en lugar de bottom negativo */
 .add-btn-floating { 
     position: absolute; 
     top: 140px; 
@@ -93,12 +91,8 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     line-height: 1; 
     transition: transform 0.2s;
 }
-.add-btn-floating:hover {
-    transform: scale(1.1);
-}
-.add-btn-floating:active {
-    transform: scale(0.95);
-}
+.add-btn-floating:hover { transform: scale(1.1); }
+.add-btn-floating:active { transform: scale(0.95); }
 
 .card-info { padding: 24px 14px 14px 14px; }
 .card .category-tag { font-size: 10px; text-transform: uppercase; color: var(--primary-pink); font-weight: 700; margin-bottom: 4px; display: block; }
@@ -108,7 +102,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .card .stock-tag { font-size: 10px; color: #64748b; background: var(--gray-light); padding: 3px 8px; border-radius: 20px; display: inline-block; margin-top: 8px; font-weight: 600; }
 .card.no-stock { opacity: 0.65; }
 
-/* 🖼️ GALERÍA EN CARDS */
 .card-gallery { position: relative; width: 100%; height: 100%; }
 .card-gallery img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.3s; }
 .card-gallery img.active { opacity: 1; }
@@ -124,7 +117,22 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
 .search-wrapper { max-width: 600px; margin: 0 auto 25px auto; position: relative; }
 #buscadorCodigo { width: 100%; padding: 14px 50px 14px 48px; border: 2px solid var(--gray-border); border-radius: 30px; font-weight: 600; background: white; }
 .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #94a3b8; }
-#resultadoBusqueda { position: absolute; top: 100%; left: 0; right: 0; background: white; border-radius: 16px; margin-top: 8px; box-shadow: 0 12px 35px rgba(0,0,0,0.15); display: none; z-index: 50; max-height: 400px; overflow-y: auto; }
+
+/* 🔧 CORREGIDO: Cambiado a 'relative' para que empuje el contenido en lugar de superponerse, y max-height reducido para ser más compacto */
+#resultadoBusqueda { 
+    position: relative; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    background: white; 
+    border-radius: 16px; 
+    margin-top: 8px; 
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15); 
+    display: none; 
+    z-index: 50; 
+    max-height: 300px; 
+    overflow-y: auto; 
+}
 .search-result-item { padding: 12px 18px; border-bottom: 1px solid var(--gray-light); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
 .search-result-item:hover { background: var(--light-pink); }
 
@@ -229,7 +237,8 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 15px; }
     
     <div class="search-wrapper">
         <span class="search-icon">🔍</span>
-        <input type="text" id="buscadorCodigo" placeholder="Buscar productos...">
+        <!-- 🔧 CORREGIDO: Atributos agregados para desactivar el autocompletado nativo del navegador que genera la franja blanca -->
+        <input type="text" id="buscadorCodigo" placeholder="Buscar productos..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         <div id="resultadoBusqueda"></div>
     </div>
     
@@ -1394,37 +1403,61 @@ function comprar() {
     window.open(`https://wa.me/573118108837?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// 🔧 CORREGIDO: Lógica del buscador independiente del catálogo principal
-document.getElementById('buscadorCodigo').addEventListener('input', (e) => {
+// 🔧 CORREGIDO: Lógica estricta del buscador para evitar franjas blancas
+const searchInput = document.getElementById('buscadorCodigo');
+const resDiv = document.getElementById('resultadoBusqueda');
+
+// 1. Al hacer clic (focus), asegurar que no se muestre nada si no hay texto válido
+searchInput.addEventListener('focus', () => {
+    const q = searchInput.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (!q || q.length < 2) {
+        resDiv.style.display = 'none';
+    }
+});
+
+// 2. Al escribir, controlar estrictamente la visualización
+searchInput.addEventListener('input', (e) => {
     const q = e.target.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    const resDiv = document.getElementById('resultadoBusqueda');
     
     if (!q || q.length < 2) {
         resDiv.style.display = 'none';
-        renderProductos(); // Restablece la vista completa del catálogo
+        renderProductos(); // Restablece el catálogo completo inmediatamente
         return;
     }
     
     const resultados = productos.filter(p => p._cache && p._cache.includes(q)).slice(0, 10);
     if (resultados.length === 0) {
         resDiv.innerHTML = '<div style="padding:20px; text-align:center; color:#94a3b8;">Sin resultados</div>';
+        resDiv.style.display = 'block';
     } else {
         resDiv.innerHTML = resultados.map(p => `
             <div class="search-result-item" onclick="seleccionarBusqueda('${p.codigo}')">
                 <div><div style="font-weight:700; color:var(--primary-pink); font-size:12px;">${p.codigo}</div><div style="font-size:13px;">${p.nombre}</div></div>
                 <div style="font-weight:700;">${formatearPrecio(p.precio)}</div>
             </div>`).join('');
+        resDiv.style.display = 'block';
     }
-    resDiv.style.display = 'block';
-    // Se eliminó renderProductos(resultados) para que el catálogo no se oculte ni dependa de la búsqueda
 });
 
-// 🔧 CORREGIDO: Cerrar sugerencias al hacer clic o tocar fuera del buscador
+// 3. 🔧 NUEVO: Al pulsar Enter, cerrar sugerencias y mostrar resultados en el catálogo
+searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        resDiv.style.display = 'none'; // Cierra la barra blanca de sugerencias
+        const q = searchInput.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        if (q.length >= 2) {
+            const resultados = productos.filter(p => p._cache && p._cache.includes(q));
+            renderProductos(resultados.length > 0 ? resultados : productos);
+        } else {
+            renderProductos();
+        }
+    }
+});
+
+// 4. Cerrar al hacer clic fuera del buscador
 document.addEventListener('click', (e) => {
     const searchWrapper = document.querySelector('.search-wrapper');
-    const resDiv = document.getElementById('resultadoBusqueda');
-    
-    if (searchWrapper && resDiv && resDiv.style.display === 'block') {
+    if (searchWrapper && resDiv.style.display === 'block') {
         if (!searchWrapper.contains(e.target)) {
             resDiv.style.display = 'none';
         }
@@ -1434,9 +1467,9 @@ document.addEventListener('click', (e) => {
 function seleccionarBusqueda(codigo) {
     const p = productos.find(x => x.codigo === codigo);
     if (p) {
-        document.getElementById('buscadorCodigo').value = p.nombre;
-        document.getElementById('resultadoBusqueda').style.display = 'none';
-        renderProductos([p]); // Solo aquí filtramos el catálogo si el usuario ELIGE activamente un producto
+        searchInput.value = p.nombre;
+        resDiv.style.display = 'none';
+        renderProductos([p]); // Filtra el catálogo solo al seleccionar activamente
     }
 }
 
